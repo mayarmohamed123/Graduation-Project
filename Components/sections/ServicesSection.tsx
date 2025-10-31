@@ -33,13 +33,11 @@ export default function ServicesSection() {
     },
   ];
   return (
-    <section className="px-8 md:px-20 py-20 bg-white">
+    <section className="px-8 md:px-20 py-20 bg-white max-w-8xl mx-auto">
       {/* Heading */}
       <div className="text-center mb-16">
-        <h2 className="text-5xl font-semibold text-primary mb-4">
-          Top Services We Offer
-        </h2>
-        <p className="text-gray-600 max-w-2xl mx-auto">
+        <h2 className="heading">Top Services We Offer</h2>
+        <p className="paragraph">
           In today’s fast-moving world, your health deserves care that’s both
           accessible and convenient. That’s why Sehha brings together a suite of
           digital healthcare services designed to connect you with doctors,
@@ -48,11 +46,11 @@ export default function ServicesSection() {
       </div>
 
       {/* Services Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {services.map((service, index) => (
           <div
             key={index}
-            className="p-0.5 rounded-2xl bg-gradient-to-r from-[#A8E7EB] to-[#58D2DA] shadow-md hover:shadow-lg transition-shadow">
+            className="p-0.5 rounded-xl bg-linear-to-r from-[#A8E7EB] to-[#58D2DA] h-[297px] hover:shadow-lg transition-shadow">
             <div className="bg-white rounded-2xl p-6 h-full flex flex-col items-center text-left">
               <Image
                 src={service.icon}
@@ -61,11 +59,11 @@ export default function ServicesSection() {
                 height={80}
                 className="mb-4"
               />
-              <h3 className="text-xl font-semibold text-primary mb-3">
+              <h3 className="text-2xl font-medium text-[#2BBBC5] mb-3">
                 {service.title}
               </h3>
-              <p className="text-gray-600 mb-1">{service.firstText}</p>
-              <p className="text-gray-600">{service.secondText}</p>
+              <p className="text-[#8E8E8E] mb-1">{service.firstText}</p>
+              <p className="text-[#8E8E8E] mb-2">{service.secondText}</p>
             </div>
           </div>
         ))}

@@ -120,3 +120,11 @@
     @apply bg-background text-foreground;
   }
 }
+@layer utilities {
+  .heading {
+    @apply text-[32px] md:text-[40px] text-[#2BBBC5] font-semibold mb-4;
+  }
+  .paragraph {
+    @apply text-[#4D4D4D] text-xl font-normal mx-auto;
+  }
+}

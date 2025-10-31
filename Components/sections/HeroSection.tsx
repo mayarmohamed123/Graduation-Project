@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "../ui/button";
 import Image from "next/image";
-import HeroSectionPhoto from "@/assets/HeroSection.png";
+import HeroSectionPhoto from "@/assets/HeroSection.svg";
 export default function HeroSection() {
   return (
     <section className="flex gap-6 flex-col-reverse md:flex-row items-center justify-center mt-16 px-8 md:px-20 py-16">

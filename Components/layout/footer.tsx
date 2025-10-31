@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
-import sehhaLogo from "@/assets/Sehaa 1.png";
+import sehhaLogo from "@/assets/Footer Logo.png";
 
 export default function Footer() {
   return (
