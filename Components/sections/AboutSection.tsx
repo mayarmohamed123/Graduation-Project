@@ -1,6 +1,6 @@
 import Image from "next/image";
 import React from "react";
-import aboutImage from "@/assets/About Photo.png";
+import aboutImage from "@/assets/about.svg";
 
 export default function AboutSection() {
   return (

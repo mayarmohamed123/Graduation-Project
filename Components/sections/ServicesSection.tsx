@@ -1,8 +1,8 @@
 import React from "react";
-import Doctor from "@/assets/Frame 5.png";
-import Pharmacy from "@/assets/Frame 5 (1).png";
-import Blood from "@/assets/Frame 5 (2).png";
-import secure from "@/assets/Frame 5 (3).png";
+import Doctor from "@/assets/Frame 5.svg";
+import Pharmacy from "@/assets/Frame 5 (1).svg";
+import Blood from "@/assets/Frame 5 (2).svg";
+import secure from "@/assets/Frame 5 (3).svg";
 import Image from "next/image";
 
 export default function ServicesSection() {

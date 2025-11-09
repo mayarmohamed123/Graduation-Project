@@ -1,5 +1,5 @@
 import React from "react";
-import Doctor from "@/assets/Join 1.png";
+import Doctor from "@/assets/Group 17.svg";
 import Pharmacy from "@/assets/join 2.png";
 import Image from "next/image";
 

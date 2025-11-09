@@ -1,5 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "swiper/css";
+@import "swiper/css/navigation";
+@import "swiper/css/pagination";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -127,4 +130,26 @@
   .paragraph {
     @apply text-[#4D4D4D] text-xl font-normal mx-auto;
   }
+  /* .gradient-border {
+    @apply border-[2.02px] border-transparent rounded-2xl;
+    @apply border-image: linear-gradient(98.64deg, #53ced6 23.06%, #b9ecef 55.19%);
+    @apply border-image-slice: 1;
+  } */
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  color: #2bbbc5 !important; /* Change arrow color */
+  top: 55% !important; /* Adjust vertical position */
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  font-size: 22px !important; /* Adjust arrow size */
+}
+
+.gradient-border {
+  border: 2.02px solid transparent;
+  border-image: linear-gradient(98.64deg, #53ced6 23.06%, #b9ecef 55.19%);
+  border-image-slice: 1;
 }

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import React from "react";
-import WorkImage from "@/assets/work section.png";
+import WorkImage from "@/assets/work.svg";
 
 export default function WorkSection() {
   const steps = [
