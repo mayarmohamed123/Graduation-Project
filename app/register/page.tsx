@@ -1,13 +1,82 @@
-import vector from "@/assets/Vector 37.png";
+"use client";
+
+import { useState } from "react";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
-import doctors from "@/assets/amico.svg";
-import { Input } from "@/Components/ui/input";
 import { Lock, Mail, User } from "lucide-react";
+import { Input } from "@/Components/ui/input";
 import { Button } from "@/Components/ui/button";
+import vector from "@/assets/Vector 37.png";
+import doctors from "@/assets/amico.svg";
 import google from "@/assets/Social Icons.svg";
 import facebook from "@/assets/Social Icons (1).svg";
 import vector2 from "@/assets/Vector 36.svg";
+import { authService } from "@/Services/authService";
+
 export default function RegisterPage() {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError("");
+
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      // Remove confirmPassword before sending to API
+      const { confirmPassword, ...registerData } = formData;
+      await authService.register(registerData);
+
+      // Auto-login after successful registration
+      const result = await signIn("credentials", {
+        email: formData.email,
+        password: formData.password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        router.push(`/login?message=${encodeURIComponent("Registration successful. Please login.")}`);
+      } else {
+        router.push("/user");
+        router.refresh();
+      }
+    } catch (error: any) {
+      setError(error.message || "Registration failed");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSocialSignIn = async (provider: "google" | "facebook") => {
+    try {
+      await signIn(provider, { callbackUrl: "/user" });
+    } catch (error) {
+      setError(`Failed to sign in with ${provider}`);
+    }
+  };
+
   return (
     <main className="min-h-screen flex items-center justify-center bg-[#D5F4F6] relative overflow-hidden">
       <div className="absolute z-0 left-0">
@@ -20,12 +89,20 @@ export default function RegisterPage() {
             <Image src={doctors} alt="doctors" width={270} height={265} />
           </div>
         </div>
+
         <div className="w-2/3 flex flex-col justify-center p-8 max-w-2xl mx-auto">
-          <form className="w-[350px] mx-auto">
+          <form onSubmit={handleSubmit} className="w-[350px] mx-auto">
             <h2 className="text-[#2BBBC5] text-4xl font-semibold mb-5">
               Sign Up
             </h2>
-            <div className="space-y-1 ">
+
+            {error && (
+              <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+                {error}
+              </div>
+            )}
+
+            <div className="space-y-1">
               {/* Name */}
               <div className="relative mb-4">
                 <User
@@ -35,10 +112,11 @@ export default function RegisterPage() {
                 <Input
                   id="name"
                   name="name"
+                  value={formData.name}
+                  onChange={handleChange}
                   placeholder="User Name"
-                  className="pl-9 rounded-3xl border-2 border-[#2BBBC5] 
-                     placeholder-[#2BBBC5] focus-visible:ring-0 
-                     focus-visible:border-[#2BBBC5] focus:border-[#2BBBC5]"
+                  className="pl-9 rounded-3xl border-2 border-[#2BBBC5] placeholder-[#2BBBC5] focus-visible:ring-0 focus-visible:border-[#2BBBC5] focus:border-[#2BBBC5]"
+                  required
                 />
               </div>
 
@@ -52,10 +130,11 @@ export default function RegisterPage() {
                   id="email"
                   name="email"
                   type="email"
+                  value={formData.email}
+                  onChange={handleChange}
                   placeholder="example@email.com"
-                  className="pl-9 rounded-3xl border-2 border-[#2BBBC5] 
-                     placeholder-[#2BBBC5] focus-visible:ring-0 
-                     focus-visible:border-[#2BBBC5] focus:border-[#2BBBC5]"
+                  className="pl-9 rounded-3xl border-2 border-[#2BBBC5] placeholder-[#2BBBC5] focus-visible:ring-0 focus-visible:border-[#2BBBC5] focus:border-[#2BBBC5]"
+                  required
                 />
               </div>
 
@@ -69,10 +148,11 @@ export default function RegisterPage() {
                   id="password"
                   name="password"
                   type="password"
+                  value={formData.password}
+                  onChange={handleChange}
                   placeholder="Enter password"
-                  className="pl-9 rounded-3xl border-2 border-[#2BBBC5] 
-                     placeholder-[#2BBBC5] focus-visible:ring-0 
-                     focus-visible:border-[#2BBBC5] focus:border-[#2BBBC5]"
+                  className="pl-9 rounded-3xl border-2 border-[#2BBBC5] placeholder-[#2BBBC5] focus-visible:ring-0 focus-visible:border-[#2BBBC5] focus:border-[#2BBBC5]"
+                  required
                 />
               </div>
 
@@ -86,18 +166,21 @@ export default function RegisterPage() {
                   id="confirmPassword"
                   name="confirmPassword"
                   type="password"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
                   placeholder="Confirm password"
-                  className="pl-9 rounded-3xl border-2 border-[#2BBBC5] 
-                     placeholder-[#2BBBC5] focus-visible:ring-0 
-                     focus-visible:border-[#2BBBC5] focus:border-[#2BBBC5]"
+                  className="pl-9 rounded-3xl border-2 border-[#2BBBC5] placeholder-[#2BBBC5] focus-visible:ring-0 focus-visible:border-[#2BBBC5] focus:border-[#2BBBC5]"
+                  required
                 />
               </div>
 
               {/* Button */}
               <Button
+                type="submit"
                 size="lg"
-                className="bg-[#2BBBC5] text-white px-8 py-3 rounded-3xl">
-                Sign Up
+                disabled={isLoading}
+                className="bg-[#2BBBC5] text-white px-8 py-3 rounded-3xl w-full hover:bg-[#249da5] disabled:opacity-50">
+                {isLoading ? "Creating Account..." : "Sign Up"}
               </Button>
 
               <div className="my-6 flex items-center gap-4">
@@ -109,11 +192,13 @@ export default function RegisterPage() {
               <div className="flex items-center justify-center gap-6">
                 <button
                   type="button"
+                  onClick={() => handleSocialSignIn("google")}
                   className="hover:scale-110 transition-transform duration-200">
                   <Image src={google} alt="Google" width={35} height={35} />
                 </button>
                 <button
                   type="button"
+                  onClick={() => handleSocialSignIn("facebook")}
                   className="hover:scale-110 transition-transform duration-200">
                   <Image src={facebook} alt="Facebook" width={35} height={35} />
                 </button>

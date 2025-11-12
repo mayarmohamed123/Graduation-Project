@@ -1,20 +1,84 @@
-import vector from "@/assets/Vector 37.png";
+"use client";
+
+import { useState, useEffect, Suspense } from "react";
+import { signIn } from "next-auth/react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
-import doctors from "@/assets/amico.svg";
-import { Input } from "@/Components/ui/input";
 import { Lock, Mail } from "lucide-react";
+import { Input } from "@/Components/ui/input";
 import { Button } from "@/Components/ui/button";
+import vector from "@/assets/Vector 37.png";
+import doctors from "@/assets/amico.svg";
 import google from "@/assets/Social Icons.svg";
 import facebook from "@/assets/Social Icons (1).svg";
 import vector2 from "@/assets/Vector 36.svg";
 
-export default function SignInPage() {
+function SignInForm() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  useEffect(() => {
+    const message = searchParams.get("message");
+    if (message) {
+      setSuccess(message);
+      // Clear the message from URL
+      router.replace("/login");
+    }
+  }, [searchParams, router]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError("");
+
+    try {
+      const result = await signIn("credentials", {
+        email: formData.email,
+        password: formData.password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        setError("Invalid email or password");
+      } else {
+        router.push("/user");
+        router.refresh();
+      }
+    } catch {
+      setError("An error occurred during login");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSocialSignIn = async (provider: "google" | "facebook") => {
+    try {
+      await signIn(provider, { callbackUrl: "/user" });
+    } catch {
+      setError(`Failed to sign in with ${provider}`);
+    }
+  };
+
   return (
     <main className="min-h-screen flex items-center justify-center bg-[#D5F4F6] relative overflow-hidden">
       <div className="absolute z-0 left-0">
         <Image src={vector2} alt="vector2" />
       </div>
-
       <div className="flex max-w-4xl mx-auto w-full bg-white shadow-lg rounded-lg overflow-hidden">
         {/* Left Side (Image Section) */}
         <div className="w-1/3 relative">
@@ -26,10 +90,21 @@ export default function SignInPage() {
 
         {/* Right Side (Form Section) */}
         <div className="w-2/3 flex flex-col justify-center p-8 max-w-2xl mx-auto">
-          <form className="w-[350px] mx-auto">
+          <form onSubmit={handleSubmit} className="w-[350px] mx-auto">
             <h2 className="text-[#2BBBC5] text-4xl font-semibold mb-5 text-center">
               Sign In
             </h2>
+
+            {success && (
+              <div className="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded">
+                {success}
+              </div>
+            )}
+            {error && (
+              <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+                {error}
+              </div>
+            )}
 
             {/* Email */}
             <div className="relative mb-4">
@@ -41,10 +116,11 @@ export default function SignInPage() {
                 id="email"
                 name="email"
                 type="email"
+                value={formData.email}
+                onChange={handleChange}
                 placeholder="example@email.com"
-                className="pl-9 rounded-3xl border-2 border-[#2BBBC5]
-                placeholder-[#2BBBC5] focus-visible:ring-0
-                focus-visible:border-[#2BBBC5] focus:border-[#2BBBC5]"
+                className="pl-9 rounded-3xl border-2 border-[#2BBBC5] placeholder-[#2BBBC5] focus-visible:ring-0 focus-visible:border-[#2BBBC5] focus:border-[#2BBBC5]"
+                required
               />
             </div>
 
@@ -58,10 +134,11 @@ export default function SignInPage() {
                 id="password"
                 name="password"
                 type="password"
+                value={formData.password}
+                onChange={handleChange}
                 placeholder="Enter password"
-                className="pl-9 rounded-3xl border-2 border-[#2BBBC5]
-                placeholder-[#2BBBC5] focus-visible:ring-0
-                focus-visible:border-[#2BBBC5] focus:border-[#2BBBC5]"
+                className="pl-9 rounded-3xl border-2 border-[#2BBBC5] placeholder-[#2BBBC5] focus-visible:ring-0 focus-visible:border-[#2BBBC5] focus:border-[#2BBBC5]"
+                required
               />
             </div>
 
@@ -76,9 +153,11 @@ export default function SignInPage() {
 
             {/* Button */}
             <Button
+              type="submit"
               size="lg"
-              className="bg-[#2BBBC5] text-white px-8 py-3 rounded-3xl w-full">
-              Sign In
+              disabled={isLoading}
+              className="bg-[#2BBBC5] text-white px-8 py-3 rounded-3xl w-full hover:bg-[#249da5] disabled:opacity-50">
+              {isLoading ? "Signing In..." : "Sign In"}
             </Button>
 
             {/* Or Section */}
@@ -92,11 +171,13 @@ export default function SignInPage() {
             <div className="flex items-center justify-center gap-6">
               <button
                 type="button"
+                onClick={() => handleSocialSignIn("google")}
                 className="hover:scale-110 transition-transform duration-200">
                 <Image src={google} alt="Google" width={35} height={35} />
               </button>
               <button
                 type="button"
+                onClick={() => handleSocialSignIn("facebook")}
                 className="hover:scale-110 transition-transform duration-200">
                 <Image src={facebook} alt="Facebook" width={35} height={35} />
               </button>
@@ -104,7 +185,7 @@ export default function SignInPage() {
 
             {/* Register Link */}
             <p className="text-center text-sm text-gray-400 mt-6">
-              Don’t have an account?{" "}
+              Donot have an account?{" "}
               <a href="/register" className="text-teal-500 underline">
                 Sign Up
               </a>
@@ -113,5 +194,20 @@ export default function SignInPage() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense fallback={
+      <main className="min-h-screen flex items-center justify-center bg-[#D5F4F6]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2BBBC5] mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </main>
+    }>
+      <SignInForm />
+    </Suspense>
   );
 }

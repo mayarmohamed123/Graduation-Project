@@ -1,6 +1,10 @@
 "use client";
 import React, { useState } from "react";
+import { useSession, signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { LogOut } from "lucide-react";
+import { Button } from "@/Components/ui/button";
 import donate from "@/assets/slider/donate.svg";
 import doctors from "@/assets/slider/doctors.svg";
 import medicine from "@/assets/slider/medicine.svg";
@@ -11,9 +15,18 @@ import donateCard from "@/assets/cards/unsplash_w46dSjqUUxM (2).svg";
 
 // Import Swiper
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import { Navigation ,Autoplay } from "swiper/modules";
 
 export default function Page() {
+  const { data: session } = useSession();
+  const router = useRouter();
+  const userName = session?.user?.name || "User";
+
+  const handleLogout = async () => {
+    await signOut({ redirect: false });
+    router.push("/");
+    router.refresh();
+  };
   const actionCards = [
     {
       id: 1,
@@ -57,16 +70,27 @@ export default function Page() {
     <div>
       {/* Hero Section */}
       <section className="min-h-screen bg-gray-50 flex flex-col items-center justify-center py-10 px-4">
-        <div className="max-w-4xl text-center">
-          <h1 className="heading">Welcome back, Nourhan !👋</h1>
-          <p className="text-[#8E8E8E] text-lg mb-10">
+        <div className="max-w-4xl w-full">
+          {/* Header with Logout */}
+          <div className="flex items-center justify-between mb-6">
+            <h1 className="heading">Welcome back, {userName}!👋</h1>
+            <Button
+              onClick={handleLogout}
+              variant="outline"
+              size="sm"
+              className="flex items-center space-x-2 border-red-300 text-red-600 hover:bg-red-50 hover:text-red-700 hover:border-red-400">
+              <LogOut size={18} />
+              <span>Logout</span>
+            </Button>
+          </div>
+          <p className="text-[#8E8E8E] text-lg mb-10 text-center">
             Take care of your health today ,explore trusted doctors, order
             medicines, or help others by donating blood.
           </p>
 
           <form
             onSubmit={handleSearch}
-            className="flex items-center justify-center mb-12">
+            className="flex items-center justify-center mb-12 w-full">
             <div className="relative flex w-full max-w-4xl border border-[#2BBBC5] rounded-full overflow-hidden shadow-2xl">
               <input
                 type="text"
@@ -94,7 +118,7 @@ export default function Page() {
             className="pb-10">
             {/* Slide 1 */}
             <SwiperSlide>
-              <div className="flex flex-col md:flex-row items-center justify-between bg-linear-to-r from-[#2BBBC5] to-[#D5F4F6] rounded-3xl shadow-md p-8">
+              <div className="flex flex-col md:flex-row items-center justify-between bg-gradient-to-r from-[#2BBBC5] to-[#D5F4F6] rounded-3xl shadow-md p-8">
                 <div className="max-w-md py-5">
                   <h2 className="text-2xl font-medium text-white mb-2">
                     Find Trusted Doctors Near You
@@ -145,7 +169,7 @@ export default function Page() {
 
             {/* Slide 3 */}
             <SwiperSlide>
-              <div className="flex flex-col md:flex-row items-center justify-between  bg-linear-to-r from-[#2BBBC5] to-[#D5F4F6] rounded-3xl shadow-md p-8">
+              <div className="flex flex-col md:flex-row items-center justify-between  bg-gradient-to-r from-[#2BBBC5] to-[#D5F4F6] rounded-3xl shadow-md p-8">
                 <div className="max-w-md">
                   <h2 className="text-2xl font-medium text-white mb-2">
                     Save Lives. Donate Blood Today.
