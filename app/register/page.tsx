@@ -19,10 +19,11 @@ export default function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [formData, setFormData] = useState({
-    name: "",
+    username: "",
     email: "",
     password: "",
     confirmPassword: "",
+    role: "User", // Default role
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,8 +46,14 @@ export default function RegisterPage() {
     }
 
     try {
-      // Remove confirmPassword before sending to API
-      const { confirmPassword, ...registerData } = formData;
+      // Transform form data to match API requirements
+      const registerData = {
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+        confirmpassword: formData.confirmPassword,
+        role: formData.role,
+      };
       await authService.register(registerData);
 
       // Auto-login after successful registration
@@ -62,8 +69,9 @@ export default function RegisterPage() {
         router.push("/user");
         router.refresh();
       }
-    } catch (error: any) {
-      setError(error.message || "Registration failed");
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Registration failed";
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -103,16 +111,16 @@ export default function RegisterPage() {
             )}
 
             <div className="space-y-1">
-              {/* Name */}
+              {/* Username */}
               <div className="relative mb-4">
                 <User
                   className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2BBBC5]"
                   size={18}
                 />
                 <Input
-                  id="name"
-                  name="name"
-                  value={formData.name}
+                  id="username"
+                  name="username"
+                  value={formData.username}
                   onChange={handleChange}
                   placeholder="User Name"
                   className="pl-9 rounded-3xl border-2 border-[#2BBBC5] placeholder-[#2BBBC5] focus-visible:ring-0 focus-visible:border-[#2BBBC5] focus:border-[#2BBBC5]"

@@ -185,7 +185,7 @@ function SignInForm() {
 
             {/* Register Link */}
             <p className="text-center text-sm text-gray-400 mt-6">
-              Donot have an account?{" "}
+              Don't have an account?{" "}
               <a href="/register" className="text-teal-500 underline">
                 Sign Up
               </a>

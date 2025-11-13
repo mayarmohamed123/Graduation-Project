@@ -1,3 +1,4 @@
+// lib/authOptions.ts
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
@@ -19,17 +20,20 @@ export const authOptions: NextAuthOptions = {
         }
 
         try {
-          const { user, token } = await authService.login({
+          const response = await authService.login({
             email: credentials.email,
             password: credentials.password,
           });
 
+          // Set token in cookies
+          authService.setToken(response.token);
+
           return {
-            id: user.id,
-            email: user.email,
-            name: user.name,
-            image: user.image,
-            accessToken: token,
+            id: response.user.email, // Using email as ID since user ID isn't in response
+            email: response.user.email,
+            name: response.user.userName,
+            roles: response.user.roles,
+            accessToken: response.token,
           };
         } catch (error) {
           console.error("Auth error:", error);
@@ -38,37 +42,54 @@ export const authOptions: NextAuthOptions = {
       },
     }),
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      clientId: process.env.GOOGLE_CLIENT_ID || "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
     }),
     FacebookProvider({
-      clientId: process.env.FACEBOOK_CLIENT_ID!,
-      clientSecret: process.env.FACEBOOK_CLIENT_SECRET!,
+      clientId: process.env.FACEBOOK_CLIENT_ID || "",
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET || "",
     }),
   ],
   callbacks: {
-    async jwt({ token, user, account }) {
+    async jwt({ token, user, account, trigger, session }) {
       // Initial sign in
       if (account && user) {
-        // For OAuth providers, you might want to create/link accounts with your .NET API
+        // For OAuth providers
         if (account.provider !== "credentials") {
-          // Handle OAuth sign in - you'll need to implement this based on your .NET API
           try {
-            // This is where you'd call your .NET API to handle OAuth
-            // const response = await authService.oauthSignIn(account.provider, account.access_token);
-            // token.accessToken = response.token;
+            let response;
+            if (account.provider === "google") {
+              response = await authService.googleLogin(account.access_token!);
+            } else if (account.provider === "facebook") {
+              response = await authService.facebookLogin(account.access_token!);
+            } else {
+              throw new Error(`Unsupported OAuth provider: ${account.provider}`);
+            }
+            
+            token.accessToken = response.token;
+            token.roles = response.user.roles;
+
+            // Set token in cookies
+            authService.setToken(response.token);
           } catch (error) {
             console.error("OAuth error:", error);
+            return token;
           }
         } else {
-          // For credentials login, we already have the token from authorize
-          token.accessToken = (user as any).accessToken;
+          // For credentials login
+          token.accessToken = (user as { accessToken?: string }).accessToken;
+          token.roles = (user as { roles?: string[] }).roles;
         }
 
         return {
           ...token,
           ...user,
         };
+      }
+
+      // Handle session update in client
+      if (trigger === "update" && session) {
+        token = { ...token, ...session };
       }
 
       return token;
@@ -79,10 +100,15 @@ export const authOptions: NextAuthOptions = {
         email: token.email as string,
         name: token.name as string,
         image: token.picture as string,
+        roles: token.roles as string[],
       };
       session.accessToken = token.accessToken as string;
 
       return session;
+    },
+    async signIn({ user, account, profile }) {
+      // For OAuth providers, we handle the token in the jwt callback
+      return true;
     },
   },
   pages: {
