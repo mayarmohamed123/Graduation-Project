@@ -29,7 +29,7 @@ export const authOptions: NextAuthOptions = {
           authService.setToken(response.token);
 
           return {
-            id: response.user.email, // Using email as ID since user ID isn't in response
+            id: response.user.email,
             email: response.user.email,
             name: response.user.userName,
             roles: response.user.roles,
@@ -42,43 +42,64 @@ export const authOptions: NextAuthOptions = {
       },
     }),
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || "",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      authorization: {
+        params: {
+          scope: "openid email profile",
+        },
+      },
     }),
     FacebookProvider({
-      clientId: process.env.FACEBOOK_CLIENT_ID || "",
-      clientSecret: process.env.FACEBOOK_CLIENT_SECRET || "",
+      clientId: process.env.FACEBOOK_CLIENT_ID!,
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET!,
     }),
   ],
   callbacks: {
+    async signIn({ user, account, profile }) {
+      // Handle OAuth sign in (Google/Facebook)
+      if (account?.provider === "google" || account?.provider === "facebook") {
+        try {
+          // Call your .NET API - no parameters needed since your API doesn't require them
+          const response =
+            account.provider === "google"
+              ? await authService.googleLogin()
+              : await authService.facebookLogin();
+
+          // Store the token in cookies
+          authService.setToken(response.token);
+
+          // Update user object with data from your API
+          user.id = response.user.email;
+          user.email = response.user.email;
+          user.name = response.user.userName;
+          (user as any).roles = response.user.roles;
+          (user as any).accessToken = response.token;
+
+          return true;
+        } catch (error) {
+          console.error("OAuth signin error:", error);
+          return false;
+        }
+      }
+      return true; // For credentials, return true
+    },
+
     async jwt({ token, user, account, trigger, session }) {
       // Initial sign in
       if (account && user) {
-        // For OAuth providers
-        if (account.provider !== "credentials") {
-          try {
-            let response;
-            if (account.provider === "google") {
-              response = await authService.googleLogin(account.access_token!);
-            } else if (account.provider === "facebook") {
-              response = await authService.facebookLogin(account.access_token!);
-            } else {
-              throw new Error(`Unsupported OAuth provider: ${account.provider}`);
-            }
-            
-            token.accessToken = response.token;
-            token.roles = response.user.roles;
-
-            // Set token in cookies
-            authService.setToken(response.token);
-          } catch (error) {
-            console.error("OAuth error:", error);
-            return token;
-          }
-        } else {
+        if (account.provider === "credentials") {
           // For credentials login
-          token.accessToken = (user as { accessToken?: string }).accessToken;
-          token.roles = (user as { roles?: string[] }).roles;
+          token.accessToken = (user as any).accessToken;
+          token.roles = (user as any).roles;
+        }
+        // For OAuth, we've already handled the token in signIn callback
+        else if (
+          account.provider === "google" ||
+          account.provider === "facebook"
+        ) {
+          token.accessToken = (user as any).accessToken;
+          token.roles = (user as any).roles;
         }
 
         return {
@@ -92,8 +113,15 @@ export const authOptions: NextAuthOptions = {
         token = { ...token, ...session };
       }
 
+      // Always ensure we have the latest token from cookies
+      const cookieToken = authService.getToken();
+      if (cookieToken && cookieToken !== token.accessToken) {
+        token.accessToken = cookieToken;
+      }
+
       return token;
     },
+
     async session({ session, token }) {
       session.user = {
         id: token.id as string,
@@ -105,10 +133,6 @@ export const authOptions: NextAuthOptions = {
       session.accessToken = token.accessToken as string;
 
       return session;
-    },
-    async signIn({ user, account, profile }) {
-      // For OAuth providers, we handle the token in the jwt callback
-      return true;
     },
   },
   pages: {

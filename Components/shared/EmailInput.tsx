@@ -2,7 +2,7 @@ import Image from "next/image";
 import { Input } from "../ui/input";
 import Photo from "@/assets/Email Icon.svg";
 
-export function EmailInput() {
+export default function EmailInput() {
   return (
     <div className="relative w-full mb-4">
       <Image

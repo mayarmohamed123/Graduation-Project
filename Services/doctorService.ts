@@ -2,7 +2,7 @@
 import { Doctor } from "@/types/doctors";
 import { FilterParams, fetchWithAuth } from "./api";
 
-const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000/api";
+const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export const doctorService = {
   // Get all doctors

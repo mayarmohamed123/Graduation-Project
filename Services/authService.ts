@@ -83,13 +83,12 @@ class AuthService {
     return response.json();
   }
 
-  async googleLogin(accessToken: string): Promise<AuthResponse> {
+  async googleLogin(): Promise<AuthResponse> {
     const response = await fetch(`${API_BASE_URL}/User/google-login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ accessToken }),
     });
 
     if (!response.ok) {
@@ -100,13 +99,12 @@ class AuthService {
     return response.json();
   }
 
-  async facebookLogin(accessToken: string): Promise<AuthResponse> {
+  async facebookLogin(): Promise<AuthResponse> {
     const response = await fetch(`${API_BASE_URL}/User/facebook-login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ accessToken }),
     });
 
     if (!response.ok) {

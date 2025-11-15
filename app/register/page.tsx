@@ -23,7 +23,7 @@ export default function RegisterPage() {
     email: "",
     password: "",
     confirmPassword: "",
-    role: "User", // Default role
+    role: "regularuser",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,13 +64,18 @@ export default function RegisterPage() {
       });
 
       if (result?.error) {
-        router.push(`/login?message=${encodeURIComponent("Registration successful. Please login.")}`);
+        router.push(
+          `/login?message=${encodeURIComponent(
+            "Registration successful. Please login."
+          )}`
+        );
       } else {
         router.push("/user");
         router.refresh();
       }
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Registration failed";
+      const errorMessage =
+        error instanceof Error ? error.message : "Registration failed";
       setError(errorMessage);
     } finally {
       setIsLoading(false);

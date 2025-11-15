@@ -2,7 +2,7 @@ import Image from "next/image";
 import photo from "@/assets/message-square.svg";
 import { Textarea } from "../ui/textarea";
 
-export function MessageTextarea() {
+export default function MessageTextarea() {
   return (
     <div className="relative w-full mb-4">
       <Image

@@ -8,7 +8,7 @@ import { Button } from "@/Components/ui/button";
 import donate from "@/assets/slider/donate.svg";
 import doctors from "@/assets/slider/doctors.svg";
 import medicine from "@/assets/slider/medicine.svg";
-import vector from "@/assets/Vector.svg";
+
 import doctorsCard from "@/assets/cards/unsplash_w46dSjqUUxM.svg";
 import medicineCard from "@/assets/cards/unsplash_w46dSjqUUxM (1).svg";
 import donateCard from "@/assets/cards/unsplash_w46dSjqUUxM (2).svg";
@@ -16,17 +16,13 @@ import donateCard from "@/assets/cards/unsplash_w46dSjqUUxM (2).svg";
 // Import Swiper
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
+import TopRatedDoctors from "@/Components/sections/TopRatedDoctors";
 
 export default function Page() {
   const { data: session } = useSession();
   const router = useRouter();
   const userName = session?.user?.name || "User";
 
-  const handleLogout = async () => {
-    await signOut({ redirect: false });
-    router.push("/");
-    router.refresh();
-  };
   const actionCards = [
     {
       id: 1,
@@ -59,12 +55,6 @@ export default function Page() {
       buttonHover: "#25a4ac",
     },
   ];
-  const [query, setQuery] = useState<string>("");
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Searching for:", query);
-  };
 
   return (
     <div>
@@ -74,36 +64,11 @@ export default function Page() {
           {/* Header with Logout */}
           <div className="flex items-center justify-between mb-6">
             <h1 className="heading">Welcome back, {userName}!👋</h1>
-            <Button
-              onClick={handleLogout}
-              variant="outline"
-              size="sm"
-              className="flex items-center space-x-2 border-red-300 text-red-600 hover:bg-red-50 hover:text-red-700 hover:border-red-400">
-              <LogOut size={18} />
-              <span>Logout</span>
-            </Button>
           </div>
           <p className="text-[#8E8E8E] text-lg mb-10 text-center">
             Take care of your health today ,explore trusted doctors, order
             medicines, or help others by donating blood.
           </p>
-
-          <form
-            onSubmit={handleSearch}
-            className="flex items-center justify-center mb-12 w-full">
-            <div className="relative flex w-full max-w-4xl border border-[#2BBBC5] rounded-full overflow-hidden shadow-2xl">
-              <input
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search for doctors, pharmacies, or blood donors"
-                className="w-full px-4 py-2 outline-none text-gray-700"
-              />
-              <div className="absolute top-1/2 right-4 -translate-y-1/2">
-                <Image src={vector} alt="search icon" width={20} height={20} />
-              </div>
-            </div>
-          </form>
         </div>
 
         {/* --- Slider Section --- */}
@@ -127,7 +92,7 @@ export default function Page() {
                     Book appointments with verified specialists in just a few
                     clicks.
                   </p>
-                  <button 
+                  <button
                     onClick={() => router.push("/user/search-doctors")}
                     className="bg-[#2BBBC5] text-white px-5 py-2 rounded-full hover:bg-primary/90 transition-all">
                     Find a Doctor
@@ -219,7 +184,7 @@ export default function Page() {
                 <p className="text-[#8E8E8E] text-sm mb-4">
                   {card.description}
                 </p>
-                <button 
+                <button
                   onClick={() => {
                     if (card.id === 1) {
                       router.push("/user/search-doctors");
@@ -235,7 +200,8 @@ export default function Page() {
         </div>
       </section>
 
-      {/* Accord */}
+      {/* Top Reated */}
+      <TopRatedDoctors />
     </div>
   );
 }
