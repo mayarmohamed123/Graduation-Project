@@ -1,6 +1,7 @@
 import Image from "next/image";
 import React from "react";
 import WorkImage from "@/assets/work.svg";
+import WaveLines from "../shared/WaveLines";
 
 export default function WorkSection() {
   const steps = [
@@ -31,7 +32,7 @@ export default function WorkSection() {
   ];
 
   return (
-    <section className="px-8 md:px-20 py-20 bg-gray-50">
+    <section id="work" className="px-8 md:px-20 py-20 bg-gray-50">
       {/* Heading */}
       <div className="text-center mb-16">
         <h2 className="heading mb-4">How It Works</h2>
@@ -43,7 +44,9 @@ export default function WorkSection() {
       </div>
 
       {/* Content Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto relative">
+        <WaveLines top="30px" left="550px" />
+        <WaveLines top="450px" left="1000px" />
         <div className="flex flex-col items-start relative">
           {steps.map((step, index) => (
             <div key={index} className="flex items-start mb-10 relative">
@@ -69,7 +72,7 @@ export default function WorkSection() {
         </div>
 
         {/* Right Side - Image */}
-        <div className="flex justify-center">
+        <div className="flex justify-center z-10">
           <Image
             src={WorkImage}
             alt="How it works illustration"

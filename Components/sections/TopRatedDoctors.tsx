@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { TopRatedDoctor } from "@/types";
+import { Doctor } from "@/types";
 
 export default function TopRatedDoctors() {
-  const [doctors, setDoctors] = useState<TopRatedDoctor[]>([]);
+  const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

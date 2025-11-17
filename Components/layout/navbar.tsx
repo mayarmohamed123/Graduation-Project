@@ -4,7 +4,7 @@ import { Menu, X, LogOut } from "lucide-react";
 import React, { useState } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { Button } from "../ui/button";
+import { Button } from "../ui";
 import Image from "next/image";
 import Link from "next/link";
 import sehhaLogo from "@/assets/Sehaa 1.png";
@@ -15,10 +15,11 @@ import profileIcon from "@/assets/iconamoon_profile.svg";
 
 export default function Navbar() {
   const { data: session, status } = useSession();
+  const [activeLink, setActiveLink] = useState("home");
   const router = useRouter();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const isLoggedIn = !!session;
-  
+
   // Show loading state while session is being fetched
   if (status === "loading") {
     return (
@@ -43,12 +44,12 @@ export default function Navbar() {
   }
 
   const navLinks = [
-    { name: "Home", href: "/" },
-    { name: "About", href: "/about" },
-    { name: "Services", href: "/services" },
-    { name: "How It Works", href: "/how-it-works" },
-    { name: "Join Us", href: "/join" },
-    { name: "Contact", href: "/contact" },
+    { name: "Home", href: "#home" },
+    { name: "About", href: "#about" },
+    { name: "Services", href: "#services" },
+    { name: "How It Works", href: "#work" },
+    { name: "Join Us", href: "#join" },
+    { name: "Contact", href: "#contact" },
   ];
 
   return (
@@ -77,7 +78,13 @@ export default function Navbar() {
                   <Link
                     key={link.name}
                     href={link.href}
-                    className="text-primary/900 hover:text-primary transition">
+                    onClick={() => setActiveLink(link.href.replace("#", ""))}
+                    className={`relative text-primary/900 hover:text-primary transition 
+                      ${
+                        activeLink === link.href.replace("#", "")
+                          ? "active-link"
+                          : ""
+                      }`}>
                     {link.name}
                   </Link>
                 ))}

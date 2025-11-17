@@ -4,14 +4,21 @@ export interface Doctor {
   email: string;
   specialty: string;
   isApproved: boolean;
-  gender: "male" | "female";
+  gender: string;
+  averageRating: number;
+  username: string;
   consultationPrice: number;
-  consultationType: "inClinic" | "homeVisit";
+  consultationType: string;
   clinicName: string;
   clinicPhone: string;
   clinicImagePath: string;
-  doctorImage: string | null;
+  doctorImage: string;
   city: string;
+  postalCode: string;
+  country: string;
+  street: string;
+  latitude: number;
+  longitude: number;
 }
 
 export interface FilterState {

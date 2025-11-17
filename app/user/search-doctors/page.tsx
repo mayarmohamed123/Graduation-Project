@@ -47,17 +47,17 @@ export default function SearchDoctorsPage() {
   const [searchInput, setSearchInput] = useState("");
 
   // Helper function to extract name from email
-  const getDoctorName = (email: string): string => {
-    const namePart = email.split("@")[0];
-    return namePart
-      .split(/[._-]/)
-      .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-      .join(" ");
-  };
+  // const getDoctorName = (email: string): string => {
+  //   const namePart = email.split("@")[0];
+  //   return namePart
+  //     .split(/[._-]/)
+  //     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+  //     .join(" ");
+  // };
 
   // Handle search input change
-  const handleSearchChange = (value: string) => {
-    setSearchInput(value);
+  const handleSearchChange = async (query: string) => {
+    setSearchInput(query);
   };
 
   // Handle filter changes
@@ -148,7 +148,7 @@ export default function SearchDoctorsPage() {
             <h3 className="text-4xl font-semibold text-gray-900">Doctor</h3>
           </div>
           {/* Search Input */}
-          <SearchInput />
+          <SearchInput onSearch={handleSearchChange} />
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
@@ -351,7 +351,7 @@ export default function SearchDoctorsPage() {
                           {doctor.doctorImage ? (
                             <Image
                               src={image}
-                              alt={`Dr. ${getDoctorName(doctor.email)}`}
+                              alt={`Dr. ${doctor.username}`}
                               width={400}
                               height={192}
                               className="h-full w-full rounded-xl"
@@ -368,7 +368,7 @@ export default function SearchDoctorsPage() {
                           {/* Doctor Name and Specialty */}
                           <div className="mb-4">
                             <h3 className="text-xl font-semibold mb-1 text-black">
-                              Dr. {getDoctorName(doctor.email)}
+                              Dr. {doctor.username}
                             </h3>
                             <p className="text-gray-700 text-sm">
                               {doctor.specialty}

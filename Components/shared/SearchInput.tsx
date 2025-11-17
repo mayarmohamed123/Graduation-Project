@@ -3,11 +3,15 @@ import Image from "next/image";
 import React, { useState } from "react";
 import vector from "@/assets/Vector.svg";
 
-export default function SearchInput() {
+interface SearchInputProps {
+  onSearch: (query: string) => void;
+}
+
+export default function SearchInput({ onSearch }: SearchInputProps) {
   const [query, setQuery] = useState<string>("");
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Searching for:", query);
+    onSearch(query);
   };
   return (
     <form
@@ -22,7 +26,13 @@ export default function SearchInput() {
           className="w-full px-4 py-2 outline-none text-gray-700"
         />
         <div className="absolute top-1/2 right-4 -translate-y-1/2">
-          <Image src={vector} alt="search icon" width={20} height={20} />
+          <Image
+            className="cursor-pointer"
+            src={vector}
+            alt="search icon"
+            width={20}
+            height={20}
+          />
         </div>
       </div>
     </form>

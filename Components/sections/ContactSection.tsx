@@ -2,11 +2,11 @@ import React from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Mail, MapPin, Phone } from "lucide-react";
-import { EmailInput, MessageTextarea } from "../shared";
+import { EmailInput, MessageTextarea } from "@/Components";
 
 export default function ContactSection() {
   return (
-    <section className="px-8 md:px-20 py-20 bg-gray-50 relative">
+    <section id="contact" className="px-8 md:px-20 py-20 bg-gray-50 relative">
       {/* Heading */}
       <div className="text-center mb-16">
         <h2 className="heading mb-4">Contact Us</h2>

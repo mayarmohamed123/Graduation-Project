@@ -5,6 +5,10 @@
 @import "swiper/css/navigation";
 @import "swiper/css/pagination";
 
+html {
+  scroll-behavior: smooth;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -153,4 +157,19 @@
   border: 2.02px solid transparent;
   border-image: linear-gradient(98.64deg, #53ced6 23.06%, #b9ecef 55.19%);
   border-image-slice: 1;
+}
+
+.active-link {
+  color: var(--primary);
+}
+
+.active-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 3px;
+  border-radius: 8px;
+  background: linear-gradient(to right, #a8e7eb, #58d2da);
 }

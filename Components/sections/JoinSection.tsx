@@ -20,7 +20,7 @@ export default function JoinSection() {
   ];
 
   return (
-    <section className="px-8 md:px-20 py-20 ">
+    <section id="join" className="px-8 md:px-20 py-20 ">
       {/* Heading */}
       <div className="text-center mb-16">
         <h2 className="heading mb-4">Join Us</h2>

@@ -13,7 +13,7 @@ export default function page() {
             <h3 className="text-4xl font-semibold text-gray-900">Medicine</h3>
           </div>
           {/* Search Input */}
-          <SearchInput />
+          {/* <SearchInput /> */}
         </div>
       </div>
     </div>

@@ -4,6 +4,7 @@ import Pharmacy from "@/assets/Frame 5 (1).svg";
 import Blood from "@/assets/Frame 5 (2).svg";
 import secure from "@/assets/Frame 5 (3).svg";
 import Image from "next/image";
+import { WavesLines } from "../shared";
 
 export default function ServicesSection() {
   const services = [
@@ -33,9 +34,13 @@ export default function ServicesSection() {
     },
   ];
   return (
-    <section className="px-8 md:px-20 py-20 bg-white max-w-8xl mx-auto">
+    <section
+      id="services"
+      className="px-8 md:px-20 py-20 bg-white max-w-8xl mx-auto relative">
+      <WavesLines top="218px" left="30px" className="mb-5" />
+      <WavesLines top="607px" left="1183px" className="mt-1" />
       {/* Heading */}
-      <div className="text-center mb-16">
+      <div className="text-center mb-20">
         <h2 className="heading">Top Services We Offer</h2>
         <p className="paragraph">
           In today’s fast-moving world, your health deserves care that’s both
@@ -46,7 +51,7 @@ export default function ServicesSection() {
       </div>
 
       {/* Services Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
         {services.map((service, index) => (
           <div
             key={index}

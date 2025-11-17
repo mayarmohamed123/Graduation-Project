@@ -4,7 +4,7 @@ import aboutImage from "@/assets/about.svg";
 
 export default function AboutSection() {
   return (
-    <section className="px-8 md:px-20 py-20 bg-gray-50">
+    <section id="about" className="px-8 md:px-20 py-20 bg-gray-50">
       {/* Section Title */}
       <h2 className="heading text-center mb-16">About Sehha</h2>
 

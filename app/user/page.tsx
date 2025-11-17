@@ -201,7 +201,7 @@ export default function Page() {
       </section>
 
       {/* Top Reated */}
-      <TopRatedDoctors />
+      {/* <TopRatedDoctors /> */}
     </div>
   );
 }
