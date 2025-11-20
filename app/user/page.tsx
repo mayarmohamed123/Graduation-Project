@@ -176,6 +176,7 @@ export default function Page() {
                 src={card.image}
                 alt={card.alt}
                 className="w-full h-56 object-cover"
+                priority
               />
               <div className="p-6">
                 <h3 className="text-[#2BBBC5] text-2xl font-medium mb-2">
@@ -201,7 +202,7 @@ export default function Page() {
       </section>
 
       {/* Top Reated */}
-      {/* <TopRatedDoctors /> */}
+      <TopRatedDoctors />
     </div>
   );
 }

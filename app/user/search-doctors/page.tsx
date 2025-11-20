@@ -7,13 +7,14 @@ import Image from "next/image";
 import { useDoctors } from "@/hook/useDoctors";
 import { FilterState } from "@/types/doctors";
 import { useAuthToken } from "@/hook/useAuthToken";
-import { SearchInput } from "@/Components";
+import { LoadingSpinner, SearchInput } from "@/Components";
 import PrvButton from "@/Components/shared/prvButton";
 import { Button } from "@/Components/ui/button";
 import SpecialtyIcon from "@/Components/shared/SpecialtyIcon";
 import { RadioGroup, RadioGroupItem } from "@/Components/ui/radio-group";
 import { Label } from "@/Components/ui/label";
 import { Checkbox } from "@/Components/ui/checkbox";
+import Link from "next/link";
 
 // Medical specialties list
 const specialties = [
@@ -45,15 +46,6 @@ export default function SearchDoctorsPage() {
   });
 
   const [searchInput, setSearchInput] = useState("");
-
-  // Helper function to extract name from email
-  // const getDoctorName = (email: string): string => {
-  //   const namePart = email.split("@")[0];
-  //   return namePart
-  //     .split(/[._-]/)
-  //     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-  //     .join(" ");
-  // };
 
   // Handle search input change
   const handleSearchChange = async (query: string) => {
@@ -110,11 +102,7 @@ export default function SearchDoctorsPage() {
 
   // Show loading while checking authentication
   if (sessionStatus === "loading" || authLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   // Show login prompt if not authenticated
@@ -317,9 +305,7 @@ export default function SearchDoctorsPage() {
             </div>
 
             {loading ? (
-              <div className="flex justify-center items-center py-12">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-              </div>
+              <LoadingSpinner />
             ) : error ? (
               <div className="text-center py-12">
                 <p className="text-red-600 text-lg mb-4">{error}</p>
@@ -355,6 +341,7 @@ export default function SearchDoctorsPage() {
                               width={400}
                               height={192}
                               className="h-full w-full rounded-xl"
+                              priority
                             />
                           ) : (
                             <div className="text-5xl">
@@ -397,9 +384,11 @@ export default function SearchDoctorsPage() {
                           </div>
 
                           {/* Book Now Button */}
-                          <button className="w-full bg-primary text-white py-3 px-4 rounded-xl font-medium">
-                            Book Now
-                          </button>
+                          <Link href={`/user/appointment/${doctor.id}`}>
+                            <button className="w-full bg-primary text-white py-3 px-4 rounded-xl font-medium">
+                              Book Now
+                            </button>
+                          </Link>
                         </div>
                       </div>
                     );

@@ -1,22 +1,33 @@
-import { SearchInput } from "@/Components";
+"use client";
+
+import { useEffect, useState } from "react";
+import { LoadingSpinner, SearchInput } from "@/Components";
 import PrvButton from "@/Components/shared/prvButton";
 import { Pharmacy } from "@/types";
 import Image from "next/image";
-import { Star, MapPin, Clock, Truck } from "lucide-react";
+import { Star } from "lucide-react";
+import { pharmacyService } from "@/Services/pharmacies";
 
-async function getPharmacies(): Promise<Pharmacy[]> {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/Pharmacy`, {
-    next: { revalidate: 60 },
-  });
+export default function Page() {
+  const [pharmacies, setPharmacies] = useState<Pharmacy[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  if (!res.ok) throw new Error("Failed to load pharmacies");
+  useEffect(() => {
+    const loadPharmacies = async () => {
+      try {
+        const data = await pharmacyService.getPharmacies();
+        setPharmacies(data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const json = await res.json();
-  return json.data || json;
-}
+    loadPharmacies();
+  }, []);
 
-export default async function Page() {
-  const pharmacies = await getPharmacies();
+  if (loading) return <LoadingSpinner />;
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -30,14 +41,21 @@ export default async function Page() {
         </div>
 
         {/* Pharmacy Cards */}
+        <div className="flex flex-col">
+          <h3 className="heading">Top Pharmacies Near You</h3>
+          <p className="font-normal text-[#8E8E8E] text-xl mb-5 ">
+            Find trusted pharmacies that offer quick delivery and quality
+            service.
+          </p>
+        </div>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {pharmacies.map((pharmacy) => {
             const imgUrl = `${process.env.NEXT_PUBLIC_API_IMAGE_BASE_URL}${pharmacy.imagePath}`;
-
             return (
               <div
                 key={pharmacy.id}
-                className="rounded-2xl bg-white shadow-md hover:shadow-lg transition p-4 border border-gray-200">
+                className="rounded-2xl bg-white shadow-md hover:shadow-lg transition p-4 border border-[#58D2DA]">
                 {/* Image */}
                 <div className="h-48 w-full rounded-xl overflow-hidden">
                   <Image
@@ -64,27 +82,24 @@ export default async function Page() {
 
                 {/* Address */}
                 <p className="text-gray-700 text-sm mt-1 flex items-center gap-1">
-                  <MapPin size={16} className="text-red-400" />
-                  {pharmacy.city} – {pharmacy.street}
+                  📍{pharmacy.city} – {pharmacy.street}
                 </p>
 
                 {/* Working Hours */}
                 <p className="flex items-center gap-1 text-gray-700 text-sm">
-                  <Clock size={16} className="text-blue-500" />
-                  Open: 8:00 AM – 12:00 AM
+                  🕐 Open: 8:00 AM – 12:00 AM
                 </p>
 
                 {/* Delivery */}
                 <p className="flex items-center gap-1 text-gray-700 text-sm">
-                  <Truck size={16} className="text-orange-500" />
-                  Fast delivery available
+                  🚚 Fast delivery available
                 </p>
                 <p className="text-gray-700 text-sm ml-6">
                   Delivery within 24 hours
                 </p>
 
                 {/* Button */}
-                <button className="mt-4 bg-teal-500 hover:bg-teal-600 text-white w-full py-2 rounded-full font-medium">
+                <button className="mt-4 bg-[#2BBBC5] text-white w-full py-2 rounded-full font-medium">
                   Visit Pharmacy
                 </button>
               </div>

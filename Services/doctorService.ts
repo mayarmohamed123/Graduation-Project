@@ -1,6 +1,11 @@
 // services/doctorService.ts
-import { Doctor } from "@/types/doctors";
-import { FilterParams, fetchWithAuth } from "./api";
+import {
+  AppointmentResponse,
+  BookAppointmentData,
+  Doctor,
+  Review,
+} from "@/types/doctors";
+import { FilterParams, fetchWithAuth, postWithAuth } from "./api";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -40,5 +45,19 @@ export const doctorService = {
 
     // Otherwise use the general filter endpoint
     return await doctorService.getDoctorsWithFilters(filters);
+  },
+  // Get doctor by ID
+  getDoctorById: async (id: number): Promise<Doctor> => {
+    return await fetchWithAuth(`${baseUrl}/doctors/${id}`);
+  },
+  // Book appointment in doctor clinic
+  bookAppointmentInClinic: async (
+    data: BookAppointmentData
+  ): Promise<AppointmentResponse> => {
+    return await postWithAuth(`${baseUrl}/appointment/book`, data);
+  },
+  // Get Doctor Reviews
+  GetDoctorReviews: async (id: number): Promise<Review> => {
+    return await fetchWithAuth(`${baseUrl}/Review/doctor/${id}`);
   },
 };

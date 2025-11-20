@@ -11,7 +11,13 @@ export default function Footer() {
         {/* 1️⃣ Logo & Description */}
         <div>
           <div className="flex items-center gap-2 mb-4">
-            <Image src={sehhaLogo} alt="Sehaa Logo" width={40} height={40} />
+            <Image
+              src={sehhaLogo}
+              alt="Sehaa Logo"
+              width={40}
+              height={40}
+              priority
+            />
             <h2 className="text-xl font-semibold">Sehaa</h2>
           </div>
           <p className="text-sm text-gray-100 mb-6">

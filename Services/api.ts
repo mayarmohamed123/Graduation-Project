@@ -1,8 +1,5 @@
 // services/api.ts
 import { authService } from "@/Services/authService";
-import { Doctor } from "@/types/doctors";
-
-const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export interface FilterParams {
   specialty?: string;
@@ -33,6 +30,46 @@ export const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
 
   if (response.status === 401) {
     // Token expired or invalid
+    authService.logout();
+    throw new Error("Session expired. Please log in again.");
+  }
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => null);
+    throw new Error(
+      errorData?.message ||
+        `API error: ${response.status} ${response.statusText}`
+    );
+  }
+
+  return response.json();
+};
+// POST request with token + JSON body
+export const postWithAuth = async (
+  url: string,
+  data: any,
+  options: RequestInit = {}
+) => {
+  const token = authService.getToken();
+
+  if (!token) {
+    throw new Error("No authentication token found. Please log in again.");
+  }
+
+  const headers = {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+    ...options.headers,
+  };
+
+  const response = await fetch(url, {
+    method: "POST",
+    body: JSON.stringify(data),
+    ...options,
+    headers,
+  });
+
+  if (response.status === 401) {
     authService.logout();
     throw new Error("Session expired. Please log in again.");
   }

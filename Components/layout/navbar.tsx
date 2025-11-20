@@ -123,6 +123,7 @@ export default function Navbar() {
                     alt="Favorite"
                     width={24}
                     height={24}
+                    loading="eager"
                     className="cursor-pointer hover:opacity-70 transition"
                   />
                 </Link>
@@ -132,6 +133,7 @@ export default function Navbar() {
                     alt="Cart"
                     width={24}
                     height={24}
+                    loading="eager"
                     className="cursor-pointer hover:opacity-70 transition"
                   />
                 </Link>
@@ -141,6 +143,7 @@ export default function Navbar() {
                     alt="Notifications"
                     width={24}
                     height={24}
+                    loading="eager"
                     className="cursor-pointer hover:opacity-70 transition"
                   />
                 </Link>
@@ -150,6 +153,7 @@ export default function Navbar() {
                     alt="Profile"
                     width={24}
                     height={24}
+                    loading="eager"
                     className="cursor-pointer hover:opacity-70 transition"
                   />
                 </Link>

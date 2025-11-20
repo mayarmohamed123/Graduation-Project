@@ -17,6 +17,7 @@ export default function PrvButton() {
         alt="Previous page"
         className="transition-transform duration-200 hover:scale-110"
         priority
+        style={{ width: "auto", height: "auto" }}
         onClick={() => router.back()}
       />
     </div>
