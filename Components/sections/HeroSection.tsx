@@ -30,6 +30,7 @@ export default function HeroSection() {
           src={HeroSectionPhoto}
           alt="Hero illustration"
           fill
+          sizes="(max-width: 768px) 100vw, 588px"
           className="object-contain"
           priority
         />

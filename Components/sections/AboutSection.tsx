@@ -16,6 +16,7 @@ export default function AboutSection() {
             src={aboutImage}
             alt="About Sehaa"
             fill
+            sizes="(max-width: 768px) 100vw, 587px"
             className="object-contain rounded-2xl shadow-md"
             priority
           />

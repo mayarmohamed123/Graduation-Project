@@ -7,3 +7,7 @@ export { default as SpecialtyIcon } from "./SpecialtyIcon";
 export { default as LoadingSpinner } from "./LoadingSpinner";
 export { default as AddReviewDialog } from "./AddReview";
 export { default as DoctorReviews } from "./DoctorReviews";
+export { default as PersonalInfo } from "./PersonalInfo";
+export { default as Orders } from "./Orders";
+export { default as PasswordManagement } from "./PasswordManagement";
+export { default as Appointments } from "./Appointments";

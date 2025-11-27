@@ -21,12 +21,5 @@ export default function RegisterLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50`}>
-        {children}
-      </body>
-    </html>
-  );
+  return <>{children}</>;
 }

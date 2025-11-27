@@ -1,12 +1,7 @@
-export interface User {
-  id: string;
-  email: string;
-  userName: string;
-  roles?: string[];
-  phoneNumber?: string;
-  profileImage?: string;
-  address?: string;
-}
+import { User } from "./user";
+
+// Re-export User for backward compatibility
+export type { User };
 
 export interface AuthResponse {
   user: User;

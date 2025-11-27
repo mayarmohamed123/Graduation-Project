@@ -1,134 +1,239 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import { Camera, Eye, EyeOff } from "lucide-react";
+import UserIcon from "@/assets/User Rounded.svg";
+import OrdersIcon from "@/assets/orders.svg";
+import LockIcon from "@/assets/Lock.svg";
+import LogoutIcon from "@/assets/Logout 4.svg";
+import AppointmentIcon from "@/assets/appointment.svg";
+import profileImage from "@/assets/profile-2user.svg";
+import { useUser } from "@/hook/useUser";
+import { toast } from "react-hot-toast";
+import { userService } from "@/Services/userService";
 import {
-  User,
-  ShoppingCart,
-  Calendar,
-  CreditCard,
-  Lock,
-  LogOut,
-} from "lucide-react";
+  Appointments,
+  Orders,
+  PasswordManagement,
+  PersonalInfo,
+} from "@/Components";
+import type { UserProfileForm } from "@/types";
 
 export default function ProfilePage() {
-  const [user, setUser] = useState({
-    username: "Sara Mohamed",
-    email: "SaraMohamed@gmail.com",
-    phone: "01123456789",
-    address: "129, El-Nasr Street, Cairo, Egypt",
-    image: "/profile-1.jpg",
+  const { user: userData, isLoading, refetchUser } = useUser();
+  const [user, setUser] = useState<UserProfileForm>({
+    username: "",
+    email: "",
+    phone: "",
+    address: "",
+    image: profileImage,
   });
+
+  const [activeTab, setActiveTab] = useState("personal");
+
+  useEffect(() => {
+    if (userData) {
+      Promise.resolve().then(() => {
+        setUser({
+          username: userData.userName || "",
+          email: userData.email || "",
+          phone: userData.phoneNumber || "",
+          address: userData.address || "",
+          image: userData.profileImage
+            ? `${process.env.NEXT_PUBLIC_API_IMAGE_BASE_URL}${userData.profileImage}`
+            : profileImage,
+        });
+      });
+    }
+  }, [userData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUser({ ...user, [e.target.name]: e.target.value });
   };
 
-  const handleSave = () => {
-    console.log("Saved data:", user);
-    // هنا يمكنك إرسال البيانات إلى API
+  const handleSave = async () => {
+    try {
+      // Call the API to update user data
+      const response = await userService.updateProfile({
+        userName: user.username,
+        email: user.email,
+        address: user.address,
+        phoneNumber: user.phone,
+      });
+      
+      // Show success toast with the message from API response
+      toast.success(response.message);
+      
+      // Refetch user data to update UI
+      await refetchUser();
+    } catch (error) {
+      // Show error toast with error message
+      toast.error(error instanceof Error ? error.message : "Failed to update profile");
+    }
   };
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleCameraClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleProfilePictureChange = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file");
+      return;
+    }
+
+    // Validate file size (e.g., max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image size should be less than 5MB");
+      return;
+    }
+
+    try {
+      // Check if user has a profile image already
+      const hasProfileImage =
+        userData?.profileImage && userData.profileImage !== "";
+
+      let response;
+      if (hasProfileImage) {
+        // Update existing profile picture
+        response = await userService.updateProfilePicture(file);
+      } else {
+        // Upload profile picture for the first time
+        response = await userService.uploadProfilePicture(file);
+      }
+
+      // Show success toast with message from API
+      toast.success(response.message);
+
+      // Update local preview
+      const imageUrl = URL.createObjectURL(file);
+      setUser({ ...user, image: imageUrl });
+
+      // Refetch user data to get the updated profile image from server
+      await refetchUser();
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Failed to update profile picture"
+      );
+    }
+  };
+
+  const menuItems = [
+    { id: "personal", label: "Personal information", icon: UserIcon },
+    { id: "orders", label: "Orders", icon: OrdersIcon },
+    { id: "appointments", label: "Appointments", icon: AppointmentIcon },
+    { id: "password", label: "Password management", icon: LockIcon },
+  ];
+
+
+
+
+
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          <p className="mt-4 text-gray-600">Loading profile...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen max-w-7xl m-auto">
       {/* Sidebar */}
-      <aside className="w-64 bg-white shadow-md p-6 flex flex-col">
+      <aside className="w-80 bg-[#E9F9FA] rounded-3xl shadow-lg p-8 flex flex-col my-10 ">
         <div className="flex flex-col items-center mb-8">
-          <div className="relative w-24 h-24 mb-2">
+          <div className="relative w-28 h-28 mb-4 group">
             <Image
               src={user.image}
               alt="Profile"
-              className="rounded-full"
+              className="rounded-full object-cover"
               fill
-              style={{ objectFit: "cover" }}
+              sizes="112px"
+              loading="eager"
+            />
+            <button
+              type="button"
+              onClick={handleCameraClick}
+              className="absolute bottom-0 right-0 bg-primary text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition">
+              <Camera size={18} />
+            </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleProfilePictureChange}
+              className="hidden"
             />
           </div>
-          <h2 className="text-lg font-semibold">{user.username}</h2>
-          <p className="text-sm text-gray-500">{user.address.split(",")[0]}</p>
+          <h2 className="text-lg font-bold text-gray-900">{user.username}</h2>
+          <p className="text-sm text-gray-500 text-center mt-1">{user.email}</p>
         </div>
 
-        <nav className="flex-1">
-          <ul className="space-y-4">
-            <li className="flex items-center gap-2 text-white bg-teal-500 p-2 rounded-md">
-              <User size={18} /> Personal information
-            </li>
-            <li className="flex items-center gap-2 text-gray-700 hover:text-teal-500 cursor-pointer">
-              <ShoppingCart size={18} /> Orders
-            </li>
-            <li className="flex items-center gap-2 text-gray-700 hover:text-teal-500 cursor-pointer">
-              <Calendar size={18} /> Appointments
-            </li>
-            <li className="flex items-center gap-2 text-gray-700 hover:text-teal-500 cursor-pointer">
-              <CreditCard size={18} /> Wallets
-            </li>
-            <li className="flex items-center gap-2 text-gray-700 hover:text-teal-500 cursor-pointer">
-              <Lock size={18} /> Password management
-            </li>
-            <li className="flex items-center gap-2 text-red-500 hover:text-red-600 cursor-pointer mt-6">
-              <LogOut size={18} /> Log out
-            </li>
-          </ul>
+        <nav className="flex-1 space-y-2">
+          {menuItems.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => setActiveTab(item.id)}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition ${
+                activeTab === item.id
+                  ? "bg-primary text-white border-l-4 border-primary"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}>
+              <Image 
+                src={item.icon} 
+                alt={item.label} 
+                width={20} 
+                height={20}
+                style={{ height: 'auto' }}
+              />
+              <span className="font-medium">{item.label}</span>
+            </button>
+          ))}
         </nav>
+
+        <button className="flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 rounded-lg transition w-full">
+          <Image 
+            src={LogoutIcon} 
+            alt="logout" 
+            width={20} 
+            height={20}
+            style={{ height: 'auto' }}
+          />
+          <span className="font-medium">Log out</span>
+        </button>
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 p-10">
-        <h1 className="text-2xl font-semibold mb-6">Personal information</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl">
-          <div>
-            <label className="block text-sm font-medium text-gray-600 mb-1">
-              Username
-            </label>
-            <input
-              type="text"
-              name="username"
-              value={user.username}
+      <main className="flex-1 p-8">
+        <div className="max-w-4xl">
+          {activeTab === "personal" && (
+            <PersonalInfo
+              user={user}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
+              onSave={handleSave}
             />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-600 mb-1">
-              Phone
-            </label>
-            <input
-              type="text"
-              name="phone"
-              value={user.phone}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-600 mb-1">
-              Email
-            </label>
-            <input
-              type="email"
-              name="email"
-              value={user.email}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-600 mb-1">
-              Address
-            </label>
-            <input
-              type="text"
-              name="address"
-              value={user.address}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
-            />
-          </div>
+          )}
+
+          {activeTab === "orders" && <Orders />}
+
+          {activeTab === "appointments" && <Appointments />}
+
+
+          {activeTab === "password" && <PasswordManagement />}
         </div>
-        <button
-          onClick={handleSave}
-          className="mt-6 bg-teal-500 text-white px-6 py-2 rounded-full hover:bg-teal-600 transition">
-          Save Changes
-        </button>
       </main>
     </div>
   );

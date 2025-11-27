@@ -1,13 +1,7 @@
-import { User } from "@/types";
+import { User, UserSliceState } from "@/types";
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 
-interface UserState {
-  user: User | null;
-  isLoading: boolean;
-  error: string | null;
-}
-
-const initialState: UserState = {
+const initialState: UserSliceState = {
   user: null,
   isLoading: false,
   error: null,
