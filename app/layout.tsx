@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import SessionProvider from "@/Components/auth/SessionProvider";
+import { Toaster } from "react-hot-toast";
+import ReduxProvider from "@/Components/auth/ReduxProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,7 +30,10 @@ export default function RootLayout({
       <body
         suppressHydrationWarning
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <SessionProvider>{children}</SessionProvider>
+        <SessionProvider>
+          <ReduxProvider>{children}</ReduxProvider>
+          <Toaster />
+        </SessionProvider>
       </body>
     </html>
   );

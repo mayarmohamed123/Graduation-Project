@@ -1,8 +1,11 @@
 export interface User {
   id: string;
   email: string;
-  name: string;
-  image?: string;
+  userName: string;
+  roles?: string[];
+  phoneNumber?: string;
+  profileImage?: string;
+  address?: string;
 }
 
 export interface AuthResponse {
@@ -17,7 +20,11 @@ export interface LoginCredentials {
 }
 
 export interface RegisterCredentials {
-  name: string;
+  username: string;
   email: string;
+  phonenumber: string;
+  address: string;
   password: string;
+  confirmpassword: string;
+  role: string;
 }

@@ -47,7 +47,7 @@ export const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
 // POST request with token + JSON body
 export const postWithAuth = async (
   url: string,
-  data: any,
+  data: unknown,
   options: RequestInit = {}
 ) => {
   const token = authService.getToken();

@@ -1,3 +1,5 @@
+export const revalidate = 3600; // Revalidate static home every hour
+
 import {
   AboutSection,
   ContactSection,

@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import { Button } from "../ui/button";
 import Image from "next/image";
 import prev from "@/assets/pre.svg";
 import { useRouter } from "next/navigation";

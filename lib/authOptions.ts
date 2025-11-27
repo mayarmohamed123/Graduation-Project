@@ -1,9 +1,28 @@
 // lib/authOptions.ts
 import { NextAuthOptions } from "next-auth";
+import { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
 import { authService } from "@/Services/authService";
+
+const normalizeRoles = (roles?: string[] | string) => {
+  if (!roles) return [];
+  return Array.isArray(roles) ? roles : [roles];
+};
+
+type UserMeta = {
+  roles?: string[];
+  accessToken?: string;
+};
+
+type TokenMeta = JWT & {
+  roles?: string[];
+  accessToken?: string;
+};
+
+const withUserMeta = <T extends object>(user: T) => user as T & UserMeta;
+const withTokenMeta = (token: JWT) => token as TokenMeta;
 
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
@@ -27,12 +46,13 @@ export const authOptions: NextAuthOptions = {
 
           // Set token in cookies
           authService.setToken(response.token);
+          const roles = normalizeRoles(response.user.roles);
 
           return {
             id: response.user.email,
             email: response.user.email,
             name: response.user.userName,
-            roles: response.user.roles,
+            roles,
             accessToken: response.token,
           };
         } catch (error) {
@@ -56,7 +76,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ user, account, profile }) {
+    async signIn({ user, account }) {
       // Handle OAuth sign in (Google/Facebook)
       if (account?.provider === "google" || account?.provider === "facebook") {
         try {
@@ -68,13 +88,15 @@ export const authOptions: NextAuthOptions = {
 
           // Store the token in cookies
           authService.setToken(response.token);
+          const roles = normalizeRoles(response.user.roles);
 
           // Update user object with data from your API
           user.id = response.user.email;
           user.email = response.user.email;
           user.name = response.user.userName;
-          (user as any).roles = response.user.roles;
-          (user as any).accessToken = response.token;
+          const metaUser = withUserMeta(user);
+          metaUser.roles = roles;
+          metaUser.accessToken = response.token;
 
           return true;
         } catch (error) {
@@ -87,23 +109,27 @@ export const authOptions: NextAuthOptions = {
 
     async jwt({ token, user, account, trigger, session }) {
       // Initial sign in
+      const tokenWithMeta = withTokenMeta(token);
+
       if (account && user) {
         if (account.provider === "credentials") {
           // For credentials login
-          token.accessToken = (user as any).accessToken;
-          token.roles = (user as any).roles;
+          const metaUser = withUserMeta(user);
+          tokenWithMeta.accessToken = metaUser.accessToken;
+          tokenWithMeta.roles = metaUser.roles ?? [];
         }
         // For OAuth, we've already handled the token in signIn callback
         else if (
           account.provider === "google" ||
           account.provider === "facebook"
         ) {
-          token.accessToken = (user as any).accessToken;
-          token.roles = (user as any).roles;
+          const metaUser = withUserMeta(user);
+          tokenWithMeta.accessToken = metaUser.accessToken;
+          tokenWithMeta.roles = metaUser.roles ?? [];
         }
 
         return {
-          ...token,
+          ...tokenWithMeta,
           ...user,
         };
       }
@@ -115,22 +141,23 @@ export const authOptions: NextAuthOptions = {
 
       // Always ensure we have the latest token from cookies
       const cookieToken = authService.getToken();
-      if (cookieToken && cookieToken !== token.accessToken) {
-        token.accessToken = cookieToken;
+      if (cookieToken && cookieToken !== tokenWithMeta.accessToken) {
+        tokenWithMeta.accessToken = cookieToken;
       }
 
-      return token;
+      return tokenWithMeta;
     },
 
     async session({ session, token }) {
+      const tokenWithMeta = withTokenMeta(token);
       session.user = {
         id: token.id as string,
         email: token.email as string,
         name: token.name as string,
         image: token.picture as string,
-        roles: token.roles as string[],
+        roles: tokenWithMeta.roles ?? [],
       };
-      session.accessToken = token.accessToken as string;
+      session.accessToken = tokenWithMeta.accessToken as string;
 
       return session;
     },

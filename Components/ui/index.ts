@@ -5,4 +5,5 @@ export * from "./input";
 export * from "./label";
 export * from "./radio-group";
 export * from "./textarea";
-export * from "./calendar"
+export * from "./calendar";
+export * from "./dialog";

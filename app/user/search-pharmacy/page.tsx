@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { LoadingSpinner, SearchInput } from "@/Components";
+import { LoadingSpinner } from "@/Components";
 import PrvButton from "@/Components/shared/prvButton";
 import { Pharmacy } from "@/types";
 import Image from "next/image";

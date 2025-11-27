@@ -2,8 +2,10 @@
 import {
   AppointmentResponse,
   BookAppointmentData,
+  CreateSessionResponse,
   Doctor,
   Review,
+  VerifySessionResponse,
 } from "@/types/doctors";
 import { FilterParams, fetchWithAuth, postWithAuth } from "./api";
 
@@ -46,18 +48,67 @@ export const doctorService = {
     // Otherwise use the general filter endpoint
     return await doctorService.getDoctorsWithFilters(filters);
   },
+
   // Get doctor by ID
   getDoctorById: async (id: number): Promise<Doctor> => {
     return await fetchWithAuth(`${baseUrl}/doctors/${id}`);
   },
+
   // Book appointment in doctor clinic
   bookAppointmentInClinic: async (
     data: BookAppointmentData
   ): Promise<AppointmentResponse> => {
     return await postWithAuth(`${baseUrl}/appointment/book`, data);
   },
+
   // Get Doctor Reviews
   GetDoctorReviews: async (id: number): Promise<Review> => {
     return await fetchWithAuth(`${baseUrl}/Review/doctor/${id}`);
+  },
+
+  // add Review for Doctor
+  addReview: async (data: {
+    DoctorId: number;
+    Rating: number;
+    Comment: string;
+  }) => {
+    return await postWithAuth(`${baseUrl}/Review/add-review`, data);
+  },
+
+  // Update Review
+  updateReview: async (
+    reviewId: number,
+    data: { Rating: number; Comment: string }
+  ): Promise<{ message: string }> => {
+    return await fetchWithAuth(`${baseUrl}/Review/${reviewId}`, {
+      method: "PUT",
+      body: JSON.stringify(data),
+    });
+  },
+
+  // Delete Review
+  deleteReview: async (reviewId: number): Promise<{ message: string }> => {
+    return await fetchWithAuth(`${baseUrl}/Review/${reviewId}`, {
+      method: "DELETE",
+    });
+  },
+
+  // Create payment session after appointment
+  createPaymentSession: async (
+    appointmentId: number
+  ): Promise<CreateSessionResponse> => {
+    return await postWithAuth(`${baseUrl}/payments/create-session`, {
+      paymentFor: "Appointment",
+      appointmentId,
+    });
+  },
+
+  // Verify payment session after appointment
+  verifyPaymentSession: async (
+    sessionId: string
+  ): Promise<VerifySessionResponse> => {
+    return await fetchWithAuth(
+      `${baseUrl}/payments/verify-session?sessionId=${sessionId}`
+    );
   },
 };

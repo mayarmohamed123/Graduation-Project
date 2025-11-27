@@ -1,10 +1,7 @@
 "use client";
-import React, { useState } from "react";
-import { useSession, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { LogOut } from "lucide-react";
-import { Button } from "@/Components/ui/button";
 import donate from "@/assets/slider/donate.svg";
 import doctors from "@/assets/slider/doctors.svg";
 import medicine from "@/assets/slider/medicine.svg";

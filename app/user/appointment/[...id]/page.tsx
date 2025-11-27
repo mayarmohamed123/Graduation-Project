@@ -4,7 +4,12 @@ import { useEffect, useState } from "react";
 import { use } from "react";
 import Patients from "@/assets/profile-2user.svg";
 import Reviews from "@/assets/messages.svg";
-import { Calendar, LoadingSpinner } from "@/Components";
+import {
+  Button,
+  Calendar,
+  DoctorReviews,
+  LoadingSpinner,
+} from "@/Components";
 import { cn } from "@/lib/utils";
 import PrvButton from "@/Components/shared/prvButton";
 import { doctorService } from "@/Services/doctorService";
@@ -20,9 +25,58 @@ export default function AppointmentPage({
 
   const [doctor, setDoctor] = useState<Doctor | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [bookLoading, setBookLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string>("May 9, 2025");
   const [selectedTime, setSelectedTime] = useState<string>("10:00");
   const [loading, setLoading] = useState(true);
+
+  const handleBooking = async () => {
+    try {
+      setBookLoading(true); // START loading
+
+      if (!doctor) return;
+
+      const date = new Date(selectedDate);
+      const [hours, minutes] = selectedTime.split(":");
+      date.setHours(Number(hours));
+      date.setMinutes(Number(minutes));
+
+      const startAt = date.toISOString();
+      const endDate = new Date(date.getTime() + 30 * 60000);
+      const endAt = endDate.toISOString();
+
+      const payload = {
+        doctorId: doctor.id,
+        clinicId: doctor.clinicId,
+        startAt,
+        endAt,
+      };
+
+      // 1️⃣ Book the appointment
+      const bookingResponse = await doctorService.bookAppointmentInClinic(
+        payload
+      );
+
+      // 2️⃣ Create the payment session
+      const sessionResponse = await doctorService.createPaymentSession(
+        bookingResponse.appointment.id
+      );
+
+      // 3️⃣ Redirect to Stripe checkout
+      window.location.href = sessionResponse.sessionUrl;
+
+      // 4️⃣ Verify payment session (optional, can be handled in a separate page)
+      await doctorService.verifyPaymentSession(sessionResponse.sessionId);
+    } catch (err) {
+      if (err instanceof Error) {
+        alert(err.message || "Failed to book appointment");
+      } else {
+        alert("Failed to book appointment");
+      }
+    } finally {
+      setBookLoading(false); // STOP loading
+    }
+  };
 
   useEffect(() => {
     const fetchDoctor = async () => {
@@ -74,35 +128,6 @@ export default function AppointmentPage({
     ? `${process.env.NEXT_PUBLIC_API_IMAGE_BASE_URL}${doctor.doctorImage}`
     : textImage;
 
-  const handleBooking = async () => {
-    try {
-      if (!doctor) return;
-
-      const date = new Date(selectedDate);
-      const [hours, minutes] = selectedTime.split(":");
-
-      date.setHours(Number(hours));
-      date.setMinutes(Number(minutes));
-
-      const startAt = date.toISOString();
-
-      const endDate = new Date(date.getTime() + 30 * 60000);
-      const endAt = endDate.toISOString();
-
-      const payload = {
-        doctorId: doctor.id,
-        clinicId: doctor.clinicId,
-        startAt,
-        endAt,
-      };
-
-      const response = await doctorService.bookAppointmentInClinic(payload);
-      alert(response.message);
-    } catch (err: Error) {
-      alert(err.message || "Failed to book appointment");
-    }
-  };
-
   return (
     <div className="max-w-7xl mx-auto px-6 py-10">
       <div className="mb-8 flex">
@@ -114,7 +139,7 @@ export default function AppointmentPage({
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
         {/* Left card: Doctor info */}
-        <div className="lg:col-span-1 bg-white rounded-2xl shadow p-6 border">
+        <div className="lg:col-span-1 bg-[#E9F9FA] h-[710px] border border-primary  rounded-2xl shadow p-6 ">
           <div className="flex flex-col items-center text-center">
             {/* DOCTOR IMAGE WITH FALLBACK */}
             <Image
@@ -122,7 +147,7 @@ export default function AppointmentPage({
               width={120}
               height={120}
               alt={doctor.username || "Doctor"}
-              priority
+              loading="eager"
               className="rounded-full object-cover"
             />
 
@@ -138,7 +163,7 @@ export default function AppointmentPage({
                     alt="patients"
                     width={24}
                     height={24}
-                    priority
+                    loading="eager"
                   />
                   {doctor.countPatient}
                 </div>
@@ -162,7 +187,7 @@ export default function AppointmentPage({
               </div>
 
               {/* Reviews */}
-              <div className="flex flex-col bg-[#2BBBC5] px-4 py-2 rounded-2xl text-white">
+              <div className="flex flex-col bg-[#2BBBC5]  px-4 py-2 rounded-2xl text-white">
                 <div className="flex flex-row gap-2 font-bold">
                   <Image
                     src={Reviews}
@@ -248,66 +273,21 @@ export default function AppointmentPage({
           </p>
 
           <div className="mt-6 mb-8 text-end">
-            <button
+            <Button
+              isLoading={bookLoading}
               onClick={handleBooking}
               className="bg-primary text-white px-6 py-3 rounded-full hover:opacity-90 transition">
               Book Now
-            </button>
+            </Button>
           </div>
 
           {/* REVIEWS */}
-          <div className="mt-auto">
-            <h3 className="text-xl text-primary font-semibold mb-4">
-              Reviews and Rating ({reviews.length})
-            </h3>
 
-            {reviews.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {reviews.map((review) => {
-                  const reviewImageUrl = review.image
-                    ? `${process.env.NEXT_PUBLIC_API_IMAGE_BASE_URL}${review.image}`
-                    : textImage;
-
-                  return (
-                    <div
-                      key={review.id}
-                      className="border rounded-2xl p-6 shadow bg-white">
-                      <div className="flex items-center gap-4">
-                        {/* REVIEW IMAGE WITH FALLBACK */}
-                        <Image
-                          src={reviewImageUrl}
-                          width={50}
-                          height={50}
-                          alt={review.userName || "User"}
-                          priority
-                          className="rounded-full object-cover"
-                        />
-
-                        <div>
-                          <p className="font-semibold">{review.userName}</p>
-                          <p className="text-gray-500 text-sm">
-                            {review.userEmail}
-                          </p>
-                        </div>
-
-                        <span className="ml-auto bg-yellow-100 px-3 py-1 rounded-full text-sm">
-                          {review.rating}
-                        </span>
-                      </div>
-
-                      <p className="mt-4 text-gray-700 text-sm">
-                        {review.comment}
-                      </p>
-                    </div>
-                  );
-                })}
-              </div>
-            ) : (
-              <p className="text-gray-500 text-center py-8">
-                No reviews yet. Be the first to review!
-              </p>
-            )}
-          </div>
+          <DoctorReviews
+            doctorId={doctor.id}
+            reviews={reviews}
+            setReviews={setReviews}
+          />
         </div>
       </div>
     </div>

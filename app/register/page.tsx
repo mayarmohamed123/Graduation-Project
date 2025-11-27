@@ -21,6 +21,8 @@ export default function RegisterPage() {
   const [formData, setFormData] = useState({
     username: "",
     email: "",
+    phonenumber: "",
+    address: "",
     password: "",
     confirmPassword: "",
     role: "regularuser",
@@ -50,6 +52,8 @@ export default function RegisterPage() {
       const registerData = {
         username: formData.username,
         email: formData.email,
+        phonenumber: formData.phonenumber,
+        address: formData.address,
         password: formData.password,
         confirmpassword: formData.confirmPassword,
         role: formData.role,
@@ -85,7 +89,7 @@ export default function RegisterPage() {
   const handleSocialSignIn = async (provider: "google" | "facebook") => {
     try {
       await signIn(provider, { callbackUrl: "/user" });
-    } catch (error) {
+    } catch {
       setError(`Failed to sign in with ${provider}`);
     }
   };
@@ -150,6 +154,33 @@ export default function RegisterPage() {
                   required
                 />
               </div>
+
+            {/* Phone Number */}
+            <div className="relative mb-4">
+              <Input
+                id="phonenumber"
+                name="phonenumber"
+                type="tel"
+                value={formData.phonenumber}
+                onChange={handleChange}
+                placeholder="Phone Number"
+                className="pl-4 rounded-3xl border-2 border-[#2BBBC5] placeholder-[#2BBBC5] focus-visible:ring-0 focus-visible:border-[#2BBBC5] focus:border-[#2BBBC5]"
+                required
+              />
+            </div>
+
+            {/* Address */}
+            <div className="relative mb-4">
+              <Input
+                id="address"
+                name="address"
+                value={formData.address}
+                onChange={handleChange}
+                placeholder="City / Address"
+                className="pl-4 rounded-3xl border-2 border-[#2BBBC5] placeholder-[#2BBBC5] focus-visible:ring-0 focus-visible:border-[#2BBBC5] focus:border-[#2BBBC5]"
+                required
+              />
+            </div>
 
               {/* Password */}
               <div className="relative mb-4">

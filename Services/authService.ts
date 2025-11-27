@@ -7,6 +7,8 @@ export interface LoginCredentials {
 export interface RegisterCredentials {
   username: string;
   email: string;
+  phonenumber: string;
+  address: string;
   password: string;
   confirmpassword: string;
   role: string;
@@ -18,7 +20,17 @@ export interface AuthResponse {
   user: {
     userName: string;
     email: string;
-    roles: string[];
+    roles: string[] | string;
+  };
+}
+
+export interface RegisterResponse {
+  message: string;
+  role: string;
+  user: {
+    userName: string;
+    email: string;
+    roles: string[] | string;
   };
 }
 
@@ -47,9 +59,7 @@ class AuthService {
     return response.json();
   }
 
-  async register(
-    credentials: RegisterCredentials
-  ): Promise<{ message: string; role: string }> {
+  async register(credentials: RegisterCredentials): Promise<RegisterResponse> {
     const response = await fetch(`${API_BASE_URL}/User/register`, {
       method: "POST",
       headers: {

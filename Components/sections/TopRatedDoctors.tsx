@@ -14,10 +14,7 @@ export default function TopRatedDoctors() {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/doctors/top-doctors`,
-          { method: "GET" }
-        );
+        const res = await fetch("/api/doctors/top-rated");
 
         if (!res.ok) {
           throw new Error(`API error: ${res.status}`);

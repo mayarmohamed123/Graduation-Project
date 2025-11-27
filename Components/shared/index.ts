@@ -5,3 +5,5 @@ export { default as prvButton } from "./prvButton";
 export { default as WavesLines } from "./WaveLines";
 export { default as SpecialtyIcon } from "./SpecialtyIcon";
 export { default as LoadingSpinner } from "./LoadingSpinner";
+export { default as AddReviewDialog } from "./AddReview";
+export { default as DoctorReviews } from "./DoctorReviews";

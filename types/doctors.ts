@@ -44,9 +44,14 @@ export interface ApiFilterParams {
 export interface AppointmentResponse {
   message: string;
   appointment: {
+    id: number;
     userId: string;
     doctorId: number;
     clinicId: number;
+    doctorName: string;
+    userName: string;
+    clinicName: string;
+    status: string;
     startAt: string; // ISO date string
     endAt: string; // ISO date string
   };
@@ -58,11 +63,31 @@ export interface BookAppointmentData {
   endAt: string; // ISO
 }
 
+export interface ReviewAuthor {
+  id: string;
+  email: string;
+  userName: string;
+  phoneNumber: string | null;
+  profileImage: string | null;
+  address: string | null;
+}
+
 export interface Review {
   id: number;
-  userName: string;
-  image: null | string;
   rating: number;
   comment: string;
-  userEmail: string;
+  user: ReviewAuthor;
+}
+
+export interface CreateSessionResponse {
+  message: string;
+  sessionUrl: string;
+  sessionId: string;
+}
+
+export interface VerifySessionResponse {
+  status: string;
+  sessionId: string;
+  paymentIntentId: string;
+  message: string;
 }
