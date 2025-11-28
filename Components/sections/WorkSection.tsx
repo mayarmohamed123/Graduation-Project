@@ -45,8 +45,9 @@ export default function WorkSection() {
 
       {/* Content Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto relative">
-        <WaveLines top="30px" left="550px" />
-        <WaveLines top="450px" left="1000px" />
+        {/* Wave decorations - hidden on mobile */}
+        <WaveLines top="30px" left="550px" className="hidden lg:block" />
+        <WaveLines top="450px" left="1000px" className="hidden lg:block" />
         <div className="flex flex-col items-start relative">
           {steps.map((step, index) => (
             <div key={index} className="flex items-start mb-10 relative">
@@ -65,7 +66,7 @@ export default function WorkSection() {
               {/* Step Text */}
               <div>
                 <h3 className="paragraph mb-2">{step.title}</h3>
-                <p className="text-[#6D6D6D] w-[334px]">{step.description}</p>
+                <p className="text-[#6D6D6D] max-w-sm">{step.description}</p>
               </div>
             </div>
           ))}
@@ -78,7 +79,7 @@ export default function WorkSection() {
             alt="How it works illustration"
             width={500}
             height={500}
-            className="rounded-2xl shadow-lg"
+            className="rounded-2xl shadow-lg w-full max-w-md"
           />
         </div>
       </div>

@@ -11,12 +11,12 @@ export default function AboutSection() {
       {/* Content Wrapper */}
       <div className="flex flex-col md:flex-row items-center justify-center gap-6">
         {/* Left - Image */}
-        <div className="relative w-full md:w-[587px] h-[391px]">
+        <div className="relative w-full md:w-[587px] h-[250px] sm:h-[300px] md:h-[391px]">
           <Image
             src={aboutImage}
             alt="About Sehaa"
             fill
-            sizes="(max-width: 768px) 100vw, 587px"
+            sizes="(max-width: 640px) 90vw, (max-width: 768px) 80vw, 587px"
             className="object-contain rounded-2xl shadow-md"
             priority
           />

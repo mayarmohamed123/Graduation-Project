@@ -46,7 +46,7 @@ export default function TopRatedDoctors() {
   }
 
   return (
-    <div className="w-full max-w-6xl mx-auto mt-20 pb-10 px-4">
+    <div className="w-full max-w-6xl mx-auto mt-10 md:mt-20 pb-10 px-4 md:px-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-7">
         <h2 className="text-2xl font-semibold text-primary">

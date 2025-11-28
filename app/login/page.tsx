@@ -77,13 +77,15 @@ function SignInForm() {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-[#D5F4F6] relative overflow-hidden">
-      <div className="absolute z-0 left-0">
+    <main className="min-h-screen flex items-center justify-center bg-[#D5F4F6] relative overflow-hidden p-4">
+      {/* Background vector - hidden on mobile */}
+      <div className="absolute z-0 left-0 hidden md:block">
         <Image src={vector36} alt="vector2" />
       </div>
-      <div className="flex max-w-4xl mx-auto w-full bg-white shadow-lg rounded-lg overflow-hidden">
-        {/* Left Side (Image Section) */}
-        <div className="w-1/3 relative">
+      
+      <div className="flex flex-col md:flex-row max-w-4xl mx-auto w-full bg-white shadow-lg rounded-lg overflow-hidden">
+        {/* Left Side (Image Section) - Hidden on mobile, visible on md+ */}
+        <div className="hidden md:block md:w-1/3 relative">
           <Image src={vector37} alt="vector" />
           <div className="absolute z-10 top-44 p-5">
             <Image src={doctorsIllustration} alt="doctors" width={270} height={265} />
@@ -91,8 +93,8 @@ function SignInForm() {
         </div>
 
         {/* Right Side (Form Section) */}
-        <div className="w-2/3 flex flex-col justify-center p-8 max-w-2xl mx-auto">
-          <form onSubmit={handleSubmit} className="w-[350px] mx-auto">
+        <div className="w-full md:w-2/3 flex flex-col justify-center p-6 md:p-8">
+          <form onSubmit={handleSubmit} className="w-full max-w-[350px] mx-auto">
             <h2 className="text-[#2BBBC5] text-4xl font-semibold mb-5 text-center">
               Sign In
             </h2>

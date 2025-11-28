@@ -15,6 +15,7 @@ import { RadioGroup, RadioGroupItem } from "@/Components/ui/radio-group";
 import { Label } from "@/Components/ui/label";
 import { Checkbox } from "@/Components/ui/checkbox";
 import Link from "next/link";
+import { Filter, X } from "lucide-react";
 
 // Medical specialties list
 const specialties = [
@@ -46,6 +47,7 @@ export default function SearchDoctorsPage() {
   });
 
   const [searchInput, setSearchInput] = useState("");
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   // Handle search input change
   const handleSearchChange = async (query: string) => {
@@ -130,19 +132,30 @@ export default function SearchDoctorsPage() {
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="mb-8 flex">
-          <div className="flex justify-between">
+        <div className="mb-8">
+          <div className="flex items-center gap-4 mb-4">
             <PrvButton />
-            <h3 className="text-4xl font-semibold text-gray-900">Doctor</h3>
+            <h3 className="text-3xl md:text-4xl font-semibold text-gray-900">Doctor</h3>
           </div>
           {/* Search Input */}
           <SearchInput onSearch={handleSearchChange} />
+          
+          {/* Mobile Filter Toggle */}
+          <button
+            onClick={() => setIsFilterOpen(!isFilterOpen)}
+            className="lg:hidden mt-4 w-full flex items-center justify-center gap-2 bg-primary text-white px-4 py-3 rounded-lg hover:bg-primary/90 transition">
+            <Filter size={20} />
+            {isFilterOpen ? 'Hide Filters' : 'Show Filters'}
+          </button>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Sidebar Filters */}
-          <div className="lg:w-1/4">
-            <div className="bg-white rounded-lg shadow-sm p-6 sticky top-8">
+          {/* Sidebar Filters - Collapsible on mobile */}
+          <div className={`
+            lg:block lg:w-1/4
+            ${ isFilterOpen ? 'block' : 'hidden'}
+          `}>
+            <div className="bg-white rounded-lg shadow-sm p-6 lg:sticky lg:top-8">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-lg font-semibold text-gray-900">Filter</h2>
                 <button
@@ -249,7 +262,7 @@ export default function SearchDoctorsPage() {
           <div className="lg:w-3/4">
             {/* Specialty Filter */}
             <div className="mb-6">
-              <h3 className="text-2xl font-medium text-black mb-3">
+              <h3 className="text-xl md:text-2xl font-medium text-black mb-3">
                 Choose Specialties
               </h3>
 
@@ -324,7 +337,7 @@ export default function SearchDoctorsPage() {
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                   {doctors.map((doctor) => {
                     const image = `${process.env.NEXT_PUBLIC_API_IMAGE_BASE_URL}${doctor.doctorImage}`;
 

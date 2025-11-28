@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { Camera, Eye, EyeOff } from "lucide-react";
+import { Camera, Eye, EyeOff, Menu, X } from "lucide-react";
 import {
   userRoundedIcon,
   ordersIcon,
@@ -33,6 +33,7 @@ export default function ProfilePage() {
   });
 
   const [activeTab, setActiveTab] = useState("personal");
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     if (userData) {
@@ -153,9 +154,23 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="flex min-h-screen max-w-7xl m-auto">
-      {/* Sidebar */}
-      <aside className="w-80 bg-[#E9F9FA] rounded-3xl shadow-lg p-8 flex flex-col my-10 ">
+    <div className="min-h-screen max-w-7xl mx-auto px-4 md:px-6">
+      {/* Mobile Menu Toggle Button */}
+      <button
+        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        className="lg:hidden fixed top-20 left-4 z-50 bg-primary text-white p-3 rounded-full shadow-lg hover:bg-primary/90 transition">
+        {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+      </button>
+
+      <div className="flex flex-col lg:flex-row min-h-screen">
+        {/* Sidebar - Hidden on mobile, slide-in drawer on mobile */}
+        <aside
+          className={`
+            fixed lg:static inset-y-0 left-0 z-40
+            w-80 bg-[#E9F9FA] rounded-none lg:rounded-3xl shadow-lg p-8 flex flex-col my-0 lg:my-10
+            transform transition-transform duration-300 ease-in-out
+            ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+          `}>
         <div className="flex flex-col items-center mb-8">
           <div className="relative w-28 h-28 mb-4 group">
             <Image
@@ -188,7 +203,10 @@ export default function ProfilePage() {
           {menuItems.map((item) => (
             <button
               key={item.id}
-              onClick={() => setActiveTab(item.id)}
+              onClick={() => {
+                setActiveTab(item.id);
+                setIsMobileMenuOpen(false); // Close mobile menu on selection
+              }}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition ${
                 activeTab === item.id
                   ? "bg-primary text-white border-l-4 border-primary"
@@ -218,8 +236,16 @@ export default function ProfilePage() {
         </button>
       </aside>
 
+      {/* Overlay for mobile menu */}
+      {isMobileMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
       {/* Main Content */}
-      <main className="flex-1 p-8">
+      <main className="flex-1 p-4 md:p-8 pt-20 lg:pt-8">
         <div className="max-w-4xl">
           {activeTab === "personal" && (
             <PersonalInfo
@@ -237,6 +263,7 @@ export default function ProfilePage() {
           {activeTab === "password" && <PasswordManagement />}
         </div>
       </main>
+      </div>
     </div>
   );
 }

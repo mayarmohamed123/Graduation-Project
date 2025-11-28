@@ -36,7 +36,7 @@ export default function Page() {
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center gap-4">
             <PrvButton />
-            <h3 className="text-4xl font-semibold text-gray-900">Pharmacy</h3>
+            <h3 className="text-3xl md:text-4xl font-semibold text-gray-900">Pharmacy</h3>
           </div>
         </div>
 

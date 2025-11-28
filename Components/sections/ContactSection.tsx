@@ -13,10 +13,10 @@ export default function ContactSection() {
       </div>
 
       {/* Contact Container */}
-      <div className="flex mx-auto bg-[#E9F9FA] w-[894px] h-[588px] rounded-2xl shadow-xl p-10 md:p-16">
+      <div className="flex flex-col md:flex-row mx-auto bg-[#E9F9FA] max-w-6xl w-full rounded-2xl shadow-xl p-6 md:p-10 lg:p-16 gap-8">
         {/* Form Section */}
-        <div className="w-1/3 relative">
-          <div className="flex flex-col justify-center items-center absolute top-4 right-10 bg-[#2BBBC5] p-10 text-white rounded-2xl shadow-lg w-[408px] h-[458px]">
+        <div className="md:w-1/3 relative md:order-2">
+          <div className="flex flex-col justify-center items-center md:absolute md:top-4 md:right-10 bg-[#2BBBC5] p-8 md:p-10 text-white rounded-2xl shadow-lg w-full md:w-[408px] md:h-[458px]">
             <h3 className="text-3xl font-semibold text-white mb-8">
               Contact Us
             </h3>
@@ -42,7 +42,7 @@ export default function ContactSection() {
             </div>
           </div>
         </div>
-        <form className="w-2/3 flex flex-col justify-center space-y-6 max-w-4xl mx-auto">
+        <form className="w-full md:w-2/3 flex flex-col justify-center space-y-6 md:order-1">
           <div className="w-full">
             <h3 className="text-[#4D4D4D] font-medium text-2xl mb-2">
               Get in Touch

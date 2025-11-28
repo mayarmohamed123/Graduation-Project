@@ -39,14 +39,15 @@ export default function ServicesSection() {
     <section
       id="services"
       className="px-8 md:px-20 py-20 bg-white max-w-8xl mx-auto relative">
-      <WavesLines top="218px" left="30px" className="mb-5" />
-      <WavesLines top="607px" left="1183px" className="mt-1" />
+      {/* Wave decorations - hidden on mobile */}
+      <WavesLines top="218px" left="30px" className="mb-5 hidden lg:block" />
+      <WavesLines top="607px" left="1183px" className="mt-1 hidden lg:block" />
       {/* Heading */}
       <div className="text-center mb-20">
         <h2 className="heading">Top Services We Offer</h2>
         <p className="paragraph">
-          In today’s fast-moving world, your health deserves care that’s both
-          accessible and convenient. That’s why Sehha brings together a suite of
+          In today's fast-moving world, your health deserves care that's both
+          accessible and convenient. That's why Sehha brings together a suite of
           digital healthcare services designed to connect you with doctors,
           pharmacies, and donors — all in one trusted platform.
         </p>
@@ -57,7 +58,7 @@ export default function ServicesSection() {
         {services.map((service, index) => (
           <div
             key={index}
-            className="p-0.5 rounded-xl bg-linear-to-r from-[#A8E7EB] to-[#58D2DA] h-[297px] hover:shadow-lg transition-shadow">
+            className="p-0.5 rounded-xl bg-linear-to-r from-[#A8E7EB] to-[#58D2DA] h-auto md:h-[297px] hover:shadow-lg transition-shadow">
             <div className="bg-white rounded-2xl p-6 h-full flex flex-col items-center text-left">
               <Image
                 src={service.icon}
