@@ -1,6 +1,6 @@
 import Image from "next/image";
 import React from "react";
-import WorkImage from "@/assets/work.svg";
+import { workImage } from "@/assets";
 import WaveLines from "../shared/WaveLines";
 
 export default function WorkSection() {
@@ -74,7 +74,7 @@ export default function WorkSection() {
         {/* Right Side - Image */}
         <div className="flex justify-center z-10">
           <Image
-            src={WorkImage}
+            src={workImage}
             alt="How it works illustration"
             width={500}
             height={500}

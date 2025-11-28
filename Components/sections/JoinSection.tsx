@@ -1,18 +1,17 @@
 import React from "react";
-import Doctor from "@/assets/Group 17.svg";
-import Pharmacy from "@/assets/join 2.png";
+import { joinDoctorImage, joinPharmacyImage } from "@/assets";
 import Image from "next/image";
 
 export default function JoinSection() {
   const data = [
     {
-      image: Doctor,
+      image: joinDoctorImage,
       title: "Join as a Doctor",
       description:
         "Reach more patients and grow your practice with Sehha. Manage appointments, consultations, and communication in one secure platform.",
     },
     {
-      image: Pharmacy,
+      image: joinPharmacyImage,
       title: "Join as a Pharmacy",
       description:
         "Serve patients faster and expand your reach. Receive and fulfill medicine orders through Sehha’s verified network.",

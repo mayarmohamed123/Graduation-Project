@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import prev from "@/assets/pre.svg";
+import { previousIcon } from "@/assets";
 import { useRouter } from "next/navigation";
 
 export default function PrvButton() {
@@ -10,7 +10,7 @@ export default function PrvButton() {
   return (
     <div className="cursor-pointer">
       <Image
-        src={prev}
+        src={previousIcon}
         width={75}
         height={45}
         alt="Previous page"

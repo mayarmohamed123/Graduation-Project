@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
-import sehhaLogo from "@/assets/Footer Logo.png";
+import { footerLogo } from "@/assets";
 
 export default function Footer() {
   return (
@@ -12,7 +12,7 @@ export default function Footer() {
         <div>
           <div className="flex items-center gap-2 mb-4">
             <Image
-              src={sehhaLogo}
+              src={footerLogo}
               alt="Sehaa Logo"
               width={40}
               height={40}

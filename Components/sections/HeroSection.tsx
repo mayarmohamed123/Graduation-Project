@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import HeroSectionPhoto from "@/assets/HeroSection.svg";
+import { heroSectionImage } from "@/assets";
 import { Button } from "../ui";
 export default function HeroSection() {
   return (
@@ -27,7 +27,7 @@ export default function HeroSection() {
       {/* Right Image Side */}
       <div className="relative w-full md:w-[588px] h-[600px] mb-10 md:mb-0">
         <Image
-          src={HeroSectionPhoto}
+          src={heroSectionImage}
           alt="Hero illustration"
           fill
           sizes="(max-width: 768px) 100vw, 588px"

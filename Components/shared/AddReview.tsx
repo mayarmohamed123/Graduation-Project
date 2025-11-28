@@ -3,8 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Button, Dialog, DialogContent, DialogTrigger } from "../ui";
-import filledStar from "@/assets/fullfiled star.svg";
-import emptyStar from "@/assets/empty star.svg";
+import { filledStarIcon, emptyStarIcon } from "@/assets";
 import { doctorService } from "@/Services/doctorService";
 import { toast } from "react-hot-toast";
 
@@ -101,7 +100,7 @@ export default function AddReviewDialog({
           {[1, 2, 3, 4, 5].map((i) => (
             <Image
               key={i}
-              src={i <= rating ? filledStar : emptyStar}
+              src={i <= rating ? filledStarIcon : emptyStarIcon}
               alt="star"
               width={30}
               height={30}

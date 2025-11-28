@@ -3,12 +3,14 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { Camera, Eye, EyeOff } from "lucide-react";
-import UserIcon from "@/assets/User Rounded.svg";
-import OrdersIcon from "@/assets/orders.svg";
-import LockIcon from "@/assets/Lock.svg";
-import LogoutIcon from "@/assets/Logout 4.svg";
-import AppointmentIcon from "@/assets/appointment.svg";
-import profileImage from "@/assets/profile-2user.svg";
+import {
+  userRoundedIcon,
+  ordersIcon,
+  lockIcon,
+  logoutIcon,
+  appointmentIcon,
+  profile2UserIcon,
+} from "@/assets";
 import { useUser } from "@/hook/useUser";
 import { toast } from "react-hot-toast";
 import { userService } from "@/Services/userService";
@@ -27,7 +29,7 @@ export default function ProfilePage() {
     email: "",
     phone: "",
     address: "",
-    image: profileImage,
+    image: profile2UserIcon,
   });
 
   const [activeTab, setActiveTab] = useState("personal");
@@ -42,7 +44,7 @@ export default function ProfilePage() {
           address: userData.address || "",
           image: userData.profileImage
             ? `${process.env.NEXT_PUBLIC_API_IMAGE_BASE_URL}${userData.profileImage}`
-            : profileImage,
+            : profile2UserIcon,
         });
       });
     }
@@ -128,10 +130,10 @@ export default function ProfilePage() {
   };
 
   const menuItems = [
-    { id: "personal", label: "Personal information", icon: UserIcon },
-    { id: "orders", label: "Orders", icon: OrdersIcon },
-    { id: "appointments", label: "Appointments", icon: AppointmentIcon },
-    { id: "password", label: "Password management", icon: LockIcon },
+    { id: "personal", label: "Personal information", icon: userRoundedIcon },
+    { id: "orders", label: "Orders", icon: ordersIcon },
+    { id: "appointments", label: "Appointments", icon: appointmentIcon },
+    { id: "password", label: "Password management", icon: lockIcon },
   ];
 
 
@@ -206,7 +208,7 @@ export default function ProfilePage() {
 
         <button className="flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 rounded-lg transition w-full">
           <Image 
-            src={LogoutIcon} 
+            src={logoutIcon} 
             alt="logout" 
             width={20} 
             height={20}

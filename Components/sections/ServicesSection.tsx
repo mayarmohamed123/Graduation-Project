@@ -1,33 +1,35 @@
 import React from "react";
-import Doctor from "@/assets/Frame 5.svg";
-import Pharmacy from "@/assets/Frame 5 (1).svg";
-import Blood from "@/assets/Frame 5 (2).svg";
-import secure from "@/assets/Frame 5 (3).svg";
+import {
+  doctorServiceIcon,
+  pharmacyServiceIcon,
+  bloodServiceIcon,
+  secureServiceIcon,
+} from "@/assets";
 import Image from "next/image";
 import { WavesLines } from "../shared";
 
 export default function ServicesSection() {
   const services = [
     {
-      icon: Doctor,
+      icon: doctorServiceIcon,
       title: "Find Doctors Nearby",
       firstText: "Connect instantly with qualified doctors near you.",
       secondText: "Book appointments anytime, anywhere.",
     },
     {
-      icon: Pharmacy,
+      icon: pharmacyServiceIcon,
       title: "Order Medicines Online",
       firstText: "Order prescriptions and health supplies easily.",
       secondText: "Fast delivery from verified pharmacies.",
     },
     {
-      icon: Blood,
+      icon: bloodServiceIcon,
       title: "Donate or Request Blood",
       firstText: "Find or donate blood in emergencies.",
       secondText: " Join a caring community that saves lives.",
     },
     {
-      icon: secure,
+      icon: secureServiceIcon,
       title: "Secure Communication",
       firstText: "Chat safely with doctors and pharmacists.",
       secondText: "Your health data stays private and protected.",

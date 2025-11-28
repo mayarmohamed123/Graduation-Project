@@ -7,11 +7,13 @@ import Image from "next/image";
 import { Lock, Mail } from "lucide-react";
 import { Input } from "@/Components/ui/input";
 import { Button } from "@/Components/ui/button";
-import vector from "@/assets/Vector 37.png";
-import doctors from "@/assets/amico.svg";
-import google from "@/assets/Social Icons.svg";
-import facebook from "@/assets/Social Icons (1).svg";
-import vector2 from "@/assets/Vector 36.svg";
+import {
+  vector37,
+  doctorsIllustration,
+  googleIcon,
+  facebookIcon,
+  vector36,
+} from "@/assets";
 
 function SignInForm() {
   const router = useRouter();
@@ -77,14 +79,14 @@ function SignInForm() {
   return (
     <main className="min-h-screen flex items-center justify-center bg-[#D5F4F6] relative overflow-hidden">
       <div className="absolute z-0 left-0">
-        <Image src={vector2} alt="vector2" />
+        <Image src={vector36} alt="vector2" />
       </div>
       <div className="flex max-w-4xl mx-auto w-full bg-white shadow-lg rounded-lg overflow-hidden">
         {/* Left Side (Image Section) */}
         <div className="w-1/3 relative">
-          <Image src={vector} alt="vector" />
+          <Image src={vector37} alt="vector" />
           <div className="absolute z-10 top-44 p-5">
-            <Image src={doctors} alt="doctors" width={270} height={265} />
+            <Image src={doctorsIllustration} alt="doctors" width={270} height={265} />
           </div>
         </div>
 
@@ -173,13 +175,13 @@ function SignInForm() {
                 type="button"
                 onClick={() => handleSocialSignIn("google")}
                 className="hover:scale-110 transition-transform duration-200">
-                <Image src={google} alt="Google" width={35} height={35} />
+                <Image src={googleIcon} alt="Google" width={35} height={35} />
               </button>
               <button
                 type="button"
                 onClick={() => handleSocialSignIn("facebook")}
                 className="hover:scale-110 transition-transform duration-200">
-                <Image src={facebook} alt="Facebook" width={35} height={35} />
+                <Image src={facebookIcon} alt="Facebook" width={35} height={35} />
               </button>
             </div>
 
@@ -190,6 +192,7 @@ function SignInForm() {
                 Sign Up
               </a>
             </p>
+
           </form>
         </div>
       </div>

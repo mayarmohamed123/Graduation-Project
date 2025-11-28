@@ -7,11 +7,13 @@ import { useRouter } from "next/navigation";
 import { Button } from "../ui";
 import Image from "next/image";
 import Link from "next/link";
-import sehhaLogo from "@/assets/Sehaa 1.png";
-import favoriteIcon from "@/assets/mdi_heart-outline.svg";
-import cartIcon from "@/assets/mdi_cart-outline.svg";
-import notifIcon from "@/assets/ion_notifications-outline.svg";
-import profileIcon from "@/assets/iconamoon_profile.svg";
+import {
+  sehhaLogo,
+  heartIcon,
+  cartIcon,
+  notificationIcon,
+  profileIcon,
+} from "@/assets";
 
 export default function Navbar() {
   const { data: session, status } = useSession();
@@ -119,7 +121,7 @@ export default function Navbar() {
               <div className="hidden md:flex items-center space-x-6">
                 <Link href="/favorites">
                   <Image
-                    src={favoriteIcon}
+                    src={heartIcon}
                     alt="Favorite"
                     width={24}
                     height={24}
@@ -139,7 +141,7 @@ export default function Navbar() {
                 </Link>
                 <Link href="/notifications">
                   <Image
-                    src={notifIcon}
+                    src={notificationIcon}
                     alt="Notifications"
                     width={24}
                     height={24}

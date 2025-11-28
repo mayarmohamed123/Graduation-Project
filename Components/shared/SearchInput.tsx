@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import React, { useState } from "react";
-import vector from "@/assets/Vector.svg";
+import { vector } from "@/assets";
 
 interface SearchInputProps {
   onSearch: (query: string) => void;

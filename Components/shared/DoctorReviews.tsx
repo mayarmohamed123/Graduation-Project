@@ -5,10 +5,9 @@ import { useState } from "react";
 import { AddReviewDialog } from "@/Components";
 import { doctorService } from "@/Services/doctorService";
 import { Review } from "@/types/doctors";
-import textImage from "@/assets/user-profile.webp";
+import { userProfileImage, penIcon } from "@/assets";
 import { useUser } from "@/hook/useUser";
 import { toast } from "react-hot-toast";
-import pen from "@/assets/Pen.svg";
 import { Edit2, Trash2 } from "lucide-react";
 
 interface DoctorReviewsProps {
@@ -64,7 +63,7 @@ export default function DoctorReviews({
             doctorId={doctorId}
             trigger={
               <div className="flex items-center gap-2 cursor-pointer">
-                <Image src={pen} alt="pen" width={20} height={20} />
+                <Image src={penIcon} alt="pen" width={20} height={20} />
                 <p className="text-primary">Add Review</p>
               </div>
             }
@@ -99,7 +98,7 @@ export default function DoctorReviews({
               const author = review.user;
               const reviewImageUrl = author?.profileImage
                 ? `${process.env.NEXT_PUBLIC_API_IMAGE_BASE_URL}${author.profileImage}`
-                : textImage;
+                : userProfileImage;
 
               return (
                 <div

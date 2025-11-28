@@ -1,12 +1,12 @@
 import Image from "next/image";
-import photo from "@/assets/message-square.svg";
+import { messageSquareIcon } from "@/assets";
 import { Textarea } from "../ui/textarea";
 
 export default function MessageTextarea() {
   return (
     <div className="relative w-full mb-4">
       <Image
-        src={photo}
+        src={messageSquareIcon}
         alt="Message icon"
         width={18}
         height={18}

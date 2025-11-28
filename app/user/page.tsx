@@ -2,13 +2,14 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import donate from "@/assets/slider/donate.svg";
-import doctors from "@/assets/slider/doctors.svg";
-import medicine from "@/assets/slider/medicine.svg";
-
-import doctorsCard from "@/assets/cards/unsplash_w46dSjqUUxM.svg";
-import medicineCard from "@/assets/cards/unsplash_w46dSjqUUxM (1).svg";
-import donateCard from "@/assets/cards/unsplash_w46dSjqUUxM (2).svg";
+import {
+  sliderDonate,
+  sliderDoctors,
+  sliderMedicine,
+  doctorsCardImage,
+  medicineCardImage,
+  donateCardImage,
+} from "@/assets";
 
 // Import Swiper
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -25,7 +26,7 @@ export default function Page() {
       id: 1,
       title: "Find a Doctor",
       description: "Search and book trusted specialists near you.",
-      image: doctorsCard,
+      image: doctorsCardImage,
       alt: "Find a Doctor",
       buttonText: "Find Now",
       buttonBg: "#2BBBC5",
@@ -35,7 +36,7 @@ export default function Page() {
       id: 2,
       title: "Order Medicine",
       description: "Get your prescriptions delivered fast and safely.",
-      image: medicineCard,
+      image: medicineCardImage,
       alt: "Order Medicine",
       buttonText: "Order Now",
       buttonBg: "#2BBBC5",
@@ -45,7 +46,7 @@ export default function Page() {
       id: 3,
       title: "Donate Blood",
       description: "Save lives and support your community.",
-      image: donateCard,
+      image: donateCardImage,
       alt: "Donate Blood",
       buttonText: "Donate Now",
       buttonBg: "#2BBBC5",
@@ -96,7 +97,7 @@ export default function Page() {
                   </button>
                 </div>
                 <Image
-                  src={doctors}
+                  src={sliderDoctors}
                   alt="Doctors"
                   width={400}
                   height={400}
@@ -109,7 +110,7 @@ export default function Page() {
             <SwiperSlide>
               <div className="flex flex-col md:flex-row items-center justify-between bg-linear-to-r from-primary to-white rounded-3xl shadow-md p-8">
                 <Image
-                  src={medicine}
+                  src={sliderMedicine}
                   alt="Medicines"
                   width={300}
                   height={300}
@@ -146,7 +147,7 @@ export default function Page() {
                   </button>
                 </div>
                 <Image
-                  src={donate}
+                  src={sliderDonate}
                   alt="Donate Blood"
                   width={300}
                   height={300}

@@ -2,8 +2,11 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { use } from "react";
-import Patients from "@/assets/profile-2user.svg";
-import Reviews from "@/assets/messages.svg";
+import {
+  profile2UserIcon,
+  messagesIcon,
+  userProfileImage,
+} from "@/assets";
 import {
   Button,
   Calendar,
@@ -14,7 +17,6 @@ import { cn } from "@/lib/utils";
 import PrvButton from "@/Components/shared/prvButton";
 import { doctorService } from "@/Services/doctorService";
 import { Doctor, Review } from "@/types/doctors";
-import textImage from "@/assets/user-profile.webp";
 
 export default function AppointmentPage({
   params,
@@ -126,7 +128,7 @@ export default function AppointmentPage({
   // ===== IMAGE FALLBACK =====
   const doctorImageUrl = doctor.doctorImage
     ? `${process.env.NEXT_PUBLIC_API_IMAGE_BASE_URL}${doctor.doctorImage}`
-    : textImage;
+    : userProfileImage;
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-10">
@@ -159,7 +161,7 @@ export default function AppointmentPage({
               <div className="flex flex-col bg-[#2BBBC5] px-4 py-2 rounded-2xl text-white">
                 <div className="flex flex-row gap-2 font-bold">
                   <Image
-                    src={Patients}
+                    src={profile2UserIcon}
                     alt="patients"
                     width={24}
                     height={24}
@@ -190,7 +192,7 @@ export default function AppointmentPage({
               <div className="flex flex-col bg-[#2BBBC5]  px-4 py-2 rounded-2xl text-white">
                 <div className="flex flex-row gap-2 font-bold">
                   <Image
-                    src={Reviews}
+                    src={messagesIcon}
                     alt="review"
                     width={24}
                     height={24}
