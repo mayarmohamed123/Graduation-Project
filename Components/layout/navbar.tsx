@@ -149,7 +149,7 @@ export default function Navbar() {
                     className="cursor-pointer hover:opacity-70 transition"
                   />
                 </Link>
-                <Link href="/user">
+                <Link href="/user/profile">
                   <Image
                     src={profileIcon}
                     alt="Profile"

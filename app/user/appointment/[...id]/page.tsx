@@ -127,7 +127,7 @@ export default function AppointmentPage({
 
   // ===== IMAGE FALLBACK =====
   const doctorImageUrl = doctor.doctorImage
-    ? `${process.env.NEXT_PUBLIC_API_IMAGE_BASE_URL}${doctor.doctorImage}`
+    ? `${doctor.doctorImage}`
     : userProfileImage;
 
   return (

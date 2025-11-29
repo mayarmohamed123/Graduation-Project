@@ -1,19 +1,10 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   images: {
     remotePatterns: [
       {
         protocol: "https",
-        hostname:
-          "e-healthhub-dfcjb0cuazc3crfj.australiaeast-01.azurewebsites.net",
-        pathname: "/doctors/**",
-      },
-      {
-        protocol: "https",
-        hostname:
-          "e-healthhub-dfcjb0cuazc3crfj.australiaeast-01.azurewebsites.net",
-        pathname: "/pharmacies/**",
+        hostname: "epharmahubimages2025.blob.core.windows.net",
       },
     ],
   },

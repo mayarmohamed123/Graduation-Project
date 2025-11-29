@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchUserData } from "@/store/slices/userSlice";
 import { useAuthToken } from "./useAuthToken";
@@ -12,7 +12,7 @@ export const useUser = () => {
 
   useEffect(() => {
     const loadUserData = async () => {
-      if (isAuthenticated && token && !user) {
+      if (token && !user) {
         try {
           await dispatch(fetchUserData(token)).unwrap();
         } catch (error) {
@@ -22,9 +22,9 @@ export const useUser = () => {
     };
 
     loadUserData();
-  }, [dispatch, isAuthenticated, token, user]);
+  }, [dispatch, token, user]);
 
-  const refetchUser = async () => {
+  const refetchUser = useCallback(async () => {
     if (token) {
       try {
         await dispatch(fetchUserData(token)).unwrap();
@@ -32,7 +32,7 @@ export const useUser = () => {
         console.error("Failed to refetch user data:", error);
       }
     }
-  };
+  }, [dispatch, token]);
 
   return {
     user,

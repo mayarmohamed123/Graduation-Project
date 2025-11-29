@@ -97,7 +97,7 @@ export default function DoctorReviews({
             {displayedReviews.map((review) => {
               const author = review.user;
               const reviewImageUrl = author?.profileImage
-                ? `${process.env.NEXT_PUBLIC_API_IMAGE_BASE_URL}${author.profileImage}`
+                ? `${author.profileImage}`
                 : userProfileImage;
 
               return (

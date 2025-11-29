@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { Camera, Eye, EyeOff, Menu, X } from "lucide-react";
+import { Camera, Menu, X, MessageSquare } from "lucide-react";
+import { signOut } from "next-auth/react";
 import {
   userRoundedIcon,
   ordersIcon,
@@ -19,6 +20,7 @@ import {
   Orders,
   PasswordManagement,
   PersonalInfo,
+  Chat,
 } from "@/Components";
 import type { UserProfileForm } from "@/types";
 
@@ -36,6 +38,10 @@ export default function ProfilePage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
+    refetchUser();
+  }, [refetchUser]);
+
+  useEffect(() => {
     if (userData) {
       Promise.resolve().then(() => {
         setUser({
@@ -44,7 +50,7 @@ export default function ProfilePage() {
           phone: userData.phoneNumber || "",
           address: userData.address || "",
           image: userData.profileImage
-            ? `${process.env.NEXT_PUBLIC_API_IMAGE_BASE_URL}${userData.profileImage}`
+            ? `${userData.profileImage}`
             : profile2UserIcon,
         });
       });
@@ -134,13 +140,17 @@ export default function ProfilePage() {
     { id: "personal", label: "Personal information", icon: userRoundedIcon },
     { id: "orders", label: "Orders", icon: ordersIcon },
     { id: "appointments", label: "Appointments", icon: appointmentIcon },
+    { id: "chat", label: "Chat", icon: MessageSquare },
     { id: "password", label: "Password management", icon: lockIcon },
   ];
 
-
-
-
-
+  const handleLogout = async () => {
+    try {
+      await signOut({ redirect: true, callbackUrl: "/auth/signin" });
+    } catch (error) {
+      toast.error("Failed to logout");
+    }
+  };
 
   if (isLoading) {
     return (
@@ -224,7 +234,9 @@ export default function ProfilePage() {
           ))}
         </nav>
 
-        <button className="flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 rounded-lg transition w-full">
+        <button 
+          onClick={handleLogout}
+          className="flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 rounded-lg transition w-full">
           <Image 
             src={logoutIcon} 
             alt="logout" 
@@ -259,6 +271,7 @@ export default function ProfilePage() {
 
           {activeTab === "appointments" && <Appointments />}
 
+          {activeTab === "chat" && <Chat />}
 
           {activeTab === "password" && <PasswordManagement />}
         </div>

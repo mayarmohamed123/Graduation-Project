@@ -62,7 +62,7 @@ export default function TopRatedDoctors() {
       {/* Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {doctors.map((doctor) => {
-          const image = `${process.env.NEXT_PUBLIC_API_IMAGE_BASE_URL}${doctor.doctorImage}`;
+          const image = `${doctor.doctorImage}`;
 
           return (
             <div

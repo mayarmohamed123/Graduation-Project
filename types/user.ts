@@ -105,12 +105,19 @@ export type GetUserOrdersResponse = Order[];
  */
 export interface Appointment {
   id: number;
+  doctorId: string;
   doctorName: string;
+  doctorSpeciality: string;
+  doctorImage: string | null;
+  userId: string;
   userName: string;
+  userImage: string | null;
+  clinicId: number;
   clinicName: string;
+  clinicImage: string | null;
   startAt: string; // ISO datetime string
   endAt: string; // ISO datetime string
-  status: string; // "confirmed", "completed", "cancelled", etc.
+  status: string; // "pending", "confirmed", "completed", "cancelled", etc.
 }
 
 /**

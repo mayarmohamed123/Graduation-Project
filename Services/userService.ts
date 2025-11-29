@@ -1,5 +1,6 @@
 // Services/userService.ts
 import { authService } from "./authService";
+import { fetchWithAuth } from "./api";
 import type {
   UpdateProfileData,
   UpdateProfileResponse,
@@ -55,65 +56,11 @@ class UserService {
   }
 
   async getUserOrders(): Promise<GetUserOrdersResponse> {
-    const token = authService.getToken();
-
-    if (!token) {
-      throw new Error("No authentication token found. Please log in again.");
-    }
-
-    const response = await fetch(`${API_BASE_URL}/order/user-orders`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (response.status === 401) {
-      authService.logout();
-      throw new Error("Session expired. Please log in again.");
-    }
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => null);
-      throw new Error(
-        errorData?.message ||
-          `API error: ${response.status} ${response.statusText}`
-      );
-    }
-
-    return response.json();
+    return fetchWithAuth(`${API_BASE_URL}/order/user-orders`);
   }
 
   async getUserAppointments(): Promise<GetUserAppointmentsResponse> {
-    const token = authService.getToken();
-
-    if (!token) {
-      throw new Error("No authentication token found. Please log in again.");
-    }
-
-    const response = await fetch(`${API_BASE_URL}/appointment/user`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (response.status === 401) {
-      authService.logout();
-      throw new Error("Session expired. Please log in again.");
-    }
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => null);
-      throw new Error(
-        errorData?.message ||
-          `API error: ${response.status} ${response.statusText}`
-      );
-    }
-
-    return response.json();
+    return fetchWithAuth(`${API_BASE_URL}/appointment/user`);
   }
 
   async updatePassword(
