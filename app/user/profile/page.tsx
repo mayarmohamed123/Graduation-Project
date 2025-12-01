@@ -222,13 +222,23 @@ export default function ProfilePage() {
                   ? "bg-primary text-white border-l-4 border-primary"
                   : "text-gray-700 hover:bg-gray-100"
               }`}>
-              <Image 
-                src={item.icon} 
-                alt={item.label} 
-                width={20} 
-                height={20}
-                style={{ height: 'auto' }}
-              />
+              {/* Render icon - check if it's a component or image */}
+              {typeof item.icon === 'function' ? (
+                // Lucide icon component
+                <item.icon 
+                  size={20}
+                  className={activeTab === item.id ? "text-white" : "text-gray-700"}
+                />
+              ) : (
+                // Image source
+                <Image 
+                  src={item.icon} 
+                  alt={item.label} 
+                  width={20} 
+                  height={20}
+                  style={{ height: 'auto' }}
+                />
+              )}
               <span className="font-medium">{item.label}</span>
             </button>
           ))}

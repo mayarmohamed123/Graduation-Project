@@ -3,10 +3,12 @@
 import { useEffect, useState } from "react";
 import { MessageCircle, Calendar, Clock } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import type { Appointment } from "@/types";
 import { userService } from "@/Services/userService";
 import { toast } from "react-hot-toast";
 import { formatDate, formatTime } from "@/lib/dateUtils";
+import { useChat } from "@/hook/useChat";
 
 type TabType = "pending" | "completed" | "cancelled";
 
@@ -14,6 +16,8 @@ export default function Appointments() {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<TabType>("pending");
+  const router = useRouter();
+  const { startNewConversation } = useChat();
 
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -49,6 +53,18 @@ export default function Appointments() {
   };
 
   const filteredAppointments = filterAppointments(activeTab);
+
+  const handleStartChat = async (doctorId: string) => {
+    try {
+      // Start a conversation with the doctor
+      await startNewConversation('doctor', doctorId);
+      // Navigate to profile page where user can access chat from sidebar
+      router.push(`/user/profile`);
+      toast.success("Chat conversation started. Please check the Chat section in your profile.");
+    } catch (error) {
+      toast.error("Failed to start chat");
+    }
+  };
 
   const getStatusBadge = (status: string) => {
     const statusLower = status.toLowerCase();
@@ -122,7 +138,10 @@ export default function Appointments() {
             </div>
 
             {/* Message Icon */}
-            <button className="p-2 hover:bg-gray-100 rounded-full transition">
+            <button 
+              onClick={() => handleStartChat(appointment.doctorId)}
+              className="p-2 hover:bg-gray-100 rounded-full transition"
+            >
               <MessageCircle className="w-5 h-5 text-primary" />
             </button>
           </div>

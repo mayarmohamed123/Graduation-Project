@@ -78,6 +78,7 @@ export interface UserSliceState {
  * Order item in an order
  */
 export interface OrderItem {
+  medicationId: number;
   medicationName: string;
   quantity: number;
   unitPrice: number;
@@ -88,10 +89,21 @@ export interface OrderItem {
  */
 export interface Order {
   id: number;
-  email: string;
-  totalPrice: number;
+  userId: string;
+  userName: string;
+  userImage: string;
+  userEmail: string;
   pharmacyId: number;
+  pharmacyName: string;
+  pharmacyImage: string;
+  city: string;
+  country: string;
+  street: string;
+  phoneNumber: string;
+  totalPrice: number;
   status: string;
+  paymentStatus: string;
+  createdAt: string; // ISO datetime string
   items: OrderItem[];
 }
 

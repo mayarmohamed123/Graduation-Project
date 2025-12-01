@@ -71,12 +71,13 @@ export default function Orders() {
     <div>
       <h1 className="text-3xl font-bold text-gray-900 mb-8">Orders</h1>
 
-      <div className="space-y-6">
+      <div className="space-y-6 max-w-[680px]">
         {orders.map((order) => (
           <div
             key={order.id}
-            className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-            {/* Status Badge */}
+            className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 flex justify-between flex-row">
+          <div>
+              {/* Status Badge */}
             <div className="flex items-center gap-2 mb-4">
               <div className={`w-3 h-3 rounded-full ${getStatusColor(order.status)}`}></div>
               <span className="font-medium text-gray-700">
@@ -84,7 +85,8 @@ export default function Orders() {
               </span>
             </div>
 
-            {/* Order Info */}
+           
+             {/* Order Info */}
             <div className="mb-6">
               <p className="text-sm text-gray-500 mb-1">Order Number</p>
               <p className="font-bold text-gray-900 text-lg">#{order.id}</p>
@@ -92,6 +94,7 @@ export default function Orders() {
                 Total Amount: <span className="font-semibold">${order.totalPrice}</span>
               </p>
             </div>
+          </div>
 
             {/* Order Items */}
             <div className="space-y-4">
@@ -110,7 +113,7 @@ export default function Orders() {
                       {item.medicationName}
                     </h3>
                     <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
-                    <p className="text-xs text-gray-500">Pharmacy ID: {order.pharmacyId}</p>
+                    <p className="text-xs text-gray-500">Pharmacy: {order.pharmacyName}</p>
                   </div>
 
                   {/* Price */}
@@ -120,7 +123,8 @@ export default function Orders() {
                 </div>
               ))}
             </div>
-          </div>
+           </div>
+          
         ))}
       </div>
     </div>
