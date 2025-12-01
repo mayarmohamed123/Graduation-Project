@@ -1,11 +1,15 @@
 // services/signalRService.ts
 import * as signalR from '@microsoft/signalr';
-import { store } from '@/store/store';
 import { 
   messageReceived, 
-  updateMessageStatus,
   setConnectionStatus 
 } from '@/store/slices/chatSlice';
+
+// Dynamic store access to avoid circular dependency
+const getStore = async () => {
+  const { store } = await import('@/store/store');
+  return store;
+};
 
 class SignalRService {
   private connection: signalR.HubConnection | null = null;
@@ -32,6 +36,7 @@ class SignalRService {
       await this.connection.start();
       console.log('SignalR Connected');
       
+      const store = await getStore();
       store.dispatch(setConnectionStatus('connected'));
       
       // Setup reconnection handling
@@ -39,6 +44,7 @@ class SignalRService {
       
     } catch (error) {
       console.error('SignalR Connection Error:', error);
+      const store = await getStore();
       store.dispatch(setConnectionStatus('disconnected'));
       this.scheduleReconnect();
     }
@@ -47,41 +53,35 @@ class SignalRService {
   private setupEventHandlers() {
     if (!this.connection) return;
 
-    this.connection.on('ReceiveMessage', (message: any) => {
+    this.connection.on('ReceiveMessage', async (message: any) => {
+      const store = await getStore();
       store.dispatch(messageReceived(message));
     });
 
     this.connection.on('MessageDelivered', (messageId: string) => {
-      // Backend might send number ID, but we need to check
-      // For now assuming string or number, but slice expects string for tempId?
-      // Actually slice expects number for tempId now.
-      // But messageId from backend is number.
-      // We need to handle this.
-      // store.dispatch(updateMessageStatus({
-      //   messageId,
-      //   status: 'delivered'
-      // }));
+      // Backend might send number ID
+      // TODO: implement when updateMessageStatus is added
     });
 
     this.connection.on('MessageRead', (messageId: string) => {
-      // store.dispatch(updateMessageStatus({
-      //   messageId,
-      //   status: 'read'
-      // }));
+      // TODO: implement when updateMessageStatus is added
     });
 
-    this.connection.onreconnecting((error) => {
+    this.connection.onreconnecting(async (error) => {
       console.log('SignalR reconnecting:', error);
+      const store = await getStore();
       store.dispatch(setConnectionStatus('reconnecting'));
     });
 
-    this.connection.onreconnected((connectionId) => {
+    this.connection.onreconnected(async (connectionId) => {
       console.log('SignalR reconnected:', connectionId);
+      const store = await getStore();
       store.dispatch(setConnectionStatus('connected'));
     });
 
-    this.connection.onclose((error) => {
+    this.connection.onclose(async (error) => {
       console.log('SignalR connection closed:', error);
+      const store = await getStore();
       store.dispatch(setConnectionStatus('disconnected'));
       this.scheduleReconnect();
     });
@@ -98,6 +98,7 @@ class SignalRService {
     if (this.reconnectInterval) return;
 
     this.reconnectInterval = setInterval(async () => {
+      const store = await getStore();
       const state = store.getState();
       const { connectionStatus } = state.chat;
       
@@ -124,6 +125,7 @@ class SignalRService {
       this.connection = null;
     }
     
+    const store = await getStore();
     store.dispatch(setConnectionStatus('disconnected'));
   }
 

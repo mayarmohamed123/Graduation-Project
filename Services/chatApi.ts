@@ -1,5 +1,5 @@
 // services/chatApi.ts
-import { fetchWithAuth, postWithAuth } from "./api";
+
 import type {
   StartConversationResponse,
   GetThreadsResponse,
@@ -9,6 +9,7 @@ import type {
   ChatThread,
   ChatMessage
 } from "@/types/chat";
+import { fetchWithAuth, postWithAuth } from "./api";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 

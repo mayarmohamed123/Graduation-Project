@@ -140,7 +140,6 @@ export default function ProfilePage() {
     { id: "personal", label: "Personal information", icon: userRoundedIcon },
     { id: "orders", label: "Orders", icon: ordersIcon },
     { id: "appointments", label: "Appointments", icon: appointmentIcon },
-    { id: "chat", label: "Chat", icon: MessageSquare },
     { id: "password", label: "Password management", icon: lockIcon },
   ];
 
@@ -280,8 +279,6 @@ export default function ProfilePage() {
           {activeTab === "orders" && <Orders />}
 
           {activeTab === "appointments" && <Appointments />}
-
-          {activeTab === "chat" && <Chat />}
 
           {activeTab === "password" && <PasswordManagement />}
         </div>

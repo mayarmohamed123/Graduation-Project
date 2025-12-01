@@ -47,7 +47,6 @@ export const sendMessage = createAsyncThunk(
     const tempId = Date.now(); // Use number for temp ID to match type
     
     // Optimistically add message
-    // We need to cast this to ChatMessage because some fields like sender are missing/null
     const optimisticMessage: ChatMessage = {
       id: tempId,
       threadId,
@@ -62,17 +61,15 @@ export const sendMessage = createAsyncThunk(
     dispatch(addOptimisticMessage(optimisticMessage));
     
     try {
-      // Try to send via SignalR first
-      await signalRService.sendMessage(threadId, content);
+      // Try to send via SignalR first (optional, don't fail if unavailable)
+      try {
+        await signalRService.sendMessage(threadId, content);
+        console.log('Message sent via SignalR');
+      } catch (signalrError) {
+        console.warn('SignalR unavailable, using HTTP API fallback:', signalrError);
+      }
       
-      // If SignalR succeeds, we assume it's sent. 
-      // The server will send back the real message via SignalR 'ReceiveMessage' event
-      // which will replace this optimistic one if we handle it correctly.
-      // For now, let's just also call API to be safe or if SignalR fails?
-      // Actually, if SignalR works, we don't need API call usually.
-      // But the original code did both. Let's stick to API call for persistence guarantee
-      // and let SignalR handle real-time updates for OTHERS.
-      
+      // Always call HTTP API for persistence guarantee
       const response = await chatApi.sendMessage(threadId, content);
       
       // Replace temp message with actual one
@@ -80,9 +77,7 @@ export const sendMessage = createAsyncThunk(
       
       return response;
     } catch (error) {
-      // We don't have a status field in ChatMessage type from backend
-      // So we can't update status to 'failed' easily without extending the type.
-      // For now, just throw.
+      console.error('Failed to send message via HTTP API:', error);
       throw error;
     }
   }
@@ -146,9 +141,6 @@ const chatSlice = createSlice({
           text: message.text,
           sentAt: message.sentAt
         };
-        
-        // Increment unread count if not current thread (if we had unreadCount in type)
-        // Backend type doesn't have unreadCount on ChatThread currently.
       }
     },
     

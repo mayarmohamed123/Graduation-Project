@@ -100,12 +100,24 @@ export default function Orders() {
             <div className="space-y-4">
               {order.items.map((item, index) => (
                 <div key={index} className="flex items-center gap-4">
-                  {/* Placeholder medication image */}
-                  <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <span className="text-white font-bold text-xs">
-                      {item.medicationName.substring(0, 2).toUpperCase()}
-                    </span>
-                  </div>
+                  {/* Medication image */}
+                  {item.medicicationImage ? (
+                    <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
+                      <Image
+                        src={item.medicicationImage}
+                        alt={item.medicationName}
+                        width={64}
+                        height={64}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <span className="text-white font-bold text-xs">
+                        {item.medicationName.substring(0, 2).toUpperCase()}
+                      </span>
+                    </div>
+                  )}
 
                   {/* Item Details */}
                   <div className="flex-1">

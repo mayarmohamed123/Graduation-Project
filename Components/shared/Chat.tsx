@@ -61,6 +61,7 @@ export default function Chat() {
       await sendMessage(newMessage);
       setNewMessage("");
     } catch (error) {
+      console.log(error);
       toast.error("Failed to send message");
     }
   };

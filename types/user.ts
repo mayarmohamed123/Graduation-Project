@@ -80,6 +80,7 @@ export interface UserSliceState {
 export interface OrderItem {
   medicationId: number;
   medicationName: string;
+  medicicationImage?: string; // Note: keeping API's typo for consistency
   quantity: number;
   unitPrice: number;
 }

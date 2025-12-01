@@ -23,7 +23,10 @@ export default function Appointments() {
     const fetchAppointments = async () => {
       try {
         const data = await userService.getUserAppointments();
-        console.log(data);
+        console.log('Appointments data:', data);
+        if (data.length > 0) {
+          console.log('First appointment structure:', data[0]);
+        }
         setAppointments(data);
       } catch (error) {
         toast.error(
@@ -56,13 +59,18 @@ export default function Appointments() {
 
   const handleStartChat = async (doctorId: string) => {
     try {
+      console.log('Starting chat with doctor:', doctorId);
       // Start a conversation with the doctor
       await startNewConversation('doctor', doctorId);
-      // Navigate to profile page where user can access chat from sidebar
-      router.push(`/user/profile`);
-      toast.success("Chat conversation started. Please check the Chat section in your profile.");
+      
+      // Navigate to chat page
+      router.push('/user/chat');
+      
+      toast.success("Opening chat with doctor...");
     } catch (error) {
-      toast.error("Failed to start chat");
+      console.error('Failed to start chat:', error);
+      const errorMessage = error instanceof Error ? error.message : "Failed to start chat";
+      toast.error(errorMessage);
     }
   };
 
