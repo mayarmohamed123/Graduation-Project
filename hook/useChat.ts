@@ -1,50 +1,45 @@
-// hooks/useChat.ts
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState, AppDispatch } from '@/store/store';
-import { 
-  setCurrentThread, 
-  fetchThreads, 
-  fetchMessages, 
-  sendMessage, 
-  startConversation,
-  connectToSignalR
-} from '@/store/slices/chatSlice';
+// src/hooks/useChat.ts
+"use client";
 
-export const useChat = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const chatState = useSelector((state: RootState) => state.chat);
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setMessagesForThread,
+  setCurrentThread,
+} from "@/store/slices/chatSlice";
+import { fetchMessagesOfThread, sendMessageApi } from "@/Services/chatApi";
+import { signalRService } from "@/Services/signalRServices";
+import { RootState } from "@/store/store";
 
-  return {
-    // State
-    ...chatState,
-    
-    // Actions
-    selectThread: (threadId: number) => {
-      const thread = chatState.threads.find(t => t.id === threadId);
-      if (thread) {
-        dispatch(setCurrentThread(thread));
-        dispatch(fetchMessages(threadId));
-      }
-    },
-    
-    loadThreads: () => dispatch(fetchThreads()),
-    
-    sendMessage: (content: string) => {
-      if (!chatState.currentThread) return;
-      return dispatch(sendMessage({ 
-        threadId: chatState.currentThread.id, 
-        content 
-      })).unwrap();
-    },
-    
-    startNewConversation: (type: 'pharmacist' | 'doctor', id: string | number) => 
-      dispatch(startConversation({ type, id })).unwrap(),
-    
-    connect: () => dispatch(connectToSignalR()),
-    
-    disconnect: () => {
-      // You might want to add disconnect action to slice
-      // For now, we'll handle it differently
-    }
+export function useChat(threadId: number) {
+  const dispatch = useDispatch();
+
+  const messages =
+    useSelector((state: RootState) => state.chat.messages[threadId]) || [];
+
+  const connectionStatus = useSelector(
+    (state: RootState) => state.chat.status
+  );
+
+  // load thread messages + start real-time connection
+  useEffect(() => {
+    dispatch(setCurrentThread(threadId));
+
+    fetchMessagesOfThread(threadId).then((msgs) => {
+      dispatch(setMessagesForThread({ threadId, messages: msgs }));
+    });
+
+    signalRService.start(threadId);
+
+    return () => {
+      signalRService.stop();
+    };
+  }, [threadId, dispatch]);
+
+  // send message
+  const sendMessage = async (text: string) => {
+    await sendMessageApi(threadId, text);
   };
-};
+
+  return { messages, sendMessage, connectionStatus };
+}

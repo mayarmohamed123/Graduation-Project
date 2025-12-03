@@ -125,7 +125,9 @@ export default function Page() {
                     Fast delivery from verified pharmacies — your health, your
                     convenience.
                   </p>
-                  <button className="bg-primary text-white px-5 py-2 rounded-full hover:bg-primary/90 transition-all">
+                  <button 
+                    onClick={() => router.push("/user/search-medicine")}
+                    className="bg-primary text-white px-5 py-2 rounded-full hover:bg-primary/90 transition-all">
                     Order Now
                   </button>
                 </div>
@@ -187,6 +189,8 @@ export default function Page() {
                   onClick={() => {
                     if (card.id === 1) {
                       router.push("/user/search-doctors");
+                    } else if (card.id === 2) {
+                      router.push("/user/search-medicine");
                     }
                     // Add navigation for other cards as needed
                   }}

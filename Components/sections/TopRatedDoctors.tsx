@@ -5,11 +5,17 @@ import Image from "next/image";
 import { Doctor } from "@/types";
 import { LoadingSpinner } from "../shared";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { startConversationWithDoctor } from "@/Services/chatApi";
+import { toast } from "react-hot-toast";
+import { MessageCircle } from "lucide-react";
 
 export default function TopRatedDoctors() {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [chatLoadingId, setChatLoadingId] = useState<number | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchDoctors = async () => {
@@ -32,6 +38,22 @@ export default function TopRatedDoctors() {
 
     fetchDoctors();
   }, []);
+
+  const handleStartChat = async (doctorId: number) => {
+    try {
+      setChatLoadingId(doctorId);
+      const thread = await startConversationWithDoctor(doctorId.toString());
+      router.push(`/user/chat?threadId=${thread.id}`);
+      toast.success("Opening chat with doctor...");
+    } catch (error) {
+      console.error("Failed to start chat:", error);
+      toast.error(
+        error instanceof Error ? error.message : "Failed to start chat"
+      );
+    } finally {
+      setChatLoadingId(null);
+    }
+  };
 
   if (error) {
     return (
@@ -105,12 +127,21 @@ export default function TopRatedDoctors() {
                   </span>
                 </div>
 
-                {/* Book Now Button */}
-                <Link href={`/user/appointment/${doctor.id}`}>
-                  <button className="w-full bg-primary text-white py-3 px-4 rounded-xl font-medium">
-                    Book Now
+                {/* Buttons */}
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => handleStartChat(doctor.id)}
+                    disabled={chatLoadingId === doctor.id}
+                    className="flex items-center justify-center gap-2 border-2 border-primary text-primary py-2 px-3 rounded-xl font-medium hover:bg-primary/10 transition disabled:opacity-50">
+                    <MessageCircle className="w-5 h-5" />
+                    {chatLoadingId === doctor.id ? "..." : "Chat"}
                   </button>
-                </Link>
+                  <Link href={`/user/appointment/${doctor.id}`} className="flex-1">
+                    <button className="w-full bg-primary text-white py-3 px-4 rounded-xl font-medium hover:bg-primary/90 transition">
+                      Book Now
+                    </button>
+                  </Link>
+                </div>
               </div>
             </div>
           );

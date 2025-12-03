@@ -8,7 +8,7 @@ import type { Appointment } from "@/types";
 import { userService } from "@/Services/userService";
 import { toast } from "react-hot-toast";
 import { formatDate, formatTime } from "@/lib/dateUtils";
-import { useChat } from "@/hook/useChat";
+import { startConversationWithDoctor } from "@/Services/chatApi";
 
 type TabType = "pending" | "completed" | "cancelled";
 
@@ -17,7 +17,7 @@ export default function Appointments() {
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<TabType>("pending");
   const router = useRouter();
-  const { startNewConversation } = useChat();
+  
 
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -61,10 +61,12 @@ export default function Appointments() {
     try {
       console.log('Starting chat with doctor:', doctorId);
       // Start a conversation with the doctor
-      await startNewConversation('doctor', doctorId);
+      const thread = await startConversationWithDoctor(doctorId);
+      
+      console.log('Thread created:', thread);
       
       // Navigate to chat page
-      router.push('/user/chat');
+      router.push(`/user/chat?threadId=${thread.id}`);
       
       toast.success("Opening chat with doctor...");
     } catch (error) {

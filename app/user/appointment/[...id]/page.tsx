@@ -17,6 +17,10 @@ import { cn } from "@/lib/utils";
 import PrvButton from "@/Components/shared/prvButton";
 import { doctorService } from "@/Services/doctorService";
 import { Doctor, Review } from "@/types/doctors";
+import { startConversationWithDoctor } from "@/Services/chatApi";
+import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
+import { MessageCircle } from "lucide-react";
 
 export default function AppointmentPage({
   params,
@@ -24,6 +28,7 @@ export default function AppointmentPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
+  const router = useRouter();
 
   const [doctor, setDoctor] = useState<Doctor | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -31,6 +36,7 @@ export default function AppointmentPage({
   const [selectedDate, setSelectedDate] = useState<string>("May 9, 2025");
   const [selectedTime, setSelectedTime] = useState<string>("10:00");
   const [loading, setLoading] = useState(true);
+  const [chatLoading, setChatLoading] = useState(false);
 
   const handleBooking = async () => {
     try {
@@ -77,6 +83,24 @@ export default function AppointmentPage({
       }
     } finally {
       setBookLoading(false); // STOP loading
+    }
+  };
+
+  const handleStartChat = async () => {
+    try {
+      setChatLoading(true);
+      if (!doctor) return;
+      
+      const thread = await startConversationWithDoctor(doctor.id.toString());
+      router.push(`/user/chat?threadId=${thread.id}`);
+      toast.success("Opening chat with doctor...");
+    } catch (error) {
+      console.error("Failed to start chat:", error);
+      toast.error(
+        error instanceof Error ? error.message : "Failed to start chat"
+      );
+    } finally {
+      setChatLoading(false);
     }
   };
 
@@ -274,11 +298,18 @@ export default function AppointmentPage({
             <b>{selectedTime}</b>.
           </p>
 
-          <div className="mt-6 mb-8 text-end">
+          <div className="mt-6 mb-8 flex items-center justify-end gap-3">
+            <button
+              onClick={handleStartChat}
+              disabled={chatLoading}
+              className="flex items-center gap-2 px-4 py-2 border-2 border-primary text-primary rounded-full hover:bg-primary/10 transition disabled:opacity-50">
+              <MessageCircle className="w-5 h-5" />
+              {chatLoading ? "Opening..." : "Message Doctor"}
+            </button>
             <Button
               isLoading={bookLoading}
               onClick={handleBooking}
-              className="bg-primary text-white px-6 py-3 rounded-full hover:opacity-90 transition">
+              className="bg-primary text-white px-6 py-5 text-lg rounded-full hover:opacity-90 transition">
               Book Now
             </Button>
           </div>
