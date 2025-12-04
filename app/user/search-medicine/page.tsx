@@ -4,7 +4,7 @@
 import { TopRatedPharmacies } from "@/Components/sections";
 import React, { useState } from "react";
 import { Medicine } from "@/types";
-import { pharmacyService } from "@/Services/pharmacies";
+import { medicineService } from "@/Services/medicine";
 import { LoadingSpinner, MedicineCard, SearchInput } from "@/Components/shared";
 import { SlidersHorizontal } from "lucide-react";
 import PrvButton from "@/Components/shared/prvButton";
@@ -19,9 +19,20 @@ export default function SearchMedicinePage() {
   // Filter states
   const [selectedForm, setSelectedForm] = useState<string>("");
   const [selectedUnits, setSelectedUnits] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
 
   const dosageForms = ["Tablet", "Syrup", "Capsule", "Injection", "Cream"];
   const strengthUnits = ["mg", "g", "ml", "μg"];
+  const categories = [
+    "Antibiotic",
+    "Pain Relief",
+    "Vitamins & Supplements",
+    "Cold & Flu",
+    "First Aid",
+    "Skincare",
+    "Digestive Health",
+    "Allergy",
+  ];
 
   const handleFormChange = (form: string) => {
     // Toggle selection: if same form is clicked, deselect it
@@ -34,15 +45,27 @@ export default function SearchMedicinePage() {
     );
   };
 
+  const handleCategoryChange = (category: string) => {
+    // Toggle selection
+    setSelectedCategory((prev) => (prev === category ? "" : category));
+  };
+
+  const clearFilters = () => {
+    setSelectedForm("");
+    setSelectedUnits([]);
+    setSelectedCategory("");
+  };
+
   const handleSearch = async (query: string) => {
     setSearchQuery(query);
-    await fetchMedicines(query, selectedForm, selectedUnits);
+    await fetchMedicines(query, selectedForm, selectedUnits, selectedCategory);
   };
 
   const fetchMedicines = async (
     query: string,
     form: string,
-    units: string[]
+    units: string[],
+    category: string
   ) => {
     try {
       setLoading(true);
@@ -52,7 +75,7 @@ export default function SearchMedicinePage() {
       let results: Medicine[] = [];
 
       // If filters are applied, use filter API
-      if (form || units.length > 0) {
+      if (form || units.length > 0 || category) {
         const filters: any = {};
         if (form) {
           filters.dosageForm = form;
@@ -60,15 +83,72 @@ export default function SearchMedicinePage() {
         if (units.length > 0) {
           filters.strengthUnit = units[0]; // API typically accepts one value
         }
-        results = await pharmacyService.filterMedicines(filters);
+        if (category) {
+          filters.category = category;
+        }
+        results = await medicineService.filterMedicines(filters);
       } else if (query.trim()) {
         // If only search query, use search API
-        results = await pharmacyService.searchMedicineByName(query);
+        const response: any = await medicineService.searchMedicineByName(query);
+
+        // Check if response is the specific "No alternative medicines found" message (as requested)
+        // or if it's not an array (implying some other message object)
+        if (
+          response?.message === "No alternative medicines found." ||
+          !Array.isArray(response)
+        ) {
+          // Fallback to alternatives
+          try {
+            const alternatives = await medicineService.getAlternativesMedicines(
+              query
+            );
+            results = alternatives;
+            if (Array.isArray(alternatives) && alternatives.length > 0) {
+              setError(
+                `No exact match found for "${query}". Showing alternatives.`
+              );
+            }
+          } catch (altErr) {
+            console.error("Error fetching alternatives:", altErr);
+            results = [];
+          }
+        } else {
+          results = response;
+        }
       }
 
       setMedicines(Array.isArray(results) ? results : []);
     } catch (err) {
       console.error("Error fetching medicines:", err);
+
+      // Handle error case (e.g. 404 with message)
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      if (
+        query.trim() &&
+        !form &&
+        units.length === 0 &&
+        !category &&
+        (errorMessage === "No alternative medicines found." ||
+          errorMessage.includes("No medicines found"))
+      ) {
+        try {
+          const alternatives = await medicineService.getAlternativesMedicines(
+            query
+          );
+          setMedicines(Array.isArray(alternatives) ? alternatives : []);
+          if (Array.isArray(alternatives) && alternatives.length > 0) {
+            setError(
+              `No exact match found for "${query}". Showing alternatives.`
+            );
+          } else {
+             setError("No medicines found.");
+          }
+          return;
+        } catch (altErr) {
+          console.error("Error fetching alternatives:", altErr);
+        }
+      }
+
       setError("Failed to load medicines. Please try again.");
       setMedicines([]);
     } finally {
@@ -78,7 +158,7 @@ export default function SearchMedicinePage() {
 
   // Apply filters
   const applyFilters = () => {
-    fetchMedicines(searchQuery, selectedForm, selectedUnits);
+    fetchMedicines(searchQuery, selectedForm, selectedUnits, selectedCategory);
   };
 
   // Auto-apply filters when changed
@@ -87,7 +167,7 @@ export default function SearchMedicinePage() {
       applyFilters();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedForm, selectedUnits]);
+  }, [selectedForm, selectedUnits, selectedCategory]);
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -107,64 +187,102 @@ export default function SearchMedicinePage() {
         {/* Two-column layout */}
         <div className="flex gap-6">
           {/* Filter Sidebar */}
-          <aside className="w-64 bg-white rounded-2xl p-6 border border-gray-200 h-fit sticky top-4 hidden lg:block">
-            {/* Filter Header */}
-            <div className="flex items-center gap-2 mb-6">
-              <SlidersHorizontal className="w-5 h-5 text-gray-700" />
-              <h3 className="text-lg font-semibold text-gray-900">Filter</h3>
-            </div>
-
-            {/* Form Section */}
-            <div className="mb-6">
-              <h4 className="text-sm font-semibold text-gray-900 mb-3">
-                Form
-              </h4>
-              <div className="space-y-2">
-                {dosageForms.map((form) => (
-                  <label
-                    key={form}
-                    className="flex items-center gap-2 cursor-pointer group"
-                  >
-                    <input
-                      type="radio"
-                      name="dosageForm"
-                      checked={selectedForm === form}
-                      onChange={() => handleFormChange(form)}
-                      className="w-4 h-4 border-gray-300 text-primary focus:ring-primary cursor-pointer"
-                    />
-                    <span className="text-sm text-gray-700 group-hover:text-gray-900">
-                      {form}s
-                    </span>
-                  </label>
-                ))}
+          {hasSearched && (
+            <aside className="w-64 bg-white rounded-2xl p-6 border border-gray-200 h-fit sticky top-4 hidden lg:block">
+              {/* Filter Header */}
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-2">
+                  <SlidersHorizontal className="w-5 h-5 text-gray-700" />
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    Filter
+                  </h3>
+                </div>
+                <button
+                  onClick={clearFilters}
+                  className="text-sm text-primary hover:text-primary/80 font-medium"
+                >
+                  Clear All
+                </button>
               </div>
-            </div>
 
-            {/* Strength Unit Section */}
-            <div>
-              <h4 className="text-sm font-semibold text-gray-900 mb-3">
-                Strength Unit
-              </h4>
-              <div className="space-y-2">
-                {strengthUnits.map((unit) => (
-                  <label
-                    key={unit}
-                    className="flex items-center gap-2 cursor-pointer group"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={selectedUnits.includes(unit)}
-                      onChange={() => handleUnitChange(unit)}
-                      className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer"
-                    />
-                    <span className="text-sm text-gray-700 group-hover:text-gray-900">
-                      {unit}
-                    </span>
-                  </label>
-                ))}
+              {/* Category Section */}
+              <div className="mb-6">
+                <h4 className="text-sm font-semibold text-gray-900 mb-3">
+                  Category
+                </h4>
+                <div className="space-y-2">
+                  {categories.map((category) => (
+                    <label
+                      key={category}
+                      className="flex items-center gap-2 cursor-pointer group"
+                    >
+                      <input
+                        type="radio"
+                        name="category"
+                        checked={selectedCategory === category}
+                        onChange={() => handleCategoryChange(category)}
+                        className="w-4 h-4 border-gray-300 text-primary focus:ring-primary cursor-pointer"
+                      />
+                      <span className="text-sm text-gray-700 group-hover:text-gray-900">
+                        {category}
+                      </span>
+                    </label>
+                  ))}
+                </div>
               </div>
-            </div>
-          </aside>
+
+              {/* Form Section */}
+              <div className="mb-6">
+                <h4 className="text-sm font-semibold text-gray-900 mb-3">
+                  Form
+                </h4>
+                <div className="space-y-2">
+                  {dosageForms.map((form) => (
+                    <label
+                      key={form}
+                      className="flex items-center gap-2 cursor-pointer group"
+                    >
+                      <input
+                        type="radio"
+                        name="dosageForm"
+                        checked={selectedForm === form}
+                        onChange={() => handleFormChange(form)}
+                        className="w-4 h-4 border-gray-300 text-primary focus:ring-primary cursor-pointer"
+                      />
+                      <span className="text-sm text-gray-700 group-hover:text-gray-900">
+                        {form}s
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {/* Strength Unit Section */}
+              <div>
+                <h4 className="text-sm font-semibold text-gray-900 mb-3">
+                  Strength Unit
+                </h4>
+                <div className="space-y-2">
+                  {strengthUnits.map((unit) => (
+                    <label
+                      key={unit}
+                      className="flex items-center gap-2 cursor-pointer group"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={selectedUnits.includes(unit)}
+                        onChange={() => handleUnitChange(unit)}
+                        className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer"
+                      />
+                      <span className="text-sm text-gray-700 group-hover:text-gray-900">
+                        {unit}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            </aside>
+          )}
 
           {/* Main Content */}
           <div className="flex-1">
@@ -207,7 +325,7 @@ export default function SearchMedicinePage() {
             )}
 
             {/* Top Rated Pharmacies Section */}
-            {/* {!hasSearched && <TopRatedPharmacies />} */}
+            {!hasSearched && <TopRatedPharmacies />}
           </div>
         </div>
       </div>

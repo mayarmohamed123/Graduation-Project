@@ -12,7 +12,7 @@ import {
   appointmentIcon,
   profile2UserIcon,
 } from "@/assets";
-import { useUser } from "@/hook/useUser";
+import { useUser } from "@/hooks/useUser";
 import { toast } from "react-hot-toast";
 import { userService } from "@/Services/userService";
 import {

@@ -1,10 +1,11 @@
 // lib/authOptions.ts
-import { NextAuthOptions } from "next-auth";
-import { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
 import { authService } from "@/Services/authService";
+import type { AuthOptions, Session, User } from "next-auth";
+import type { JWT } from "next-auth/jwt";
+import type { AdapterUser } from "next-auth/adapters";
 
 const normalizeRoles = (roles?: string[] | string) => {
   if (!roles) return [];
@@ -24,7 +25,7 @@ type TokenMeta = JWT & {
 const withUserMeta = <T extends object>(user: T) => user as T & UserMeta;
 const withTokenMeta = (token: JWT) => token as TokenMeta;
 
-export const authOptions: NextAuthOptions = {
+export const authOptions: AuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   providers: [
     CredentialsProvider({
@@ -44,8 +45,6 @@ export const authOptions: NextAuthOptions = {
             password: credentials.password,
           });
 
-          // Set token in cookies
-          authService.setToken(response.token);
           const roles = normalizeRoles(response.user.roles);
 
           return {
@@ -76,21 +75,23 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ user, account }) {
+    async signIn({ 
+      user, 
+      account 
+    }: { 
+      user: User | AdapterUser; 
+      account: any 
+    }) {
       // Handle OAuth sign in (Google/Facebook)
       if (account?.provider === "google" || account?.provider === "facebook") {
         try {
-          // Call your .NET API - no parameters needed since your API doesn't require them
           const response =
             account.provider === "google"
               ? await authService.googleLogin()
               : await authService.facebookLogin();
 
-          // Store the token in cookies
-          authService.setToken(response.token);
           const roles = normalizeRoles(response.user.roles);
 
-          // Update user object with data from your API
           user.id = response.user.email;
           user.email = response.user.email;
           user.name = response.user.userName;
@@ -104,29 +105,28 @@ export const authOptions: NextAuthOptions = {
           return false;
         }
       }
-      return true; // For credentials, return true
+      return true;
     },
 
-    async jwt({ token, user, account, trigger, session }) {
-      // Initial sign in
+    async jwt({ 
+      token, 
+      user, 
+      account, 
+      trigger, 
+      session 
+    }: {
+      token: JWT;
+      user?: User | AdapterUser;
+      account?: any;
+      trigger?: "signIn" | "signUp" | "update";
+      session?: any;
+    }) {
       const tokenWithMeta = withTokenMeta(token);
 
       if (account && user) {
-        if (account.provider === "credentials") {
-          // For credentials login
-          const metaUser = withUserMeta(user);
-          tokenWithMeta.accessToken = metaUser.accessToken;
-          tokenWithMeta.roles = metaUser.roles ?? [];
-        }
-        // For OAuth, we've already handled the token in signIn callback
-        else if (
-          account.provider === "google" ||
-          account.provider === "facebook"
-        ) {
-          const metaUser = withUserMeta(user);
-          tokenWithMeta.accessToken = metaUser.accessToken;
-          tokenWithMeta.roles = metaUser.roles ?? [];
-        }
+        const metaUser = withUserMeta(user);
+        tokenWithMeta.accessToken = metaUser.accessToken;
+        tokenWithMeta.roles = metaUser.roles ?? [];
 
         return {
           ...tokenWithMeta,
@@ -134,22 +134,22 @@ export const authOptions: NextAuthOptions = {
         };
       }
 
-      // Handle session update in client
       if (trigger === "update" && session) {
-        token = { ...token, ...session };
-      }
-
-      // Always ensure we have the latest token from cookies
-      const cookieToken = authService.getToken();
-      if (cookieToken && cookieToken !== tokenWithMeta.accessToken) {
-        tokenWithMeta.accessToken = cookieToken;
+        return { ...token, ...session };
       }
 
       return tokenWithMeta;
     },
 
-    async session({ session, token }) {
+    async session({ 
+      session, 
+      token 
+    }: { 
+      session: Session; 
+      token: JWT 
+    }) {
       const tokenWithMeta = withTokenMeta(token);
+      
       session.user = {
         id: token.id as string,
         email: token.email as string,
@@ -157,6 +157,7 @@ export const authOptions: NextAuthOptions = {
         image: token.picture as string,
         roles: tokenWithMeta.roles ?? [],
       };
+      
       session.accessToken = tokenWithMeta.accessToken as string;
 
       return session;
@@ -164,11 +165,10 @@ export const authOptions: NextAuthOptions = {
   },
   pages: {
     signIn: "/login",
-    signUp: "/register",
   },
   session: {
     strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60, // 30 days
+    maxAge: 30 * 24 * 60 * 60,
   },
   cookies: {
     sessionToken: {

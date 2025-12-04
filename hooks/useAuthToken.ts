@@ -14,7 +14,7 @@ export const useAuthToken = () => {
     }
   }, [session?.accessToken]);
 
-  // Derive authentication state from session status instead of using state
+  // Derive authentication state from session status
   const isAuthenticated = status === "authenticated" && !!session?.accessToken;
 
   return {

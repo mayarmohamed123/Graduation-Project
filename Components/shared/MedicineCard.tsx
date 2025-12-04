@@ -93,7 +93,7 @@ export default function MedicineCard({ medicine }: MedicineCardProps) {
 
         {/* Description */}
         <p className="text-sm text-gray-600 mb-1 line-clamp-2">
-          {medicine.genericName || medicine.description}
+          {medicine.medicationCategory}
         </p>
 
         {/* Pack Size or Out of Stock */}
@@ -122,7 +122,7 @@ export default function MedicineCard({ medicine }: MedicineCardProps) {
         <p className="text-sm text-gray-500 mb-3">Delivery within 24 hours</p>
 
         {/* View Details Button */}
-        <Link href={`/user/searchmedicine/${medicine.id}`} className="block">
+        <Link href={`/user/search-medicine/${medicine.id}`} className="block">
           <button
             disabled={isOutOfStock}
             className={`w-full py-3 px-4 rounded-full font-medium transition-colors duration-200 ${

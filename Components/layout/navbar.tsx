@@ -1,7 +1,7 @@
 "use client";
 
 import { Menu, X, LogOut } from "lucide-react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui";
@@ -14,6 +14,9 @@ import {
   notificationIcon,
   profileIcon,
 } from "@/assets";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { fetchUserCart } from "@/store/slices/cartSlice";
+import { useAuthToken } from "@/hooks/useAuthToken";
 
 export default function Navbar() {
   const { data: session, status } = useSession();
@@ -21,6 +24,18 @@ export default function Navbar() {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const isLoggedIn = !!session;
+  const dispatch = useAppDispatch();
+  const cartTotalItems = useAppSelector((state) => state.cart.totalItems);
+
+  // 🔑 Sync NextAuth session token to cookies
+  useAuthToken();
+
+  // Fetch cart when logged in
+  useEffect(() => {
+    if (isLoggedIn) {
+      dispatch(fetchUserCart());
+    }
+  }, [isLoggedIn, dispatch]);
 
   // Show loading state while session is being fetched
   if (status === "loading") {
@@ -129,7 +144,7 @@ export default function Navbar() {
                     className="cursor-pointer hover:opacity-70 transition"
                   />
                 </Link>
-                <Link href="/cart">
+                <Link href="/user/cart" className="relative">
                   <Image
                     src={cartIcon}
                     alt="Cart"
@@ -138,6 +153,11 @@ export default function Navbar() {
                     loading="eager"
                     className="cursor-pointer hover:opacity-70 transition"
                   />
+                  {cartTotalItems > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                      {cartTotalItems}
+                    </span>
+                  )}
                 </Link>
                 <Link href="/notifications">
                   <Image

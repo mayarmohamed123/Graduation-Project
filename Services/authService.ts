@@ -132,18 +132,31 @@ class AuthService {
 
   // Helper to get token from cookies
   getToken(): string | null {
-    if (typeof document === "undefined") return null;
+    if (typeof document === "undefined") {
+      return null;
+    }
 
-    const cookies = document.cookie.split(";");
+    const allCookies = document.cookie;
+  
+    const cookies = allCookies.split(";");
     const tokenCookie = cookies.find((cookie) =>
       cookie.trim().startsWith("token=")
     );
-    return tokenCookie ? decodeURIComponent(tokenCookie.split("=")[1]) : null;
+    
+    if (tokenCookie) {
+      const token = decodeURIComponent(tokenCookie.split("=")[1]);
+      return token;
+    }
+  
+    return null;
   }
 
   // Helper to set token in cookies
   setToken(token: string): void {
-    if (typeof document === "undefined") return;
+    if (typeof document === "undefined") {
+      console.log("⚠️ setToken: Cannot set cookie on server-side");
+      return;
+    }
 
     // Set cookie with 30 days expiration
     const expirationDate = new Date();
@@ -153,6 +166,7 @@ class AuthService {
     document.cookie = `token=${encodeURIComponent(
       token
     )}; expires=${expirationDate.toUTCString()}; path=/; ${secureFlag}samesite=lax`;
+    
   }
 }
 

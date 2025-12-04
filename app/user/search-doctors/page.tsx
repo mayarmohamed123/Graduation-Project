@@ -3,9 +3,9 @@
 
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { useDoctors } from "@/hook/useDoctors";
+import { useDoctors } from "@/hooks/useDoctors";
 import { FilterState } from "@/types/doctors";
-import { useAuthToken } from "@/hook/useAuthToken";
+import { useAuthToken } from "@/hooks/useAuthToken";
 import { LoadingSpinner, SearchInput, DoctorCard } from "@/Components";
 import PrvButton from "@/Components/shared/prvButton";
 import { Button } from "@/Components/ui/button";

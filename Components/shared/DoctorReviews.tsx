@@ -6,7 +6,7 @@ import { AddReviewDialog } from "@/Components";
 import { doctorService } from "@/Services/doctorService";
 import { Review } from "@/types/doctors";
 import { userProfileImage, penIcon } from "@/assets";
-import { useUser } from "@/hook/useUser";
+import { useUser } from "@/hooks/useUser";
 import { toast } from "react-hot-toast";
 import { Edit2, Trash2 } from "lucide-react";
 

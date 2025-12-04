@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { fetchMyThreads, Thread } from "@/Services/chatApi";
-import { useChat } from "@/hook/useChat";
+import { useChat } from "@/hooks/useChat";
 import ChatThreadList from "./ChatThreadList";
 import ChatMessages from "./ChatMessages";
 import { toast } from "react-hot-toast";
