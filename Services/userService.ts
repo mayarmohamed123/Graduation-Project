@@ -56,11 +56,15 @@ class UserService {
   }
 
   async getUserOrders(): Promise<GetUserOrdersResponse> {
-    return fetchWithAuth(`${API_BASE_URL}/order/user-orders`);
+    return fetchWithAuth(`${API_BASE_URL}/order/user-orders`, {
+      next: { revalidate: 30 },
+    });
   }
 
   async getUserAppointments(): Promise<GetUserAppointmentsResponse> {
-    return fetchWithAuth(`${API_BASE_URL}/appointment/user`);
+    return fetchWithAuth(`${API_BASE_URL}/appointment/user`, {
+      next: { revalidate: 30 },
+    });
   }
 
   async updatePassword(

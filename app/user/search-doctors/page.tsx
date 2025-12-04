@@ -3,18 +3,16 @@
 
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import Image from "next/image";
 import { useDoctors } from "@/hook/useDoctors";
 import { FilterState } from "@/types/doctors";
 import { useAuthToken } from "@/hook/useAuthToken";
-import { LoadingSpinner, SearchInput } from "@/Components";
+import { LoadingSpinner, SearchInput, DoctorCard } from "@/Components";
 import PrvButton from "@/Components/shared/prvButton";
 import { Button } from "@/Components/ui/button";
 import SpecialtyIcon from "@/Components/shared/SpecialtyIcon";
 import { RadioGroup, RadioGroupItem } from "@/Components/ui/radio-group";
 import { Label } from "@/Components/ui/label";
 import { Checkbox } from "@/Components/ui/checkbox";
-import Link from "next/link";
 import { Filter, X } from "lucide-react";
 
 // Medical specialties list
@@ -338,74 +336,13 @@ export default function SearchDoctorsPage() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                  {doctors.map((doctor) => {
-                    const image = `${doctor.doctorImage}`;
-
-                    return (
-                      <div
-                        key={doctor.id}
-                        className="rounded-2xl border-2 border-[#58D2DA] bg-white overflow-hidden hover:shadow-md transition-shadow">
-                        {/* Doctor Image */}
-                        <div className="bg-white rounded-xl h-60 flex items-center justify-center">
-                          {doctor.doctorImage ? (
-                            <Image
-                              src={image}
-                              alt={`Dr. ${doctor.username}`}
-                              width={400}
-                              height={192}
-                              className="h-full w-full rounded-xl"
-                              priority
-                            />
-                          ) : (
-                            <div className="text-5xl">
-                              {doctor.gender === "female" ? "👩‍⚕️" : "👨‍⚕️"}
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Text Section */}
-                        <div className="p-6 bg-[#F7F7F7] rounded-b-xl">
-                          {/* Doctor Name and Specialty */}
-                          <div className="mb-4">
-                            <h3 className="text-xl font-semibold mb-1 text-black">
-                              Dr. {doctor.username}
-                            </h3>
-                            <p className="text-gray-700 text-sm">
-                              {doctor.specialty}
-                            </p>
-                          </div>
-
-                          {/* Price */}
-                          <div className="flex items-center justify-between mb-4">
-                            <span className="text-sm text-gray-600">
-                              Price/hour
-                            </span>
-                            <span className="text-2xl font-bold text-gray-900">
-                              ${doctor.consultationPrice}
-                            </span>
-                          </div>
-
-                          {/* Additional Info */}
-                          <div className="text-xs text-gray-600 space-y-1 mb-4">
-                            <div>🏥 {doctor.clinicName}</div>
-                            <div>📍 {doctor.city}</div>
-                            <div>
-                              {doctor.consultationType === "inClinic"
-                                ? "🏥 In-clinic"
-                                : "🏠 Home Visit"}
-                            </div>
-                          </div>
-
-                          {/* Book Now Button */}
-                          <Link href={`/user/appointment/${doctor.id}`}>
-                            <button className="w-full bg-primary text-white py-3 px-4 rounded-xl font-medium">
-                              Book Now
-                            </button>
-                          </Link>
-                        </div>
-                      </div>
-                    );
-                  })}
+                  {doctors.map((doctor) => (
+                    <DoctorCard
+                      key={doctor.id}
+                      doctor={doctor}
+                      showExtraInfo={true}
+                    />
+                  ))}
                 </div>
 
                 {/* Show message if no doctors found */}

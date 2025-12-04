@@ -15,13 +15,16 @@ export const doctorService = {
   // Get all doctors
   getAllDoctors: async (): Promise<Doctor[]> => {
     return await fetchWithAuth(
-      `${baseUrl}/doctors/allDoctorsShowToRegularUser`
+      `${baseUrl}/doctors/allDoctorsShowToRegularUser`,
+      { next: { revalidate: 60 } }
     );
   },
 
   // Get doctors by specialty
   getDoctorsBySpecialty: async (specialty: string): Promise<Doctor[]> => {
-    return await fetchWithAuth(`${baseUrl}/doctors/specialty/${specialty}`);
+    return await fetchWithAuth(`${baseUrl}/doctors/specialty/${specialty}`, {
+      next: { revalidate: 60 },
+    });
   },
 
   // Get doctors with filters
@@ -35,7 +38,7 @@ export const doctorService = {
     });
 
     const url = `${baseUrl}/doctors/filterDoctors?${queryParams.toString()}`;
-    return await fetchWithAuth(url);
+    return await fetchWithAuth(url, { next: { revalidate: 60 } });
   },
 
   // Combined method that handles all filtering scenarios
@@ -51,7 +54,9 @@ export const doctorService = {
 
   // Get doctor by ID
   getDoctorById: async (id: number): Promise<Doctor> => {
-    return await fetchWithAuth(`${baseUrl}/doctors/${id}`);
+    return await fetchWithAuth(`${baseUrl}/doctors/${id}`, {
+      next: { revalidate: 60 },
+    });
   },
 
   // Book appointment in doctor clinic
@@ -63,7 +68,9 @@ export const doctorService = {
 
   // Get Doctor Reviews
   GetDoctorReviews: async (id: number): Promise<Review> => {
-    return await fetchWithAuth(`${baseUrl}/Review/doctor/${id}`);
+    return await fetchWithAuth(`${baseUrl}/Review/doctor/${id}`, {
+      next: { revalidate: 60 },
+    });
   },
 
   // add Review for Doctor

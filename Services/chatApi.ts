@@ -63,11 +63,15 @@ async function postWithAuthNoBody(url: string): Promise<any> {
 }
 
 export async function fetchMyThreads(): Promise<Thread[]> {
-  return fetchWithAuth(`${API_BASE}/chat/my-threads`);
+  return fetchWithAuth(`${API_BASE}/chat/my-threads`, {
+    next: { revalidate: 30 },
+  });
 }
 
 export async function fetchMessagesOfThread(threadId: number): Promise<Message[]> {
-  return fetchWithAuth(`${API_BASE}/chat/${threadId}/messages`);
+  return fetchWithAuth(`${API_BASE}/chat/${threadId}/messages`, {
+    next: { revalidate: 30 },
+  });
 }
 
 export async function sendMessageApi(threadId: number, content: string): Promise<Message> {

@@ -12,3 +12,5 @@ export { default as Orders } from "./Orders";
 export { default as PasswordManagement } from "./PasswordManagement";
 export { default as Appointments } from "./Appointments";
 export { default as Chat } from "./Chat";
+export { default as MedicineCard } from "./MedicineCard";
+export { default as DoctorCard } from "./DoctorCard";
