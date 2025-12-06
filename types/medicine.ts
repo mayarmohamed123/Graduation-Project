@@ -33,3 +33,5 @@ export interface MedicineFilterParams {
   genderSuitability?: string;
   category?: string;
 }
+
+export type MedicineSearchResponse = Medicine[] | { message: string };

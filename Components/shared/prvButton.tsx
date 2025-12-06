@@ -11,12 +11,11 @@ export default function PrvButton() {
     <div className="cursor-pointer">
       <Image
         src={previousIcon}
-        width={75}
-        height={45}
+        width={40}
+        height={40}
         alt="Previous page"
         className="transition-transform duration-200 hover:scale-110"
         priority
-        style={{ width: "auto", height: "auto" }}
         onClick={() => router.back()}
       />
     </div>

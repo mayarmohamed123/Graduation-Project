@@ -14,6 +14,7 @@ import { RadioGroup, RadioGroupItem } from "@/Components/ui/radio-group";
 import { Label } from "@/Components/ui/label";
 import { Checkbox } from "@/Components/ui/checkbox";
 import { Filter, X } from "lucide-react";
+import PageHeaderWithBack from "@/Components/shared/PageHeaderWithBack";
 
 // Medical specialties list
 const specialties = [
@@ -127,17 +128,14 @@ export default function SearchDoctorsPage() {
   // }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="container mx-auto px-4">
+    <div className="min-h-screen bg-gray-50 pb-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center gap-4 mb-4">
-            <PrvButton />
-            <h3 className="text-3xl md:text-4xl font-semibold text-gray-900">Doctor</h3>
-          </div>
+        <div className="flex">
+          <PageHeaderWithBack title="Doctors" />
           {/* Search Input */}
           <SearchInput onSearch={handleSearchChange} />
-          
+
           {/* Mobile Filter Toggle */}
           <button
             onClick={() => setIsFilterOpen(!isFilterOpen)}
@@ -151,7 +149,7 @@ export default function SearchDoctorsPage() {
           {/* Sidebar Filters - Collapsible on mobile */}
           <div className={`
             lg:block lg:w-1/4
-            ${ isFilterOpen ? 'block' : 'hidden'}
+            ${isFilterOpen ? 'block' : 'hidden'}
           `}>
             <div className="bg-white rounded-lg shadow-sm p-6 lg:sticky lg:top-8">
               <div className="flex justify-between items-center mb-6">
@@ -178,11 +176,10 @@ export default function SearchDoctorsPage() {
                           gender as "male" | "female"
                         )
                       }
-                      className={`flex-1 py-2 px-3 text-sm rounded-3xl border ${
-                        filters.gender === gender
-                          ? "bg-primary text-white"
-                          : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
-                      }`}>
+                      className={`flex-1 py-2 px-3 text-sm rounded-3xl border ${filters.gender === gender
+                        ? "bg-primary text-white"
+                        : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
+                        }`}>
                       {gender.charAt(0).toUpperCase() + gender.slice(1)}
                     </button>
                   ))}
@@ -272,11 +269,10 @@ export default function SearchDoctorsPage() {
                   onClick={() => handleFilterChange("specialty", null)}
                   className={`
                              flex items-center gap-2 border border-[#B2B2B2]
-                            ${
-                              !filters.specialty === null
-                                ? "text-[#4D4D4D]"
-                                : "text-white"
-                            }
+                            ${!filters.specialty === null
+                      ? "text-[#4D4D4D]"
+                      : "text-white"
+                    }
                             `}>
                   <svg
                     className="w-4 h-4"

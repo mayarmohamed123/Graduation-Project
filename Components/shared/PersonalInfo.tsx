@@ -27,9 +27,9 @@ export default function PersonalInfo({ user, onChange, onSave }: Props) {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">
+      <h2 className="text-xl font-semibold text-gray-900 mb-8">
         Personal information
-      </h1>
+      </h2>
 
       <div className="bg-white rounded-2xl shadow-sm p-8 mb-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

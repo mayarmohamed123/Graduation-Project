@@ -1,11 +1,13 @@
-import { Medicine, MedicineFilterParams } from "@/types";
+import {
+  Medicine,
+  MedicineFilterParams,
+  MedicineSearchResponse,
+} from "@/types";
 import { fetchWithAuth } from "./api";
 
 class MedicineService {
   // Filter Medicines
-  async filterMedicines(
-    filters: MedicineFilterParams
-  ): Promise<Medicine[]> {
+  async filterMedicines(filters: MedicineFilterParams): Promise<Medicine[]> {
     const queryParams = new URLSearchParams();
 
     // Build query parameters from filters
@@ -25,9 +27,11 @@ class MedicineService {
   }
 
   // Search Medicine by Name
-  async searchMedicineByName(name: string): Promise<Medicine[]> {
+  async searchMedicineByName(name: string): Promise<MedicineSearchResponse> {
     return await fetchWithAuth(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/medicine/search/${encodeURIComponent(name)}`,
+      `${
+        process.env.NEXT_PUBLIC_API_BASE_URL
+      }/medicine/search/${encodeURIComponent(name)}`,
       {
         next: { revalidate: 60 }, // ✅ ISR enabled
       }
@@ -47,7 +51,9 @@ class MedicineService {
   // Get Alternatives Medicines
   async getAlternativesMedicines(name: string): Promise<Medicine[]> {
     return await fetchWithAuth(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/medicine/${encodeURIComponent(name)}/alternatives`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/medicine/${encodeURIComponent(
+        name
+      )}/alternatives`,
       {
         next: { revalidate: 60 }, // ✅ ISR enabled
       }

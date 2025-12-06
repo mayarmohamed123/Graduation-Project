@@ -15,6 +15,7 @@ import {
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
 import TopRatedDoctors from "@/Components/sections/TopRatedDoctors";
+import { PrimaryButton } from "@/Components/shared";
 
 export default function Page() {
   const { data: session } = useSession();
@@ -78,7 +79,7 @@ export default function Page() {
             navigation
             autoplay={{ delay: 4000 }}
             loop
-            className="pb-10">
+            className="pb-10 ">
             {/* Slide 1 */}
             <SwiperSlide>
               <div className="flex flex-col md:flex-row items-center justify-between bg-linear-to-r from-[#2BBBC5] to-[#D5F4F6] rounded-3xl shadow-md p-8">
@@ -90,11 +91,9 @@ export default function Page() {
                     Book appointments with verified specialists in just a few
                     clicks.
                   </p>
-                  <button
-                    onClick={() => router.push("/user/search-doctors")}
-                    className="bg-[#2BBBC5] text-white px-5 py-2 rounded-full hover:bg-primary/90 transition-all">
+                  <PrimaryButton variant="secondary" onClick={() => router.push("/user/search-doctors")}>
                     Find a Doctor
-                  </button>
+                  </PrimaryButton>
                 </div>
                 <Image
                   src={sliderDoctors}
@@ -125,11 +124,9 @@ export default function Page() {
                     Fast delivery from verified pharmacies — your health, your
                     convenience.
                   </p>
-                  <button 
-                    onClick={() => router.push("/user/search-medicine")}
-                    className="bg-primary text-white px-5 py-2 rounded-full hover:bg-primary/90 transition-all">
+                  <PrimaryButton onClick={() => router.push("/user/search-medicine")}>
                     Order Now
-                  </button>
+                  </PrimaryButton>
                 </div>
               </div>
             </SwiperSlide>
@@ -144,9 +141,9 @@ export default function Page() {
                   <p className="font-normal text-white mb-4">
                     Join the Sehha community and make a real difference.
                   </p>
-                  <button className="bg-primary text-white px-5 py-2 rounded-full hover:bg-primary/90 transition-all">
+                  <PrimaryButton variant="secondary" onClick={() => router.push("/user/donate")}  >
                     Donate Now
-                  </button>
+                  </PrimaryButton>
                 </div>
                 <Image
                   src={sliderDonate}
@@ -185,7 +182,7 @@ export default function Page() {
                 <p className="text-[#8E8E8E] text-sm mb-4">
                   {card.description}
                 </p>
-                <button
+                <PrimaryButton fullWidth
                   onClick={() => {
                     if (card.id === 1) {
                       router.push("/user/search-doctors");
@@ -193,10 +190,9 @@ export default function Page() {
                       router.push("/user/search-medicine");
                     }
                     // Add navigation for other cards as needed
-                  }}
-                  className="bg-[#2BBBC5] text-white px-6 py-2 rounded-full hover:bg-[#25a4ac] transition-all">
+                  }}>
                   {card.buttonText}
-                </button>
+                </PrimaryButton>
               </div>
             </div>
           ))}

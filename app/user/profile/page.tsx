@@ -2,14 +2,9 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { Camera, Menu, X, MessageSquare } from "lucide-react";
+import { Camera, Menu, X, MessageSquare, User, ShoppingBag, Calendar, Lock, LogOut } from "lucide-react";
 import { signOut } from "next-auth/react";
 import {
-  userRoundedIcon,
-  ordersIcon,
-  lockIcon,
-  logoutIcon,
-  appointmentIcon,
   profile2UserIcon,
 } from "@/assets";
 import { useUser } from "@/hooks/useUser";
@@ -23,6 +18,7 @@ import {
   Chat,
 } from "@/Components";
 import type { UserProfileForm } from "@/types";
+import PageHeaderWithBack from "@/Components/shared/PageHeaderWithBack";
 
 export default function ProfilePage() {
   const { user: userData, isLoading, refetchUser } = useUser();
@@ -70,10 +66,10 @@ export default function ProfilePage() {
         address: user.address,
         phoneNumber: user.phone,
       });
-      
+
       // Show success toast with the message from API response
       toast.success(response.message);
-      
+
       // Refetch user data to update UI
       await refetchUser();
     } catch (error) {
@@ -137,10 +133,10 @@ export default function ProfilePage() {
   };
 
   const menuItems = [
-    { id: "personal", label: "Personal information", icon: userRoundedIcon },
-    { id: "orders", label: "Orders", icon: ordersIcon },
-    { id: "appointments", label: "Appointments", icon: appointmentIcon },
-    { id: "password", label: "Password management", icon: lockIcon },
+    { id: "personal", label: "Personal information", icon: User },
+    { id: "orders", label: "Orders", icon: ShoppingBag },
+    { id: "appointments", label: "Appointments", icon: Calendar },
+    { id: "password", label: "Password management", icon: Lock },
   ];
 
   const handleLogout = async () => {
@@ -164,6 +160,7 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen max-w-7xl mx-auto px-4 md:px-6">
+      <PageHeaderWithBack title="Profile" />
       {/* Mobile Menu Toggle Button */}
       <button
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -176,103 +173,99 @@ export default function ProfilePage() {
         <aside
           className={`
             fixed lg:static inset-y-0 left-0 z-40
-            w-80 bg-[#E9F9FA] rounded-none lg:rounded-3xl shadow-lg p-8 flex flex-col my-0 lg:my-10
+            w-80 bg-[#E9F9FA] rounded-none lg:rounded-3xl shadow-lg p-8 flex flex-col my-0 lg:mb-10
             transform transition-transform duration-300 ease-in-out
             ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
           `}>
-        <div className="flex flex-col items-center mb-8">
-          <div className="relative w-28 h-28 mb-4 group">
-            <Image
-              src={user.image}
-              alt="Profile"
-              className="rounded-full object-cover"
-              fill
-              sizes="112px"
-              loading="eager"
-            />
-            <button
-              type="button"
-              onClick={handleCameraClick}
-              className="absolute bottom-0 right-0 bg-primary text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition">
-              <Camera size={18} />
-            </button>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              onChange={handleProfilePictureChange}
-              className="hidden"
-            />
+          <div className="flex flex-col items-center mb-8">
+            <div className="relative w-28 h-28 mb-4 group">
+              <Image
+                src={user.image}
+                alt="Profile"
+                className="rounded-full object-cover"
+                fill
+                sizes="112px"
+                loading="eager"
+              />
+              <button
+                type="button"
+                onClick={handleCameraClick}
+                className="absolute bottom-0 right-0 bg-primary text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition">
+                <Camera size={18} />
+              </button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleProfilePictureChange}
+                className="hidden"
+              />
+            </div>
+            <h2 className="text-lg font-bold text-gray-900">{user.username}</h2>
+            <p className="text-sm text-gray-500 text-center mt-1">{user.email}</p>
           </div>
-          <h2 className="text-lg font-bold text-gray-900">{user.username}</h2>
-          <p className="text-sm text-gray-500 text-center mt-1">{user.email}</p>
-        </div>
 
-        <nav className="flex-1 space-y-2">
-          {menuItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => {
-                setActiveTab(item.id);
-                setIsMobileMenuOpen(false); // Close mobile menu on selection
-              }}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition ${
-                activeTab === item.id
-                  ? "bg-primary text-white border-l-4 border-primary"
-                  : "text-gray-700 hover:bg-gray-100"
-              }`}>
-                <Image 
-                  src={item.icon} 
-                  alt={item.label} 
-                  width={20} 
-                  height={20}
-                  style={{ height: 'auto' }}
-                />
-                     <span className="font-medium">{item.label}</span>
-            </button>
-          ))}
-        </nav>
+          <nav className="flex-1 space-y-2">
+            {menuItems.map((item) => {
+              const IconComponent = item.icon;
+              const isActive = activeTab === item.id;
 
-        <button 
-          onClick={handleLogout}
-          className="flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 rounded-lg transition w-full">
-          <Image 
-            src={logoutIcon} 
-            alt="logout" 
-            width={20} 
-            height={20}
-            style={{ height: 'auto' }}
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    setActiveTab(item.id);
+                    setIsMobileMenuOpen(false); // Close mobile menu on selection
+                  }}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition ${isActive
+                    ? "bg-primary text-white border-l-4 border-primary"
+                    : "text-gray-700 hover:bg-gray-100"
+                    }`}>
+                  <IconComponent
+                    size={20}
+                    className={isActive ? "text-white" : "text-gray-700"}
+                  />
+                  <span className="font-medium">{item.label}</span>
+                </button>
+              );
+            })}
+          </nav>
+
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 rounded-lg transition w-full">
+            <LogOut size={20} className="text-red-500" />
+            <span className="font-medium">Log out</span>
+          </button>
+        </aside>
+
+        {/* Overlay for mobile menu */}
+        {isMobileMenuOpen && (
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
+            onClick={() => setIsMobileMenuOpen(false)}
           />
-          <span className="font-medium">Log out</span>
-        </button>
-      </aside>
+        )}
 
-      {/* Overlay for mobile menu */}
-      {isMobileMenuOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
-          onClick={() => setIsMobileMenuOpen(false)}
-        />
-      )}
+        {/* Main Content */}
 
-      {/* Main Content */}
-      <main className="flex-1 p-4 md:p-8 pt-20 lg:pt-8">
-        <div className="max-w-4xl">
-          {activeTab === "personal" && (
-            <PersonalInfo
-              user={user}
-              onChange={handleChange}
-              onSave={handleSave}
-            />
-          )}
+        <main className="flex-1 p-4 md:p-8 pt-20 lg:pt-8">
+          <div className="max-w-4xl">
+            {activeTab === "personal" && (
+              <PersonalInfo
+                user={user}
+                onChange={handleChange}
+                onSave={handleSave}
+              />
+            )}
 
-          {activeTab === "orders" && <Orders />}
+            {activeTab === "orders" && <Orders />}
 
-          {activeTab === "appointments" && <Appointments />}
+            {activeTab === "appointments" && <Appointments />}
 
-          {activeTab === "password" && <PasswordManagement />}
-        </div>
-      </main>
+            {activeTab === "password" && <PasswordManagement />}
+          </div>
+        </main>
       </div>
     </div>
   );

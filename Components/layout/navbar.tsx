@@ -9,14 +9,13 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   sehhaLogo,
-  heartIcon,
-  cartIcon,
-  notificationIcon,
-  profileIcon,
 } from "@/assets";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchUserCart } from "@/store/slices/cartSlice";
 import { useAuthToken } from "@/hooks/useAuthToken";
+import { usePathname } from "next/navigation";
+import { Heart, ShoppingCart, Bell, User } from "lucide-react";
+
 
 export default function Navbar() {
   const { data: session, status } = useSession();
@@ -26,6 +25,7 @@ export default function Navbar() {
   const isLoggedIn = !!session;
   const dispatch = useAppDispatch();
   const cartTotalItems = useAppSelector((state) => state.cart.totalItems);
+  const pathname = usePathname();
 
   // 🔑 Sync NextAuth session token to cookies
   useAuthToken();
@@ -36,6 +36,8 @@ export default function Navbar() {
       dispatch(fetchUserCart());
     }
   }, [isLoggedIn, dispatch]);
+
+  const isActiveLink = (link: string) => pathname === link;
 
   // Show loading state while session is being fetched
   if (status === "loading") {
@@ -97,10 +99,9 @@ export default function Navbar() {
                     href={link.href}
                     onClick={() => setActiveLink(link.href.replace("#", ""))}
                     className={`relative text-primary/900 hover:text-primary transition 
-                      ${
-                        activeLink === link.href.replace("#", "")
-                          ? "active-link"
-                          : ""
+                      ${activeLink === link.href.replace("#", "")
+                        ? "active-link"
+                        : ""
                       }`}>
                     {link.name}
                   </Link>
@@ -134,24 +135,20 @@ export default function Navbar() {
             /* If user IS logged in */
             <>
               <div className="hidden md:flex items-center space-x-6">
-                <Link href="/favorites">
-                  <Image
-                    src={heartIcon}
-                    alt="Favorite"
-                    width={24}
-                    height={24}
-                    loading="eager"
-                    className="cursor-pointer hover:opacity-70 transition"
+                <Link href="/user/favorites">
+                  <Heart
+                    stroke="currentColor"
+                    fill={isActiveLink("/user/favorites") ? "currentColor" : "none"}
+                    className={`cursor-pointer transition ${isActiveLink("/user/favorites") ? "text-primary" : "opacity-70"
+                      }`}
                   />
                 </Link>
                 <Link href="/user/cart" className="relative">
-                  <Image
-                    src={cartIcon}
-                    alt="Cart"
-                    width={24}
-                    height={24}
-                    loading="eager"
-                    className="cursor-pointer hover:opacity-70 transition"
+                  <ShoppingCart
+                    stroke="currentColor"
+                    fill={isActiveLink("/user/cart") ? "currentColor" : "none"}
+                    className={`cursor-pointer transition ${isActiveLink("/user/cart") ? "text-primary" : "opacity-70"
+                      }`}
                   />
                   {cartTotalItems > 0 && (
                     <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
@@ -160,23 +157,19 @@ export default function Navbar() {
                   )}
                 </Link>
                 <Link href="/user/notifications">
-                  <Image
-                    src={notificationIcon}
-                    alt="Notifications"
-                    width={24}
-                    height={24}
-                    loading="eager"
-                    className="cursor-pointer hover:opacity-70 transition"
+                  <Bell
+                    stroke="currentColor"
+                    fill={isActiveLink("/user/notifications") ? "currentColor" : "none"}
+                    className={`cursor-pointer transition ${isActiveLink("/user/notifications") ? "text-primary" : "opacity-70"
+                      }`}
                   />
                 </Link>
                 <Link href="/user/profile">
-                  <Image
-                    src={profileIcon}
-                    alt="Profile"
-                    width={24}
-                    height={24}
-                    loading="eager"
-                    className="cursor-pointer hover:opacity-70 transition"
+                  <User
+                    stroke="currentColor"
+                    fill={isActiveLink("/user/profile") ? "currentColor" : "none"}
+                    className={`cursor-pointer transition ${isActiveLink("/user/profile") ? "text-primary" : "opacity-70"
+                      }`}
                   />
                 </Link>
                 <button

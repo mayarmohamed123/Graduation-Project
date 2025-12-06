@@ -1,36 +1,77 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Doctor } from "@/types";
-import { Heart, MessageCircle } from "lucide-react";
+import { FavoriteDoctor } from "@/types/favorites";
+import { Heart, MessageCircle, MapPin, Phone, DollarSign, Star } from "lucide-react";
 import { startConversationWithDoctor } from "@/Services/chatApi";
+import { favoritesService } from "@/Services/favoritesService";
 import { toast } from "react-hot-toast";
+import PrimaryButton from "./PrimaryButton";
 
 interface DoctorCardProps {
-  doctor: Doctor;
+  doctor: Doctor | FavoriteDoctor;
   showChat?: boolean;
   showExtraInfo?: boolean;
+  variant?: "search" | "favorite"; // New prop to determine behavior
+  onRemoveFavorite?: (id: number) => void; // Callback for removing from favorites
+  initialFavoriteState?: boolean; // Initial favorite state
 }
 
 export default function DoctorCard({
   doctor,
   showChat = false,
   showExtraInfo = false,
+  variant = "search",
+  onRemoveFavorite,
+  initialFavoriteState = false,
 }: DoctorCardProps) {
-  const [isFavorite, setIsFavorite] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(initialFavoriteState);
+  const [isTogglingFavorite, setIsTogglingFavorite] = useState(false);
   const [chatLoading, setChatLoading] = useState(false);
   const router = useRouter();
 
-  const toggleFavorite = () => {
-    setIsFavorite(!isFavorite);
-    // TODO: Implement actual favorite API call
+  useEffect(() => {
+    setIsFavorite(initialFavoriteState);
+  }, [initialFavoriteState]);
+
+  const toggleFavorite = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    setIsTogglingFavorite(true);
+    try {
+      if (variant === "favorite") {
+        // In favorite page - remove from favorites
+        await favoritesService.removeDoctorFromFavorites(doctor.id);
+        setIsFavorite(false);
+        onRemoveFavorite?.(doctor.id);
+        toast.success("Doctor removed from favorites");
+      } else {
+        // In search page - toggle favorite
+        if (isFavorite) {
+          await favoritesService.removeDoctorFromFavorites(doctor.id);
+          setIsFavorite(false);
+          toast.success("Doctor removed from favorites");
+        } else {
+          await favoritesService.addDoctorToFavorites(doctor.id);
+          setIsFavorite(true);
+          toast.success("Doctor added to favorites");
+        }
+      }
+    } catch (error) {
+      console.error("Failed to toggle favorite:", error);
+      toast.error("Failed to update favorites");
+    } finally {
+      setIsTogglingFavorite(false);
+    }
   };
 
   const handleStartChat = async (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent navigation if inside a link (though buttons shouldn't be inside links usually)
+    e.preventDefault();
     try {
       setChatLoading(true);
       const thread = await startConversationWithDoctor(doctor.id.toString());
@@ -49,69 +90,93 @@ export default function DoctorCard({
   const image = doctor.doctorImage || "";
 
   return (
-    <div className="rounded-2xl border-2 border-[#58D2DA] bg-white overflow-hidden hover:shadow-md transition-shadow relative">
+    <div className="rounded-2xl border-2 border-primary bg-white overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
       {/* Doctor Image */}
-      <div className="bg-white rounded-xl h-60 flex items-center justify-center relative">
+      <div className="relative h-56 bg-gradient-to-br from-blue-50 to-white">
         {/* Favorite Button */}
         <button
           onClick={toggleFavorite}
-          className="absolute top-4 right-4 bg-white rounded-full p-2 shadow-md hover:scale-110 transition-transform z-10"
+          disabled={isTogglingFavorite}
+          className="absolute top-4 right-4 bg-white rounded-full p-2 shadow-md hover:scale-110 transition-transform z-10 disabled:opacity-50"
+          title={variant === "favorite" ? "Remove from favorites" : (isFavorite ? "Remove from favorites" : "Add to favorites")}
         >
           <Heart
-            className={`w-5 h-5 ${
-              isFavorite ? "fill-red-500 text-red-500" : "text-gray-400"
-            }`}
+            className={`w-5 h-5 ${isTogglingFavorite
+              ? "text-gray-400"
+              : isFavorite
+                ? "fill-red-500 text-red-500"
+                : "text-gray-400"
+              }`}
           />
         </button>
 
-        {doctor.doctorImage ? (
-          <Image
-            src={image}
-            alt={`Dr. ${doctor.username}`}
-            width={400}
-            height={192}
-            className="h-full w-full rounded-xl object-cover"
-            priority
-          />
-        ) : (
-          <div className="text-5xl">
-            {doctor.gender === "female" ? "👩‍⚕️" : "👨‍⚕️"}
+        {/* Rating Badge */}
+        {doctor.averageRating > 0 && (
+          <div className="absolute top-4 left-4 bg-white rounded-full px-3 py-1 shadow-md flex items-center gap-1 z-10">
+            <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+            <span className="text-sm font-semibold text-gray-900">
+              {doctor.averageRating.toFixed(1)}
+            </span>
           </div>
         )}
+
+        {/* Image */}
+        <div className="h-full w-full flex items-center justify-center p-4">
+          {doctor.doctorImage ? (
+            <Image
+              src={image}
+              alt={`Dr. ${doctor.username}`}
+              fill
+              className="object-cover rounded-xl"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
+          ) : (
+            <div className="text-7xl">
+              {doctor.gender === "female" ? "👩‍⚕️" : "👨‍⚕️"}
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* Text Section */}
-      <div className="p-6 bg-[#F7F7F7] rounded-b-xl">
+      {/* Content Section */}
+      <div className="p-5 bg-gray-50">
         {/* Doctor Name and Specialty */}
-        <div className="mb-4">
-          <h3 className="text-xl font-semibold mb-1 text-black">
+        <div className="mb-3">
+          <h3 className="text-xl font-semibold text-gray-900 mb-1 line-clamp-1">
             Dr. {doctor.username}
           </h3>
-          <p className="text-gray-700 text-sm">{doctor.specialty}</p>
+          <p className="text-sm text-gray-600 line-clamp-1">{doctor.specialty}</p>
         </div>
 
-        {/* Price */}
-        <div className="flex items-center justify-between mb-4">
-          <span className="text-sm text-gray-600">Price/hour</span>
-          <span className="text-2xl font-bold text-gray-900">
-            ${doctor.consultationPrice}
-          </span>
-        </div>
-
-        {/* Additional Info (for Search Page) */}
-        {showExtraInfo && (
-          <div className="text-xs text-gray-600 space-y-1 mb-4">
-            <div>🏥 {doctor.clinicName}</div>
-            <div>📍 {doctor.city}</div>
-            <div>
-              {doctor.consultationType === "inClinic"
-                ? "🏥 In-clinic"
-                : "🏠 Home Visit"}
-            </div>
+        {/* Doctor Information */}
+        <div className="space-y-2 mb-4">
+          {/* Price */}
+          <div className="flex items-center gap-2 text-sm text-gray-700">
+            <DollarSign className="w-4 h-4 text-primary" />
+            <span className="font-semibold text-primary">
+              ${doctor.consultationPrice}
+            </span>
+            <span className="text-gray-500">/ consultation</span>
           </div>
-        )}
 
-        {/* Buttons */}
+          {/* Clinic and Location */}
+          {showExtraInfo && (
+            <>
+              <div className="flex items-center gap-2 text-sm text-gray-600">
+                <MapPin className="w-4 h-4 text-gray-400" />
+                <span className="line-clamp-1">
+                  {doctor.clinicName}, {doctor.city}
+                </span>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-gray-600">
+                <Phone className="w-4 h-4 text-gray-400" />
+                <span>{doctor.clinicPhone}</span>
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* Action Buttons */}
         <div className="flex gap-2">
           {showChat && (
             <button
@@ -124,9 +189,9 @@ export default function DoctorCard({
             </button>
           )}
           <Link href={`/user/appointment/${doctor.id}`} className="flex-1">
-            <button className="w-full bg-primary text-white py-3 px-4 rounded-xl font-medium hover:bg-primary/90 transition">
-              Book Now
-            </button>
+            <PrimaryButton fullWidth>
+              Book Appointment
+            </PrimaryButton>
           </Link>
         </div>
       </div>
