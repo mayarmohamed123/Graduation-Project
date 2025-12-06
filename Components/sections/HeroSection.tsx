@@ -6,7 +6,7 @@ export default function HeroSection() {
   return (
     <section
       id="home"
-      className="flex gap-6 flex-col-reverse md:flex-row items-center justify-center mt-16 px-8 md:px-20 py-16">
+      className="max-w-8xl mx-auto flex gap-6 flex-col-reverse md:flex-row items-center justify-center mt-16 px-8 md:px-20 py-16">
       {/* Left Text Side */}
       <div className="max-w-2xl space-y-6 text-center md:text-left">
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold text-primary leading-tight">

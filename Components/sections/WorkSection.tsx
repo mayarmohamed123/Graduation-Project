@@ -32,11 +32,11 @@ export default function WorkSection() {
   ];
 
   return (
-    <section id="work" className="px-8 md:px-20 py-20 bg-gray-50">
+    <section id="work" className="px-8 md:px-20 py-20 bg-gray-50 max-w-8xl mx-auto">
       {/* Heading */}
       <div className="text-center mb-16">
         <h2 className="heading mb-4">How It Works</h2>
-        <p className="paragraph max-w-6xl mx-auto">
+        <p className="paragraph max-w-8xl mx-auto">
           Navigating your healthcare journey with Sehha is seamless. Just follow
           these steps mentioned below to proceed with your selected services.
           You can also see our FAQ section for more guidance:
@@ -44,7 +44,7 @@ export default function WorkSection() {
       </div>
 
       {/* Content Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto relative">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-8xl mx-auto relative">
         {/* Wave decorations - hidden on mobile */}
         <WaveLines top="30px" left="550px" className="hidden lg:block" />
         <WaveLines top="450px" left="1000px" className="hidden lg:block" />

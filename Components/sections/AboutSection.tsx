@@ -4,12 +4,12 @@ import { aboutImage } from "@/assets";
 
 export default function AboutSection() {
   return (
-    <section id="about" className="px-8 md:px-20 py-20 bg-gray-50">
+    <section id="about" className="max-w-8xl mx-auto px-8 md:px-20 py-20 bg-gray-50">
       {/* Section Title */}
       <h2 className="heading text-center mb-16">About Sehha</h2>
 
       {/* Content Wrapper */}
-      <div className="flex flex-col md:flex-row items-center justify-center gap-6">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-6">
         {/* Left - Image */}
         <div className="relative w-full md:w-[587px] h-[250px] sm:h-[300px] md:h-[391px]">
           <Image
