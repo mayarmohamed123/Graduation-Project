@@ -32,6 +32,7 @@ export { default as cameraIcon } from "./camera icon.svg";
 export { default as penIcon } from "./Pen.svg";
 export { default as walletIcon } from "./uit_wallet.svg";
 export { default as ordersOutlineIcon } from "./material-symbols-light_orders-outline-rounded.svg";
+export { default as notificationEmptyImage } from "./notifiaction.svg";
 
 // Service/Section Images
 export { default as heroSectionImage } from "./HeroSection.svg";

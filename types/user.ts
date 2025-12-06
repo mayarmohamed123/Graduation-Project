@@ -137,3 +137,35 @@ export interface Appointment {
  * Get user appointments API response
  */
 export type GetUserAppointmentsResponse = Appointment[];
+
+/**
+ * Notification entity from the API
+ */
+export interface Notification {
+  id: number;
+  userId: string;
+  title: string;
+  message: string;
+  type: NotificationType;
+  user: null;
+  isRead: boolean;
+  createdAt: string; // ISO datetime string
+}
+
+/**
+ * Notification types
+ */
+export type NotificationType =
+  | "orderConfirmed"
+  | "orderDelivered"
+  | "orderCancelled"
+  | "appointmentApproved"
+  | "appointmentStartingSoon";
+
+/**
+ * Get user notifications API response
+ */
+export interface GetUserNotificationsResponse {
+  orders: Notification[];
+  appointments: Notification[];
+}

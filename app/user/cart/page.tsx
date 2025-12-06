@@ -5,10 +5,11 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchUserCart } from "@/store/slices/cartSlice";
+import { cartService } from "@/Services/cartService";
 import { Button } from "@/Components/ui/button";
-import { ShoppingCart, Trash2, Minus, Plus } from "lucide-react";
-import Image from "next/image";
+import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
+import { PharmacyCartCard, ConfirmDialog } from "@/Components";
 
 export default function CartPage() {
   const router = useRouter();
@@ -17,6 +18,9 @@ export default function CartPage() {
   
   const { cart, loading, error } = useAppSelector((state) => state.cart);
   const isLoggedIn = !!session;
+  const [updatingItems, setUpdatingItems] = useState<Set<number>>(new Set());
+  const [clearingCart, setClearingCart] = useState(false);
+  const [showClearDialog, setShowClearDialog] = useState(false);
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -27,15 +31,58 @@ export default function CartPage() {
     dispatch(fetchUserCart());
   }, [isLoggedIn, dispatch, router]);
 
-  const handleQuantityChange = (itemId: number, newQuantity: number) => {
+  const handleQuantityChange = async (itemId: number, newQuantity: number) => {
     if (newQuantity < 1) return;
-    // TODO: Implement update quantity API
-    console.log("Update quantity for item:", itemId, "to:", newQuantity);
+    
+    setUpdatingItems(prev => new Set(prev).add(itemId));
+    try {
+      await cartService.updateQuantity(itemId, newQuantity);
+      // Refresh cart data
+      await dispatch(fetchUserCart());
+    } catch (error) {
+      console.error("Failed to update quantity:", error);
+    } finally {
+      setUpdatingItems(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(itemId);
+        return newSet;
+      });
+    }
   };
 
-  const handleRemoveItem = (itemId: number) => {
-    // TODO: Implement remove item API
-    console.log("Remove item:", itemId);
+  const handleRemoveItem = async (itemId: number) => {
+    setUpdatingItems(prev => new Set(prev).add(itemId));
+    try {
+      await cartService.removeFromCart(itemId);
+      // Refresh cart data
+      await dispatch(fetchUserCart());
+    } catch (error) {
+      console.error("Failed to remove item:", error);
+    } finally {
+      setUpdatingItems(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(itemId);
+        return newSet;
+      });
+    }
+  };
+
+  const handleClearCart = () => {
+    setShowClearDialog(true);
+  };
+
+  const confirmClearCart = async () => {
+    setClearingCart(true);
+    try {
+      await cartService.clearCart();
+      // Refresh cart data
+      await dispatch(fetchUserCart());
+      setShowClearDialog(false);
+    } catch (error) {
+      console.error("Failed to clear cart:", error);
+    } finally {
+      setClearingCart(false);
+    }
   };
 
   const handleCheckout = (pharmacyId: number, pharmacyName: string) => {
@@ -90,165 +137,39 @@ export default function CartPage() {
     );
   }
 
-  const DELIVERY_FEE = 1.50; // Fixed delivery fee per pharmacy
-
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Shopping Cart</h1>
-          <p className="text-gray-600 mt-1">
-            {cart.pharmacies.length} pharmacy(ies)
-          </p>
+        <div className="mb-8 flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">Shopping Cart</h1>
+            <p className="text-gray-600 mt-1">
+              {cart.pharmacies.length} pharmacy(ies)
+            </p>
+          </div>
+          <Button 
+            variant="outline" 
+            onClick={handleClearCart}
+            disabled={clearingCart}
+            className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-300"
+          >
+            {clearingCart ? "Clearing..." : "Clear Cart"}
+          </Button>
         </div>
 
         {/* Cart Items - Each Pharmacy */}
         <div className="space-y-8">
-          {cart.pharmacies.map((pharmacy) => {
-            const pharmacyTotal = pharmacy.totalPrice + DELIVERY_FEE;
-
-            return (
-              <div key={pharmacy.pharmacyId} className="space-y-4">
-                {/* Pharmacy Name */}
-                <div className="bg-primary/10 px-6 py-3 rounded-lg">
-                  <h2 className="text-xl font-semibold text-gray-900">
-                    {pharmacy.pharmacyName}
-                  </h2>
-                </div>
-
-                {/* Cart Table + Summary */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                  {/* Products Table */}
-                  <div className="lg:col-span-2 bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-                    <div className="overflow-x-auto">
-                      <table className="w-full">
-                        <thead className="bg-gray-50 border-b border-gray-200">
-                          <tr>
-                            <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
-                              Product
-                            </th>
-                            <th className="px-6 py-4 text-center text-sm font-semibold text-gray-700">
-                              Quantity
-                            </th>
-                            <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">
-                              Price
-                            </th>
-                            <th className="px-6 py-4 text-center text-sm font-semibold text-gray-700">
-                              Action
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-gray-200">
-                          {pharmacy.items.map((item) => (
-                            <tr key={item.id} className="hover:bg-gray-50 transition-colors">
-                              {/* Product */}
-                              <td className="px-6 py-4">
-                                <div className="flex items-center gap-4">
-                                  <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                                    <ShoppingCart className="w-8 h-8 text-gray-400" />
-                                  </div>
-                                  <div>
-                                    <p className="font-medium text-gray-900">
-                                      {item.medication}
-                                    </p>
-                                    <p className="text-sm text-gray-500">
-                                      EGP {item.unitPrice.toFixed(2)} each
-                                    </p>
-                                  </div>
-                                </div>
-                              </td>
-
-                              {/* Quantity Controls */}
-                              <td className="px-6 py-4">
-                                <div className="flex items-center justify-center gap-2">
-                                  <button
-                                    onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
-                                    className="w-8 h-8 rounded-md border border-gray-300 flex items-center justify-center hover:bg-gray-100 transition-colors"
-                                    disabled={item.quantity <= 1}
-                                  >
-                                    <Minus className="w-4 h-4 text-gray-600" />
-                                  </button>
-                                  <input
-                                    type="number"
-                                    value={item.quantity}
-                                    onChange={(e) => handleQuantityChange(item.id, parseInt(e.target.value))}
-                                    className="w-16 h-8 text-center border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                                    min="1"
-                                  />
-                                  <button
-                                    onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
-                                    className="w-8 h-8 rounded-md border border-gray-300 flex items-center justify-center hover:bg-gray-100 transition-colors"
-                                  >
-                                    <Plus className="w-4 h-4 text-gray-600" />
-                                  </button>
-                                </div>
-                              </td>
-
-                              {/* Price */}
-                              <td className="px-6 py-4 text-right">
-                                <p className="font-semibold text-gray-900">
-                                  EGP {item.total.toFixed(2)}
-                                </p>
-                              </td>
-
-                              {/* Action */}
-                              <td className="px-6 py-4 text-center">
-                                <button
-                                  onClick={() => handleRemoveItem(item.id)}
-                                  className="text-red-600 hover:text-red-700 hover:bg-red-50 p-2 rounded-md transition-colors"
-                                  title="Remove item"
-                                >
-                                  <Trash2 className="w-5 h-5" />
-                                </button>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-
-                  {/* Summary Card */}
-                  <div className="lg:col-span-1">
-                    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 sticky top-8">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                        Summary
-                      </h3>
-                      
-                      <div className="space-y-3 mb-6">
-                        <div className="flex justify-between text-gray-700">
-                          <span>Subtotal:</span>
-                          <span className="font-medium">
-                            EGP {pharmacy.totalPrice.toFixed(2)}
-                          </span>
-                        </div>
-                        <div className="flex justify-between text-gray-700">
-                          <span>Delivery Fee:</span>
-                          <span className="font-medium">
-                            EGP {DELIVERY_FEE.toFixed(2)}
-                          </span>
-                        </div>
-                        <div className="border-t border-gray-200 pt-3">
-                          <div className="flex justify-between text-lg font-bold text-gray-900">
-                            <span>Total:</span>
-                            <span>EGP {pharmacyTotal.toFixed(2)}</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <Button
-                        onClick={() => handleCheckout(pharmacy.pharmacyId, pharmacy.pharmacyName)}
-                        className="w-full h-12 text-base bg-cyan-500 hover:bg-cyan-600"
-                      >
-                        Checkout Now
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+          {cart.pharmacies.map((pharmacy) => (
+            <PharmacyCartCard
+              key={pharmacy.pharmacyId}
+              pharmacy={pharmacy}
+              updatingItems={updatingItems}
+              onQuantityChange={handleQuantityChange}
+              onRemoveItem={handleRemoveItem}
+              onCheckout={handleCheckout}
+            />
+          ))}
         </div>
 
         {/* Continue Shopping */}
@@ -260,6 +181,18 @@ export default function CartPage() {
           </Button>
         </div>
       </div>
+
+      {/* Clear Cart Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={showClearDialog}
+        onClose={() => setShowClearDialog(false)}
+        onConfirm={confirmClearCart}
+        title="Clear Your Cart?"
+        message="Are you sure you want to remove all items from your cart? This action cannot be undone."
+        confirmText="Yes, Clear Cart"
+        cancelText="Cancel"
+        isLoading={clearingCart}
+      />
     </div>
   );
 }

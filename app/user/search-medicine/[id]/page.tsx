@@ -1,22 +1,27 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import {useParams } from "next/navigation";
 import Image from "next/image";
 import { Medicine } from "@/types";
 import { medicineService } from "@/Services/medicine";
+import { cartService } from "@/Services/cartService";
 import { LoadingSpinner } from "@/Components/shared";
 import PrvButton from "@/Components/shared/prvButton";
 import { Heart, Check, X } from "lucide-react";
 import { toast } from "react-hot-toast";
+import { useAppDispatch } from "@/store/hooks";
+import { fetchUserCart } from "@/store/slices/cartSlice";
 
 export default function MedicineDetailsPage() {
   const params = useParams();
   const id = params.id as string;
+  const dispatch = useAppDispatch();
   const [medicine, setMedicine] = useState<Medicine | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
 
   useEffect(() => {
     const fetchMedicine = async () => {
@@ -41,9 +46,23 @@ export default function MedicineDetailsPage() {
     // TODO: Implement favorite API call
   };
 
-  const handleAddToCart = () => {
-    // TODO: Implement add to cart functionality
-    toast.success("Added to cart!");
+  const handleAddToCart = async () => {
+    if (!medicine) return;
+    
+    setIsAddingToCart(true);
+    try {
+      await cartService.addToCart({
+        medicationId: medicine.id,
+        pharmacyId: medicine.pharmacy.id,
+        quantity: 1,
+      });
+      // Refresh cart to update count
+      await dispatch(fetchUserCart());
+    } catch (error) {
+      console.error("Failed to add to cart:", error);
+    } finally {
+      setIsAddingToCart(false);
+    }
   };
 
   if (loading) {
@@ -151,10 +170,10 @@ export default function MedicineDetailsPage() {
               </button>
               <button 
                 onClick={handleAddToCart}
+                disabled={isOutOfStock || isAddingToCart}
                 className="flex-1 border-2 border-primary text-primary py-3 px-6 rounded-full font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={isOutOfStock}
               >
-                Add to Cart
+                {isAddingToCart ? "Adding..." : "Add to Cart"}
               </button>
             </div>
           </div>

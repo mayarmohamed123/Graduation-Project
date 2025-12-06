@@ -159,7 +159,7 @@ export default function Navbar() {
                     </span>
                   )}
                 </Link>
-                <Link href="/notifications">
+                <Link href="/user/notifications">
                   <Image
                     src={notificationIcon}
                     alt="Notifications"

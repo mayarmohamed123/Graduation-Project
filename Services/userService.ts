@@ -9,6 +9,7 @@ import type {
   ProfilePictureResponse,
   GetUserOrdersResponse,
   GetUserAppointmentsResponse,
+  GetUserNotificationsResponse,
 } from "@/types";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -63,6 +64,12 @@ class UserService {
 
   async getUserAppointments(): Promise<GetUserAppointmentsResponse> {
     return fetchWithAuth(`${API_BASE_URL}/appointment/user`, {
+      next: { revalidate: 30 },
+    });
+  }
+
+  async getUserNotifications(): Promise<GetUserNotificationsResponse> {
+    return fetchWithAuth(`${API_BASE_URL}/notifications/user`, {
       next: { revalidate: 30 },
     });
   }

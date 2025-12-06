@@ -2,24 +2,41 @@
 
 import Image from "next/image";
 import { Medicine } from "@/types";
-import { Heart, Plus } from "lucide-react";
+import { Heart, Plus, Loader2 } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
+import { cartService } from "@/Services/cartService";
+import { useAppDispatch } from "@/store/hooks";
+import { fetchUserCart } from "@/store/slices/cartSlice";
 
 interface MedicineCardProps {
   medicine: Medicine;
 }
 
 export default function MedicineCard({ medicine }: MedicineCardProps) {
+  const dispatch = useAppDispatch();
   const [isFavorite, setIsFavorite] = useState(false);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
 
   const imageUrl = medicine.imagePath?.startsWith("http")
     ? medicine.imagePath
     : `${process.env.NEXT_PUBLIC_API_BASE_URL}${medicine.imagePath}`;
 
-  const handleAddToCart = () => {
-    // TODO: Implement add to cart functionality
-    console.log("Add to cart:", medicine.id);
+  const handleAddToCart = async () => {
+    setIsAddingToCart(true);
+    try {
+      await cartService.addToCart({
+        medicationId: medicine.id,
+        pharmacyId: medicine.pharmacy.id,
+        quantity: 1,
+      });
+      // Refresh cart to update count
+      await dispatch(fetchUserCart());
+    } catch (error) {
+      console.error("Failed to add to cart:", error);
+    } finally {
+      setIsAddingToCart(false);
+    }
   };
 
   const toggleFavorite = () => {
@@ -72,9 +89,14 @@ export default function MedicineCard({ medicine }: MedicineCardProps) {
         {!isOutOfStock && (
           <button
             onClick={handleAddToCart}
-            className="absolute bottom-4 right-4 bg-primary rounded-full p-3 shadow-lg hover:scale-110 transition-transform z-10"
+            disabled={isAddingToCart}
+            className="absolute bottom-4 right-4 bg-primary rounded-full p-3 shadow-lg hover:scale-110 transition-transform z-10 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <Plus className="w-6 h-6 text-white" />
+            {isAddingToCart ? (
+              <Loader2 className="w-6 h-6 text-white animate-spin" />
+            ) : (
+              <Plus className="w-6 h-6 text-white" />
+            )}
           </button>
         )}
       </div>
