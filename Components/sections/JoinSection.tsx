@@ -23,7 +23,7 @@ export default function JoinSection() {
       {/* Heading */}
       <div className="text-center mb-16">
         <h2 className="heading mb-4">Join Us</h2>
-        <p className="paragraph max-w-8xl mx-auto">
+        <p className="paragraph max-w-6xl mx-auto">
           Be part of the Sehha network and help us make healthcare more
           accessible. Whether you’re a doctor or a pharmacy, we provide the
           tools you need to connect with patients effectively.
@@ -31,7 +31,7 @@ export default function JoinSection() {
       </div>
 
       {/* Cards */}
-      <div className="flex flex-col gap-12 items-center max-w-8xl mx-auto">
+      <div className="flex flex-col gap-12 items-center max-w-7xl mx-auto">
         {data.map((item, index) => (
           <div
             key={index}

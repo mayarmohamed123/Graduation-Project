@@ -38,7 +38,7 @@ export default function ServicesSection() {
   return (
     <section
       id="services"
-      className="px-8 md:px-20 py-20 bg-white max-w-8xl mx-auto relative">
+      className="px-8 md:px-20 py-20 bg-white max-w-7xl mx-auto relative">
       {/* Wave decorations - hidden on mobile */}
       <WavesLines top="218px" left="30px" className="mb-5 hidden lg:block" />
       <WavesLines top="607px" left="1183px" className="mt-1 hidden lg:block" />
@@ -58,7 +58,7 @@ export default function ServicesSection() {
         {services.map((service, index) => (
           <div
             key={index}
-            className="p-0.5 rounded-xl bg-linear-to-r from-[#A8E7EB] to-[#58D2DA] h-auto md:h-[297px] hover:shadow-lg transition-shadow">
+            className="rounded-xl border border-primary h-auto md:h-[297px] hover:shadow-lg transition-shadow">
             <div className="bg-white rounded-2xl p-6 h-full flex flex-col items-center text-left">
               <Image
                 src={service.icon}
@@ -67,7 +67,7 @@ export default function ServicesSection() {
                 height={80}
                 className="mb-4"
               />
-              <h3 className="text-2xl font-medium text-[#2BBBC5] mb-3">
+              <h3 className="text-xl font-medium text-[#2BBBC5] mb-3">
                 {service.title}
               </h3>
               <p className="text-[#8E8E8E] mb-1">{service.firstText}</p>

@@ -6,67 +6,74 @@ import { EmailInput, MessageTextarea } from "@/Components";
 
 export default function ContactSection() {
   return (
-    <section id="contact" className="px-8 md:px-20 py-20 bg-gray-50 relative">
+    <section id="contact" className="px-8 md:px-20 py-20 relative">
       {/* Heading */}
       <div className="text-center mb-16">
-        <h2 className="heading mb-4">Contact Us</h2>
+        <h2 className="heading mb-4 text-[#2BBBC5]">Contact Us</h2>
       </div>
 
-      {/* Contact Container */}
-      <div className="flex flex-col md:flex-row mx-auto bg-[#E9F9FA] max-w-6xl w-full rounded-2xl shadow-xl p-6 md:p-10 lg:p-16 gap-8">
-        {/* Form Section */}
-        <div className="md:w-1/3 relative md:order-2 z-50">
-          <div className="flex flex-col justify-center items-center md:absolute md:top-4 md:right-10 bg-[#2BBBC5] p-8 md:p-10 text-white rounded-2xl shadow-lg w-full md:w-[408px] md:h-[420px]">
-            <h3 className="text-3xl font-semibold text-white mb-8">
-              Contact Us
-            </h3>
-            <div className="flex flex-col gap-6">
-              <div className="flex items-center gap-4">
-                <span className="w-6">
-                  <MapPin size={16} />
-                </span>
-                <p className="font-medium">Cairo, Egypt</p>
-              </div>
-              <div className="flex items-center gap-4">
-                <span className="w-6">
-                  <Mail size={16} />
-                </span>
-                <p className="font-medium">Support@Sehha.com</p>
-              </div>
-              <div className="flex items-center gap-4">
-                <span className="w-6">
-                  <Phone size={16} />
-                </span>
-                <p className="font-medium">+20 101 234 5678</p>
-              </div>
+      {/* Main Container */}
+      <div className="relative mx-auto bg-[#EDFCFE] max-w-6xl w-full rounded-[30px] p-6 md:p-12 lg:p-16 flex flex-col md:block">
+        
+        {/* Contact Info Card (Floating Left) */}
+        <div className="flex flex-col justify-center items-start bg-[#2BBBC5] p-8 md:p-10 text-white rounded-[20px] shadow-lg w-full md:w-[380px] md:h-[480px] md:absolute md:-left-4 md:top-1/2 md:-translate-y-1/2 z-20 mb-8 md:mb-0">
+          <h3 className="text-3xl font-semibold text-white mb-7">
+            Contact Us
+          </h3>
+          <div className="flex flex-col gap-8 w-full">
+             {/* MapPin not in design image provided? Usually text is simpler. I'll stick to icons + text. */}
+            <div className="flex items-center gap-4">
+              <span className="w-6 flex justify-center">
+                 <MapPin size={24} />
+              </span>
+              <p className="font-medium text-lg">Cairo, Egypt</p>
+            </div>
+            <div className="flex items-center gap-4">
+              <span className="w-6 flex justify-center">
+                 <Mail size={24} />
+              </span>
+              <p className="font-medium text-lg">Support@Sehha.com</p>
+            </div>
+            <div className="flex items-center gap-4">
+              <span className="w-6 flex justify-center">
+                 <Phone size={24} />
+              </span>
+              <p className="font-medium text-lg">+20 101 234 5678</p>
             </div>
           </div>
         </div>
-        <form className="w-full md:w-2/3 flex flex-col justify-center space-y-6 md:order-1 relative z-0">
+
+        {/* Form Section (Right Side) */}
+        <form className="w-full md:w-[60%] md:ml-auto flex flex-col justify-center relative z-10 pl-0 md:pl-10">
           <div className="w-full">
-            <h3 className="text-[#4D4D4D] font-medium text-2xl mb-2">
+            <h3 className="text-[#333333] font-bold text-2xl mb-2">
               Get in Touch
             </h3>
-            <p className="text-[#8E8E8E] text-[14px] mb-8">
+            <p className="text-[#8E8E8E] text-sm mb-8">
               Have a question? We’re always ready to assist you.
             </p>
-            <Input
-              type="text"
-              placeholder="Name"
-              className="rounded-xl text-[#B2B2B2] bg-white border-[#D4D4D4] focus-visible:ring-[#2BBBC5] mb-4 relative z-0"
-            />
-            <div className="relative z-0">
-               <EmailInput />
-            </div>
-            <div className="relative z-0">
-               <MessageTextarea />
+            
+            <div className="flex flex-col gap-4">
+                <Input
+                  type="text"
+                  placeholder="Name"
+                  className="rounded-xl h-12 px-4 text-gray-700 bg-white border border-gray-200 focus-visible:ring-1 focus-visible:ring-[#2BBBC5] placeholder:text-gray-400"
+                />
+                <div className="relative">
+                   <EmailInput />
+                </div>
+                <div className="relative">
+                   <MessageTextarea />
+                </div>
             </div>
 
-            <Button
-              type="submit"
-              className="bg-linear-to-r from-[#81DDE4] to-[#2BBBC5] text-white font-semibold px-8 py-6 rounded-full text-lg hover:opacity-90 transition-all">
-              Send
-            </Button>
+            <div className="mt-6 md:mt-8">
+                <Button
+                  type="submit"
+                  className="bg-[#58D2DA] hover:bg-[#2BBBC5] text-white font-medium px-10 py-6 rounded-full text-lg shadow-md transition-all w-full md:w-auto">
+                  Send
+                </Button>
+            </div>
           </div>
         </form>
       </div>
