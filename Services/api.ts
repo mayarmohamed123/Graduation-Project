@@ -132,8 +132,45 @@ export const postWithAuthText = async (
   if (!response.ok) {
     const errorText = await response.text().catch(() => null);
     throw new Error(
-      errorText ||
-        `API error: ${response.status} ${response.statusText}`
+      errorText || `API error: ${response.status} ${response.statusText}`
+    );
+  }
+
+  return response.text();
+};
+
+// DELETE request that returns raw text response
+export const deleteWithAuthText = async (
+  url: string,
+  options: RequestInit = {}
+) => {
+  const token = authService.getToken();
+
+  if (!token) {
+    throw new Error("No authentication token found. Please log in again.");
+  }
+
+  const headers = {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+    ...options.headers,
+  };
+
+  const response = await fetch(url, {
+    method: "DELETE",
+    ...options,
+    headers,
+  });
+
+  if (response.status === 401) {
+    authService.logout();
+    throw new Error("Session expired. Please log in again.");
+  }
+
+  if (!response.ok) {
+    const errorText = await response.text().catch(() => null);
+    throw new Error(
+      errorText || `API error: ${response.status} ${response.statusText}`
     );
   }
 

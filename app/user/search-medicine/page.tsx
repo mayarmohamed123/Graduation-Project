@@ -8,6 +8,7 @@ import { medicineService } from "@/Services/medicine";
 import { LoadingSpinner, MedicineCard, SearchInput } from "@/Components/shared";
 import { SlidersHorizontal } from "lucide-react";
 import PrvButton from "@/Components/shared/prvButton";
+import PageHeaderWithBack from "@/Components/shared/PageHeaderWithBack";
 
 export default function SearchMedicinePage() {
   const [medicines, setMedicines] = useState<Medicine[]>([]);
@@ -143,7 +144,7 @@ export default function SearchMedicinePage() {
               `No exact match found for "${query}". Showing alternatives.`
             );
           } else {
-             setError("No medicines found.");
+            setError("No medicines found.");
           }
           return;
         } catch (altErr) {
@@ -172,16 +173,11 @@ export default function SearchMedicinePage() {
   }, [selectedForm, selectedUnits, selectedCategory]);
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="container mx-auto px-4">
+    <div className="min-h-screen bg-gray-50 pb-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center gap-4 mb-4">
-            <PrvButton/>
-            <h3 className="text-3xl md:text-4xl font-semibold text-gray-900">
-              Medicine
-            </h3>
-          </div>
+        <div className="flex">
+          <PageHeaderWithBack title="Medicine" />
           {/* Search Input */}
           <SearchInput onSearch={handleSearch} />
         </div>
@@ -310,14 +306,13 @@ export default function SearchMedicinePage() {
                 </h3>
                 <p className="text-gray-600 mb-6">
                   {medicines.length > 0
-                    ? `Found ${medicines.length} medicine${
-                        medicines.length > 1 ? "s" : ""
-                      }`
+                    ? `Found ${medicines.length} medicine${medicines.length > 1 ? "s" : ""
+                    }`
                     : "No medicines found. Try a different search term or adjust filters."}
                 </p>
 
                 {medicines.length > 0 && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {medicines.map((medicine) => (
                       <MedicineCard key={medicine.id} medicine={medicine} />
                     ))}

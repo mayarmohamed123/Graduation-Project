@@ -58,9 +58,9 @@ export default function PasswordManagement() {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">
+      <h2 className="text-xl font-semibold text-gray-900 mb-8">
         Personal information
-      </h1>
+      </h2>
 
       <div className="bg-white rounded-2xl shadow-sm p-8 max-w-2xl">
         <div className="space-y-6">

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Pharmacy } from "@/types";
-import { LoadingSpinner } from "../shared";
+import { LoadingSpinner, PrimaryButton } from "../shared";
 import Link from "next/link";
 import { pharmacyService } from "@/Services/pharmacies";
 import { Clock, MapPin, Star } from "lucide-react";
@@ -132,9 +132,9 @@ export default function TopRatedPharmacies() {
 
                 {/* Visit Button */}
                 <Link href={`/user/pharmacy/${pharmacy.id}`} className="block">
-                  <button className="w-full bg-primary text-white py-3 px-4 rounded-xl font-medium hover:bg-primary/90 transition-colors duration-200">
+                  <PrimaryButton fullWidth>
                     Visit Pharmacy
-                  </button>
+                  </PrimaryButton>
                 </Link>
               </div>
             </div>
