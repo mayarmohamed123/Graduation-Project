@@ -1,4 +1,3 @@
-// app/search-doctors/page.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -6,15 +5,17 @@ import { useSession } from "next-auth/react";
 import { useDoctors } from "@/hooks/useDoctors";
 import { FilterState } from "@/types/doctors";
 import { useAuthToken } from "@/hooks/useAuthToken";
-import { LoadingSpinner, SearchInput, DoctorCard } from "@/components";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
+import SearchInput from "@/components/common/SearchInput";
+import DoctorCard from "@/components/features/doctor/DoctorCard";
 import PrvButton from "@/components/common/prvButton";
 import { Button } from "@/components/ui/button";
 import SpecialtyIcon from "@/components/common/SpecialtyIcon";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Filter, X } from "lucide-react";
 import PageHeaderWithBack from "@/components/common/PageHeaderWithBack";
+import { Filter, X } from "lucide-react";
 
 // Medical specialties list
 const specialties = [

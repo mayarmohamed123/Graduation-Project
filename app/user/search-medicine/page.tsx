@@ -1,12 +1,15 @@
 "use client";
 
 
-import { TopRatedPharmacies } from "@/components/features/sections";
+import TopRatedPharmacies from "@/components/features/sections/TopRatedPharmacies";
 import React, { useState } from "react";
 import { Medicine } from "@/types";
 import { medicineService } from "@/services/medicineServices";
 import { SlidersHorizontal } from "lucide-react";
-import { LoadingSpinner, MedicineCard, SearchInput , PageHeaderWithBack } from "@/components";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
+import MedicineCard from "@/components/common/MedicineCard";
+import SearchInput from "@/components/common/SearchInput";
+import PageHeaderWithBack from "@/components/common/PageHeaderWithBack";
 
 export default function SearchMedicinePage() {
   const [medicines, setMedicines] = useState<Medicine[]>([]);

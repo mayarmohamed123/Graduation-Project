@@ -15,7 +15,7 @@ import {
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
 import TopRatedDoctors from "@/components/features/sections/TopRatedDoctors";
-import { PrimaryButton } from "@/components/common";
+import PrimaryButton from "@/components/common/PrimaryButton";
 
 export default function Page() {
   const { data: session } = useSession();
@@ -141,7 +141,7 @@ export default function Page() {
                   <p className="font-normal text-white mb-4">
                     Join the Sehha community and make a real difference.
                   </p>
-                  <PrimaryButton variant="secondary" onClick={() => router.push("/user/donate")}  >
+                  <PrimaryButton variant="secondary" onClick={() => router.push("/user/donation")}  >
                     Donate Now
                   </PrimaryButton>
                 </div>
@@ -188,8 +188,9 @@ export default function Page() {
                       router.push("/user/search-doctors");
                     } else if (card.id === 2) {
                       router.push("/user/search-medicine");
+                    } else if (card.id === 3) {
+                      router.push("/user/donation");
                     }
-                    // Add navigation for other cards as needed
                   }}>
                   {card.buttonText}
                 </PrimaryButton>

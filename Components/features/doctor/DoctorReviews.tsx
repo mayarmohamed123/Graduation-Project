@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { AddReviewDialog } from "@/components";
+import AddReviewDialog from "./AddReview";
 import { doctorService } from "@/services/doctorService";
 import { Review } from "@/types/doctors";
 import { userProfileImage, penIcon } from "@/assets";

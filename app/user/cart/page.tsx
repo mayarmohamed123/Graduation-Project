@@ -4,14 +4,15 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { fetchUserCart } from "@/store/slices/cartSlice";
+import { fetchUserCart, clearLocalCart } from "@/store/slices/cartSlice";
 import { cartService } from "@/services/cartService";
+import PharmacyCartCard from "@/components/features/cart/PharmacyCartCard";
+import ConfirmDialog from "@/components/features/cart/ConfirmDialog";
+import CheckoutDialog, { CheckoutFormData } from "@/components/features/cart/CheckoutDialog";
+import PageHeaderWithBack from "@/components/common/PageHeaderWithBack";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
-import { PharmacyCartCard, ConfirmDialog } from "@/components";
-import CheckoutDialog, { CheckoutFormData } from "@/components/features/cart/CheckoutDialog";
-import PageHeaderWithBack from "@/components/common/PageHeaderWithBack";
 import { CheckoutRequest } from "@/types";
 import toast from "react-hot-toast";
 
@@ -82,8 +83,8 @@ export default function CartPage() {
     setClearingCart(true);
     try {
       await cartService.clearCart();
-      // Refresh cart data
-      await dispatch(fetchUserCart());
+      // Immediately clear local state
+      dispatch(clearLocalCart());
       setShowClearDialog(false);
     } catch (error) {
       console.error("Failed to clear cart:", error);
@@ -187,15 +188,16 @@ export default function CartPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <PageHeaderWithBack title="Shopping Cart" />
-        <Button
+       
+         <Button
           variant="outline"
           onClick={handleClearCart}
           disabled={clearingCart}
-          className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-300"
+          className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-300 my-5"
         >
           {clearingCart ? "Clearing..." : "Clear Cart"}
         </Button>
-
+       
         {/* Cart Items - Each Pharmacy */}
         <div className="space-y-8">
           {cart.pharmacies.map((pharmacy) => (

@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { Doctor } from "@/types";
-import { LoadingSpinner, DoctorCard } from "../common";
 import Link from "next/link";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
+import DoctorCard from "../doctor/DoctorCard";
 
 export default function TopRatedDoctors() {
   const [doctors, setDoctors] = useState<Doctor[]>([]);

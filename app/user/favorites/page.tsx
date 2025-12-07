@@ -2,7 +2,11 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { Switch, DoctorCard, MedicineCard, ClinicCard , PageHeaderWithBack } from "@/components";
+import Switch from "@/components/common/Switch";
+import DoctorCard from "@/components/features/doctor/DoctorCard";
+import MedicineCard from "@/components/common/MedicineCard";
+import ClinicCard from "@/components/common/ClinicCard";
+import PageHeaderWithBack from "@/components/common/PageHeaderWithBack";
 import noFavorites from "@/assets/noFavorites.png";
 import {
     FavoriteDoctor,

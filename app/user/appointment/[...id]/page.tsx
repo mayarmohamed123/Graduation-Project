@@ -7,14 +7,12 @@ import {
   messagesIcon,
   userProfileImage,
 } from "@/assets";
-import {
-  Button,
-  Calendar,
-  DoctorReviews,
-  LoadingSpinner,
-} from "@/components";
-import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import DoctorReviews from "@/components/features/doctor/DoctorReviews";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 import PrvButton from "@/components/common/prvButton";
+import { cn } from "@/lib/utils";
 import { doctorService } from "@/services/doctorService";
 import { Doctor, Review } from "@/types/doctors";
 import { startConversationWithDoctor } from "@/services/chatServices";

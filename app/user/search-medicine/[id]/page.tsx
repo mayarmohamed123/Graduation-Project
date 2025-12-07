@@ -6,7 +6,7 @@ import Image from "next/image";
 import { Medicine } from "@/types";
 import { medicineService } from "@/services/medicineServices";
 import { cartService } from "@/services/cartService";
-import { LoadingSpinner } from "@/components/common";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 import PrvButton from "@/components/common/prvButton";
 import { Heart, Check, X } from "lucide-react";
 import { toast } from "react-hot-toast";

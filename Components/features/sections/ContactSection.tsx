@@ -2,7 +2,8 @@ import React from "react";
 import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
 import { Mail, MapPin, Phone } from "lucide-react";
-import { EmailInput, MessageTextarea } from "@/components";
+import EmailInput from "../../common/EmailInput";
+import MessageTextarea from "../../common/MessageTextarea";
 
 export default function ContactSection() {
   return (

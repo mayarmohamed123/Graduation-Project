@@ -10,15 +10,13 @@ import {
 import { useUser } from "@/hooks/useUser";
 import { toast } from "react-hot-toast";
 import { userService } from "@/services/userService";
-import {
-  Appointments,
-  Orders,
-  PasswordManagement,
-  PersonalInfo,
-  Chat,
-} from "@/components";
-import type { UserProfileForm } from "@/types";
+import Appointments from "@/components/features/user/Appointments";
+import Orders from "@/components/features/user/Orders";
+import PasswordManagement from "@/components/features/user/PasswordManagement";
+import PersonalInfo from "@/components/features/user/PersonalInfo";
+import Chat from "@/components/features/chat/Chat";
 import PageHeaderWithBack from "@/components/common/PageHeaderWithBack";
+import type { UserProfileForm } from "@/types";
 
 export default function ProfilePage() {
   const { user: userData, isLoading, refetchUser } = useUser();
