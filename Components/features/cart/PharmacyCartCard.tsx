@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { PharmacyCart } from "@/types";
-import { Button } from "@/Components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Trash2, Minus, Plus, Loader2 } from "lucide-react";
 import Image from "next/image";
 
@@ -12,6 +12,7 @@ interface PharmacyCartCardProps {
   onQuantityChange: (itemId: number, newQuantity: number) => void;
   onRemoveItem: (itemId: number) => void;
   onCheckout: (pharmacyId: number, pharmacyName: string) => void;
+  isCheckoutLoading?: boolean;
 }
 
 export default function PharmacyCartCard({
@@ -20,6 +21,7 @@ export default function PharmacyCartCard({
   onQuantityChange,
   onRemoveItem,
   onCheckout,
+  isCheckoutLoading = false,
 }: PharmacyCartCardProps) {
   return (
     <div key={pharmacy.pharmacyId} className="space-y-4">
@@ -173,8 +175,16 @@ export default function PharmacyCartCard({
             <Button
               onClick={() => onCheckout(pharmacy.pharmacyId, pharmacy.pharmacyName)}
               className="w-full h-12 text-base bg-primary"
+              disabled={isCheckoutLoading}
             >
-              Checkout Now
+              {isCheckoutLoading ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                "Checkout Now"
+              )}
             </Button>
           </div>
         </div>

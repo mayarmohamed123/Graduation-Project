@@ -138,15 +138,13 @@ export interface Appointment {
  */
 export type GetUserAppointmentsResponse = Appointment[];
 
-/**
- * Notification entity from the API
- */
 export interface Notification {
   id: number;
   userId: string;
   title: string;
   message: string;
   type: NotificationType;
+  category?: "appointment" | "order";
   user: null;
   isRead: boolean;
   createdAt: string; // ISO datetime string

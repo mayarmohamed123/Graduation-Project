@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { Doctor } from "@/types/doctors";
-import { doctorService } from "@/Services/doctorService";
+import { doctorService } from "@/services/doctorService";
 import { useAuthToken } from "./useAuthToken";
 
 export const useDoctors = () => {

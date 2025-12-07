@@ -1,6 +1,6 @@
 // src/store/slices/chatSlice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Message } from "@/Services/chatApi";
+import { Message } from "@/services/chatServices";
 
 interface ChatState {
   currentThreadId: number | null;

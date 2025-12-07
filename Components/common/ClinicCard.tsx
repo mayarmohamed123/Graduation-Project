@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FavoriteClinic } from "@/types/favorites";
 import { Heart, MapPin, Phone } from "lucide-react";
-import { favoritesService } from "@/Services/favoritesService";
+import { favoritesService } from "@/services/favoritesService";
 import { toast } from "react-hot-toast";
 import PrimaryButton from "./PrimaryButton";
 

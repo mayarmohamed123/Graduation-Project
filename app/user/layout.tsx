@@ -1,6 +1,6 @@
 import "../globals.css";
-import { Footer, Navbar } from "@/Components/layout";
-import ProtectedRoute from "@/Components/auth/ProtectedRoute";
+import { Footer, Navbar } from "@/components/layout";
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
 
 export default function UserLayout({
   children,

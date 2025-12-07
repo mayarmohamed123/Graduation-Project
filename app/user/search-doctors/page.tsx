@@ -6,15 +6,15 @@ import { useSession } from "next-auth/react";
 import { useDoctors } from "@/hooks/useDoctors";
 import { FilterState } from "@/types/doctors";
 import { useAuthToken } from "@/hooks/useAuthToken";
-import { LoadingSpinner, SearchInput, DoctorCard } from "@/Components";
-import PrvButton from "@/Components/shared/prvButton";
-import { Button } from "@/Components/ui/button";
-import SpecialtyIcon from "@/Components/shared/SpecialtyIcon";
-import { RadioGroup, RadioGroupItem } from "@/Components/ui/radio-group";
-import { Label } from "@/Components/ui/label";
-import { Checkbox } from "@/Components/ui/checkbox";
+import { LoadingSpinner, SearchInput, DoctorCard } from "@/components";
+import PrvButton from "@/components/common/prvButton";
+import { Button } from "@/components/ui/button";
+import SpecialtyIcon from "@/components/common/SpecialtyIcon";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Filter, X } from "lucide-react";
-import PageHeaderWithBack from "@/Components/shared/PageHeaderWithBack";
+import PageHeaderWithBack from "@/components/common/PageHeaderWithBack";
 
 // Medical specialties list
 const specialties = [

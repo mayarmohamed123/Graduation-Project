@@ -23,3 +23,34 @@ export interface UserCart {
   deliveryTotal: number;
   grandTotal: number;
 }
+
+export interface CheckoutRequest {
+  pharmacyId: number;
+  country: string;
+  city: string;
+  street: string;
+  phoneNumber: string;
+}
+
+export interface CheckoutResponse {
+  success: boolean;
+  message: string;
+  data: {
+    orderId: number;
+    itemsTotal: number;
+    deliveryFee: number;
+    totalPrice: number;
+  };
+}
+
+export interface CreatePaymentSessionRequest {
+  paymentFor: string;
+  amount: number;
+  orderid: number;
+}
+
+export interface CreatePaymentSessionResponse {
+  message: string;
+  sessionUrl: string;
+  sessionId: string;
+}

@@ -7,10 +7,10 @@ import { useRouter } from "next/navigation";
 import { Doctor } from "@/types";
 import { FavoriteDoctor } from "@/types/favorites";
 import { Heart, MessageCircle, MapPin, Phone, DollarSign, Star } from "lucide-react";
-import { startConversationWithDoctor } from "@/Services/chatApi";
-import { favoritesService } from "@/Services/favoritesService";
+import { startConversationWithDoctor } from "@/services/chatServices";
+import { favoritesService } from "@/services/favoritesService";
 import { toast } from "react-hot-toast";
-import PrimaryButton from "./PrimaryButton";
+import PrimaryButton from "../../common/PrimaryButton";
 
 interface DoctorCardProps {
   doctor: Doctor | FavoriteDoctor;

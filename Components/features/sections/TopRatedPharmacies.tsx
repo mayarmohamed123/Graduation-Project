@@ -3,10 +3,11 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Pharmacy } from "@/types";
-import { LoadingSpinner, PrimaryButton } from "../shared";
 import Link from "next/link";
-import { pharmacyService } from "@/Services/pharmacies";
+import { pharmacyService } from "@/services/pharmaciesServices";
 import { Clock, MapPin, Star } from "lucide-react";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
+import PrimaryButton from "@/components/common/PrimaryButton";
 
 export default function TopRatedPharmacies() {
   const [pharmacies, setPharmacies] = useState<Pharmacy[]>([]);

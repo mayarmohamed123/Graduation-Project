@@ -7,7 +7,7 @@ import {
   JoinSection,
   ServicesSection,
   WorkSection,
-} from "@/Components";
+} from "@/components";
 
 export default function Home() {
   return (

@@ -5,12 +5,15 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchUserCart } from "@/store/slices/cartSlice";
-import { cartService } from "@/Services/cartService";
-import { Button } from "@/Components/ui/button";
+import { cartService } from "@/services/cartService";
+import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
-import { PharmacyCartCard, ConfirmDialog } from "@/Components";
-import PageHeaderWithBack from "@/Components/shared/PageHeaderWithBack";
+import { PharmacyCartCard, ConfirmDialog } from "@/components";
+import CheckoutDialog, { CheckoutFormData } from "@/components/features/cart/CheckoutDialog";
+import PageHeaderWithBack from "@/components/common/PageHeaderWithBack";
+import { CheckoutRequest } from "@/types";
+import toast from "react-hot-toast";
 
 export default function CartPage() {
   const router = useRouter();
@@ -22,6 +25,9 @@ export default function CartPage() {
   const [updatingItems, setUpdatingItems] = useState<Set<number>>(new Set());
   const [clearingCart, setClearingCart] = useState(false);
   const [showClearDialog, setShowClearDialog] = useState(false);
+  const [checkoutLoadingId, setCheckoutLoadingId] = useState<number | null>(null);
+  const [showCheckoutDialog, setShowCheckoutDialog] = useState(false);
+  const [selectedPharmacy, setSelectedPharmacy] = useState<{id: number, name: string} | null>(null);
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -87,8 +93,46 @@ export default function CartPage() {
   };
 
   const handleCheckout = (pharmacyId: number, pharmacyName: string) => {
-    console.log("Checkout for pharmacy:", pharmacyId, pharmacyName);
-    // router.push(`/user/checkout/${pharmacyId}`);
+    setSelectedPharmacy({ id: pharmacyId, name: pharmacyName });
+    setShowCheckoutDialog(true);
+  };
+
+  const onConfirmCheckout = async (formData: CheckoutFormData) => {
+    if (!selectedPharmacy) return;
+    
+    setCheckoutLoadingId(selectedPharmacy.id);
+    try {
+      const checkoutData: CheckoutRequest = {
+        pharmacyId: selectedPharmacy.id,
+        ...formData
+      };
+
+      const checkoutResponse = await cartService.checkout(checkoutData);
+
+      if (checkoutResponse.success) {
+        toast.success(checkoutResponse.message);
+        const { orderId, totalPrice } = checkoutResponse.data;
+
+        const paymentSession = await cartService.createPaymentSession({
+          paymentFor: "Order",
+          amount: totalPrice,
+          orderid: orderId,
+        });
+
+        if (paymentSession.sessionUrl) {
+          window.location.href = paymentSession.sessionUrl;
+        } else {
+          toast.error("Failed to generate payment session");
+        }
+      }
+    } catch (error) {
+      console.error("Checkout failed:", error);
+    } finally {
+      setCheckoutLoadingId(null);
+      // Don't close dialog immediately if redirecting, but if error we might want to keep it open or close it. 
+      // If redirecting, component might unmount. 
+      // Safe to stop loading state.
+    }
   };
 
   if (loading) {
@@ -162,17 +206,9 @@ export default function CartPage() {
               onQuantityChange={handleQuantityChange}
               onRemoveItem={handleRemoveItem}
               onCheckout={handleCheckout}
+              isCheckoutLoading={false} // Loading is now shown in the dialog
             />
           ))}
-        </div>
-
-        {/* Continue Shopping */}
-        <div className="mt-8 text-center">
-          <Button variant="outline" asChild>
-            <Link href="/user/search-medicine">
-              ← Continue Shopping
-            </Link>
-          </Button>
         </div>
       </div>
 
@@ -186,6 +222,14 @@ export default function CartPage() {
         confirmText="Yes, Clear Cart"
         cancelText="Cancel"
         isLoading={clearingCart}
+      />
+
+      {/* Checkout Dialog */}
+      <CheckoutDialog
+        isOpen={showCheckoutDialog}
+        onClose={() => setShowCheckoutDialog(false)}
+        onConfirm={onConfirmCheckout}
+        isLoading={checkoutLoadingId !== null}
       />
     </div>
   );

@@ -9,16 +9,16 @@ import {
 } from "@/assets";
 import { useUser } from "@/hooks/useUser";
 import { toast } from "react-hot-toast";
-import { userService } from "@/Services/userService";
+import { userService } from "@/services/userService";
 import {
   Appointments,
   Orders,
   PasswordManagement,
   PersonalInfo,
   Chat,
-} from "@/Components";
+} from "@/components";
 import type { UserProfileForm } from "@/types";
-import PageHeaderWithBack from "@/Components/shared/PageHeaderWithBack";
+import PageHeaderWithBack from "@/components/common/PageHeaderWithBack";
 
 export default function ProfilePage() {
   const { user: userData, isLoading, refetchUser } = useUser();

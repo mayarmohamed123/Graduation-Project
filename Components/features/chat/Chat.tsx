@@ -1,12 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { fetchMyThreads, Thread } from "@/Services/chatApi";
+import { fetchMyThreads, Thread } from "@/services/chatServices";
 import { useChat } from "@/hooks/useChat";
-import ChatThreadList from "./ChatThreadList";
-import ChatMessages from "./ChatMessages";
 import { toast } from "react-hot-toast";
 import { useSession } from "next-auth/react";
+import ChatThreadList from "./ChatThreadList";
+import ChatMessages from "./ChatMessages";
 
 export default function Chat() {
   const router = useRouter();

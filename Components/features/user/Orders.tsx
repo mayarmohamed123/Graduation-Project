@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import type { Order } from "@/types";
-import { userService } from "@/Services/userService";
+import { userService } from "@/services/userService";
 import { toast } from "react-hot-toast";
 
 export default function Orders() {

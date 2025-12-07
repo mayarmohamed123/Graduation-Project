@@ -1,7 +1,6 @@
 
 // Services/userService.ts
-import { authService } from "./authService";
-import { fetchWithAuth } from "./api";
+
 import type {
   UpdateProfileData,
   UpdateProfileResponse,
@@ -12,6 +11,7 @@ import type {
   GetUserAppointmentsResponse,
   GetUserNotificationsResponse,
 } from "@/types";
+import { fetchWithAuth } from "./api";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 

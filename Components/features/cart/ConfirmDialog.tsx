@@ -1,4 +1,4 @@
-import { Button } from "@/Components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -6,7 +6,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/Components/ui/dialog";
+} from "@/components/ui/dialog";
 import { AlertTriangle } from "lucide-react";
 
 interface ConfirmDialogProps {

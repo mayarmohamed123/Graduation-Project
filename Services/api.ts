@@ -1,5 +1,5 @@
 // services/api.ts
-import { authService } from "@/Services/authService";
+import { authService } from "@/services/authService";
 
 export interface FilterParams {
   specialty?: string;

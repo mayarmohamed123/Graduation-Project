@@ -2,7 +2,7 @@
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
-import { authService } from "@/Services/authService";
+import { authService } from "@/services/authService";
 import type { AuthOptions, Session, User } from "next-auth";
 import type { JWT } from "next-auth/jwt";
 import type { AdapterUser } from "next-auth/adapters";

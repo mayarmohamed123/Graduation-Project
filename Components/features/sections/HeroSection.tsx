@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { heroSectionImage } from "@/assets";
-import { Button } from "../ui";
+import { Button } from "../../ui";
 export default function HeroSection() {
   return (
     <section

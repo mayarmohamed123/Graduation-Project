@@ -2,17 +2,16 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { Switch, DoctorCard, MedicineCard, ClinicCard } from "@/Components/shared";
-import PrvButton from "@/Components/shared/prvButton";
+import { Switch, DoctorCard, MedicineCard, ClinicCard , PageHeaderWithBack } from "@/components";
 import noFavorites from "@/assets/noFavorites.png";
 import {
     FavoriteDoctor,
     FavoriteMedicine,
     FavoriteClinic,
 } from "@/types/favorites";
-import { favoritesService } from "@/Services/favoritesService";
+import { favoritesService } from "@/services/favoritesService";
 import { toast } from "react-hot-toast";
-import PageHeaderWithBack from "@/Components/shared/PageHeaderWithBack";
+
 
 export default function Favorites() {
     const [activeTab, setActiveTab] = useState("doctors");

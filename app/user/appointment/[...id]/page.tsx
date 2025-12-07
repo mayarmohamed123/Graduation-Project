@@ -12,12 +12,12 @@ import {
   Calendar,
   DoctorReviews,
   LoadingSpinner,
-} from "@/Components";
+} from "@/components";
 import { cn } from "@/lib/utils";
-import PrvButton from "@/Components/shared/prvButton";
-import { doctorService } from "@/Services/doctorService";
+import PrvButton from "@/components/common/prvButton";
+import { doctorService } from "@/services/doctorService";
 import { Doctor, Review } from "@/types/doctors";
-import { startConversationWithDoctor } from "@/Services/chatApi";
+import { startConversationWithDoctor } from "@/services/chatServices";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { MessageCircle } from "lucide-react";

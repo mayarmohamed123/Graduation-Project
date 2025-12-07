@@ -14,8 +14,8 @@ import {
 // Import Swiper
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
-import TopRatedDoctors from "@/Components/sections/TopRatedDoctors";
-import { PrimaryButton } from "@/Components/shared";
+import TopRatedDoctors from "@/components/features/sections/TopRatedDoctors";
+import { PrimaryButton } from "@/components/common";
 
 export default function Page() {
   const { data: session } = useSession();

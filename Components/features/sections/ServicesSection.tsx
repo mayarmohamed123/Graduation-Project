@@ -6,7 +6,7 @@ import {
   secureServiceIcon,
 } from "@/assets";
 import Image from "next/image";
-import { WavesLines } from "../shared";
+import WaveLines from "@/components/common/WaveLines";
 
 export default function ServicesSection() {
   const services = [
@@ -40,8 +40,8 @@ export default function ServicesSection() {
       id="services"
       className="px-8 md:px-20 py-20 bg-white max-w-7xl mx-auto relative">
       {/* Wave decorations - hidden on mobile */}
-      <WavesLines top="218px" left="30px" className="mb-5 hidden lg:block" />
-      <WavesLines top="607px" left="1183px" className="mt-1 hidden lg:block" />
+      <WaveLines top="218px" left="30px" className="mb-5 hidden lg:block" />
+      <WaveLines top="607px" left="1183px" className="mt-1 hidden lg:block" />
       {/* Heading */}
       <div className="text-center mb-20">
         <h2 className="heading">Top Services We Offer</h2>

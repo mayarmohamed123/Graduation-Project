@@ -1,8 +1,9 @@
 "use client";
 
-import { Button, Input, Label } from "../ui";
+
 import { useState } from "react";
 import type { UserProfileForm } from "@/types";
+import { Button, Input, Label } from "@/components/ui";
 
 // Re-export for backward compatibility
 export type UserState = UserProfileForm;

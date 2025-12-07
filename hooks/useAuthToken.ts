@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { authService } from "@/Services/authService";
+import { authService } from "@/services/authService";
 
 export const useAuthToken = () => {
   const { data: session, status } = useSession();

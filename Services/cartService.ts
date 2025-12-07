@@ -1,7 +1,13 @@
 // Services/cartService.ts
-import { fetchWithAuth, postWithAuthText } from "./api";
+import { fetchWithAuth, postWithAuthText, postWithAuth } from "./api";
 import { authService } from "./authService";
-import { UserCart } from "@/types";
+import {
+  UserCart,
+  CheckoutRequest,
+  CheckoutResponse,
+  CreatePaymentSessionRequest,
+  CreatePaymentSessionResponse
+} from "@/types";
 import { toast } from "react-hot-toast";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -150,6 +156,53 @@ class CartService {
       return message;
     } catch (error: any) {
       toast.error(error.message || "Failed to clear cart");
+      throw error;
+    }
+  }
+
+  /**
+   * Checkout order
+   * POST {{baseUrl}}/order/checkout
+   */
+  async checkout(data: CheckoutRequest): Promise<CheckoutResponse> {
+    const url = `${API_BASE_URL}/order/checkout`;
+
+    try {
+      const response = await postWithAuth(url, data);
+      return response as CheckoutResponse;
+    } catch (error: any) {
+      toast.error(error.message || "Checkout failed");
+      throw error;
+    }
+  }
+
+  /**
+   * Create payment session
+   * POST {{baseUrl}}/payments/create-session
+   */
+  async createPaymentSession(data: CreatePaymentSessionRequest): Promise<CreatePaymentSessionResponse> {
+    const url = `${API_BASE_URL}/payments/create-session`;
+
+    try {
+      const response = await postWithAuth(url, data);
+      return response as CreatePaymentSessionResponse;
+    } catch (error: any) {
+      toast.error(error.message || "Failed to create payment session");
+      throw error;
+    }
+  }
+
+  /**
+   * Verify payment session
+   * GET {{baseUrl}}/payments/verify-session?sessionId={sessionId}
+   */
+  async verifySession(sessionId: string): Promise<any> {
+    const url = `${API_BASE_URL}/payments/verify-session?sessionId=${sessionId}`;
+
+    try {
+      return await fetchWithAuth(url);
+    } catch (error: any) {
+      toast.error(error.message || "Failed to verify session");
       throw error;
     }
   }

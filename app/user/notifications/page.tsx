@@ -3,16 +3,16 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { userService } from "@/Services/userService";
-import { createNotificationConnection } from "@/Services/notificationHub";
-import { Notification, NotificationType } from "@/types";
-import { Button } from "@/Components/ui/button";
-import PrvButton from "@/Components/shared/prvButton";
-import { Calendar, CheckCircle, XCircle, Clock, Package } from "lucide-react";
+import { userService } from "@/services/userService";
+import { createNotificationConnection } from "@/services/notificationHub";
+import { Notification } from "@/types";
 import Image from "next/image";
 import { notificationEmptyImage } from "@/assets";
 import toast from "react-hot-toast";
-import PageHeaderWithBack from "@/Components/shared/PageHeaderWithBack";
+import PageHeaderWithBack from "@/components/common/PageHeaderWithBack";
+import Switch from "@/components/common/Switch";
+import NotificationCard from "@/components/common/NotificationCard";
+import { HubConnectionState } from "@microsoft/signalr";
 
 type TabType = "appointments" | "orders";
 
@@ -30,8 +30,8 @@ export default function NotificationsPage() {
     // 1- Create SignalR connection
     const connection = createNotificationConnection(session.accessToken);
 
-    // 2- Listen for notifications
-    connection.on("ReceiveNotification", (data) => {
+    // 2- Define notification handler
+    const handleNotification = (data: Notification) => {
       console.log("🔔 New Notification:", data);
 
       // Show toast notification
@@ -52,16 +52,31 @@ export default function NotificationsPage() {
       } else if (data.category === "order") {
         setOrders((prev) => [data, ...prev]);
       }
-    });
+    };
 
-    // 3- Start connection
-    connection.start().catch(console.error);
+    // 3- Listen for notifications
+    connection.on("ReceiveNotification", handleNotification);
 
-    // 4- Fetch notifications once
+    // 4- Start connection safely
+    const startConnection = async () => {
+      if (connection.state === HubConnectionState.Disconnected) {
+        try {
+          await connection.start();
+          console.log("SignalR Connected.");
+        } catch (err) {
+          console.error("SignalR Connection Error: ", err);
+        }
+      }
+    };
+
+    startConnection();
+
+    // 5- Fetch notifications once
     fetchNotifications();
 
+    // Cleanup: Remove listener but keep connection open (singleton)
     return () => {
-      connection.stop();
+      connection.off("ReceiveNotification", handleNotification);
     };
   }, [session]);
 
@@ -75,40 +90,6 @@ export default function NotificationsPage() {
       console.error("Failed to fetch notifications:", error);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const getNotificationIcon = (type: NotificationType) => {
-    switch (type) {
-      case "appointmentStartingSoon":
-        return { icon: Clock, bg: "bg-orange-100", color: "text-orange-600" };
-      case "appointmentApproved":
-        return { icon: CheckCircle, bg: "bg-green-100", color: "text-green-600" };
-      case "orderConfirmed":
-        return { icon: CheckCircle, bg: "bg-green-100", color: "text-green-600" };
-      case "orderDelivered":
-        return { icon: Package, bg: "bg-blue-100", color: "text-blue-600" };
-      case "orderCancelled":
-        return { icon: XCircle, bg: "bg-red-100", color: "text-red-600" };
-      default:
-        return { icon: Calendar, bg: "bg-gray-100", color: "text-gray-600" };
-    }
-  };
-
-  const getNotificationBg = (type: NotificationType) => {
-    switch (type) {
-      case "appointmentStartingSoon":
-        return "bg-orange-50";
-      case "appointmentApproved":
-        return "bg-green-50";
-      case "orderConfirmed":
-        return "bg-green-50";
-      case "orderDelivered":
-        return "bg-blue-50";
-      case "orderCancelled":
-        return "bg-red-50";
-      default:
-        return "bg-gray-50";
     }
   };
 
@@ -130,25 +111,15 @@ export default function NotificationsPage() {
 
       <div className="max-w-7xl mx-auto px-4 pb-4">
         {/* Tabs */}
-        <div className="flex gap-3 mb-6">
-          <button
-            onClick={() => setActiveTab("appointments")}
-            className={`flex-1 py-3 px-6 rounded-full font-medium transition-all ${activeTab === "appointments"
-              ? "bg-primary text-white shadow-md"
-              : "bg-white text-gray-700 hover:bg-gray-100"
-              }`}
-          >
-            Appointments
-          </button>
-          <button
-            onClick={() => setActiveTab("orders")}
-            className={`flex-1 py-3 px-6 rounded-full font-medium transition-all ${activeTab === "orders"
-              ? "bg-primary text-white shadow-md"
-              : "bg-white text-gray-700 hover:bg-gray-100"
-              }`}
-          >
-            Medicine Order
-          </button>
+        <div className="mb-6 flex flex-end">
+          <Switch
+            tabs={[
+              { id: "appointments", label: "Appointments" },
+              { id: "orders", label: "Medicine Order" },
+            ]}
+            activeTab={activeTab}
+            onTabChange={(id) => setActiveTab(id as TabType)}
+          />
         </div>
 
         {/* Notifications List or Empty State */}
@@ -171,46 +142,12 @@ export default function NotificationsPage() {
           </div>
         ) : (
           <div className="space-y-3">
-            {currentNotifications.map((notification) => {
-              const { icon: Icon, bg, color } = getNotificationIcon(notification.type);
-              const bgClass = getNotificationBg(notification.type);
-
-              return (
-                <div
-                  key={notification.id}
-                  className={`${bgClass} rounded-xl p-4 flex gap-4 items-start hover:shadow-md transition-shadow`}
-                >
-                  {/* Icon */}
-                  <div className={`${bg} rounded-full p-3 flex-shrink-0`}>
-                    <Icon className={`w-6 h-6 ${color}`} />
-                  </div>
-
-                  {/* Content */}
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-gray-900 mb-1">
-                      {notification.title}
-                    </h3>
-                    <p className="text-sm text-gray-600 leading-relaxed">
-                      {notification.message}
-                    </p>
-                    <p className="text-xs text-gray-500 mt-2">
-                      {new Date(notification.createdAt).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </p>
-                  </div>
-
-                  {/* Unread indicator */}
-                  {!notification.isRead && (
-                    <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0 mt-2"></div>
-                  )}
-                </div>
-              );
-            })}
+            {currentNotifications.map((notification) => (
+              <NotificationCard
+                key={notification.id}
+                notification={notification}
+              />
+            ))}
           </div>
         )}
       </div>

@@ -5,8 +5,8 @@ import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { Lock, Mail } from "lucide-react";
-import { Input } from "@/Components/ui/input";
-import { Button } from "@/Components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import {
   vector37,
   doctorsIllustration,

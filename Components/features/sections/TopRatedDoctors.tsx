@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Doctor } from "@/types";
-import { LoadingSpinner, DoctorCard } from "../shared";
+import { LoadingSpinner, DoctorCard } from "../common";
 import Link from "next/link";
 
 export default function TopRatedDoctors() {
