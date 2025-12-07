@@ -107,18 +107,8 @@ export default function ProfilePage() {
     }
 
     try {
-      // Check if user has a profile image already
-      const hasProfileImage =
-        userData?.profileImage && userData.profileImage !== "";
-
-      let response;
-      if (hasProfileImage) {
-        // Update existing profile picture
-        response = await userService.updateProfilePicture(file);
-      } else {
-        // Upload profile picture for the first time
-        response = await userService.uploadProfilePicture(file);
-      }
+      // Upload profile picture (API handles both upload and update via same endpoint now)
+      const response = await userService.uploadProfilePicture(file);
 
       // Show success toast with message from API
       toast.success(response.message);
@@ -145,7 +135,7 @@ export default function ProfilePage() {
 
   const handleLogout = async () => {
     try {
-      await signOut({ redirect: true, callbackUrl: "/auth/signin" });
+      await signOut({ redirect: true, callbackUrl: "/" });
     } catch (error) {
       toast.error("Failed to logout");
     }

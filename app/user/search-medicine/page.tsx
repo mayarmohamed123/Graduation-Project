@@ -25,13 +25,15 @@ export default function SearchMedicinePage() {
   const strengthUnits = ["mg", "g", "ml", "μg"];
   const categories = [
     "Antibiotic",
-    "Pain Relief",
-    "Vitamins & Supplements",
-    "Cold & Flu",
-    "First Aid",
+    "Antihistamine",
+    "Antipyretic",
+    "Cardiovascular",
+    "Dermatology",
     "Skincare",
-    "Digestive Health",
-    "Allergy",
+    "Supplement",
+    "Respiratory",
+    "Vitamin",
+
   ];
 
   const handleFormChange = (form: string) => {

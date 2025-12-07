@@ -180,11 +180,7 @@ export default function Navbar() {
                   />
                 </Link>
                 <button
-                  onClick={async () => {
-                    await signOut({ redirect: false });
-                    router.push("/");
-                    router.refresh();
-                  }}
+                  onClick={() => signOut({ callbackUrl: "/" })}
                   className="flex items-center space-x-2 text-gray-700 hover:text-primary transition">
                   <LogOut size={20} />
                   <span className="hidden lg:inline">Logout</span>
@@ -256,11 +252,9 @@ export default function Navbar() {
                   Notifications
                 </Link>
                 <button
-                  onClick={async () => {
+                  onClick={() => {
                     setIsOpen(false);
-                    await signOut({ redirect: false });
-                    router.push("/");
-                    router.refresh();
+                    signOut({ callbackUrl: "/" });
                   }}
                   className="w-full mt-3 flex items-center justify-center space-x-2 text-red-600 hover:text-red-700 transition py-2">
                   <LogOut size={20} />

@@ -17,11 +17,20 @@ export const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
     throw new Error("No authentication token found. Please log in again.");
   }
 
-  const headers = {
-    "Content-Type": "application/json",
+  const headers: Record<string, string> = {
     Authorization: `Bearer ${token}`,
-    ...options.headers,
+    ...(options.headers as Record<string, string>),
   };
+
+  // Only set Content-Type to application/json if body is NOT FormData
+  // and Content-Type isn't explicitly set (though spreading options.headers handles the explicit set usually, 
+  // we just want to avoid overwriting it or setting it for FormData)
+  if (
+    !(options.body instanceof FormData) &&
+    !headers["Content-Type"]
+  ) {
+    headers["Content-Type"] = "application/json";
+  }
 
   const response = await fetch(url, {
     ...options,
@@ -56,15 +65,20 @@ export const postWithAuth = async (
     throw new Error("No authentication token found. Please log in again.");
   }
 
-  const headers = {
-    "Content-Type": "application/json",
+  const headers: Record<string, string> = {
     Authorization: `Bearer ${token}`,
-    ...options.headers,
+    ...(options.headers as Record<string, string>),
   };
+
+  const isFormData = data instanceof FormData;
+
+  if (!isFormData && !headers["Content-Type"]) {
+    headers["Content-Type"] = "application/json";
+  }
 
   const response = await fetch(url, {
     method: "POST",
-    ...(data ? { body: JSON.stringify(data) } : {}),
+    body: isFormData ? (data as FormData) : data ? JSON.stringify(data) : undefined,
     ...options,
     headers,
   });

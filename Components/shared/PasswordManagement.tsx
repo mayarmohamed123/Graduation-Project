@@ -64,20 +64,6 @@ export default function PasswordManagement() {
 
       <div className="bg-white rounded-2xl shadow-sm p-8 max-w-2xl">
         <div className="space-y-6">
-          {/* Username Field (Read-only for context) */}
-          <div className="space-y-2">
-            <Label htmlFor="username" className="text-primary">
-              Username
-            </Label>
-            <Input
-              id="username"
-              type="text"
-              placeholder="Sara Mohamed"
-              disabled
-              className="bg-gray-50"
-            />
-          </div>
-
           {/* Current Password */}
           <div className="space-y-2">
             <Label htmlFor="current" className="text-primary">
