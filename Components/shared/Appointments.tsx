@@ -17,7 +17,7 @@ export default function Appointments() {
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<TabType>("pending");
   const router = useRouter();
-  
+
 
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -62,12 +62,12 @@ export default function Appointments() {
       console.log('Starting chat with doctor:', doctorId);
       // Start a conversation with the doctor
       const thread = await startConversationWithDoctor(doctorId);
-      
+
       console.log('Thread created:', thread);
-      
+
       // Navigate to chat page
       router.push(`/user/chat?threadId=${thread.id}`);
-      
+
       toast.success("Opening chat with doctor...");
     } catch (error) {
       console.error('Failed to start chat:', error);
@@ -148,7 +148,7 @@ export default function Appointments() {
             </div>
 
             {/* Message Icon */}
-            <button 
+            <button
               onClick={() => handleStartChat(appointment.doctorId)}
               className="p-2 hover:bg-gray-100 rounded-full transition"
             >
@@ -188,7 +188,7 @@ export default function Appointments() {
   if (isLoading) {
     return (
       <div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Appointments</h1>
+        <h2 className="text-xl font-semibold text-gray-900 mb-8">Appointments</h2>
         <div className="flex items-center justify-center py-12">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
         </div>
@@ -198,35 +198,32 @@ export default function Appointments() {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">Appointments</h1>
+      <h2 className="text-xl font-semibold text-gray-900 mb-8">Appointments</h2>
 
       {/* Tab Filters */}
       <div className="flex gap-3 mb-8 bg-gray-100 p-2 rounded-full justify-evenly transition-all ">
         <button
           onClick={() => setActiveTab("pending")}
-          className={`px-16 py-3 rounded-full font-medium transition ${
-            activeTab === "pending"
+          className={`px-16 py-3 rounded-full font-medium transition ${activeTab === "pending"
               ? "bg-primary text-white"
               : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-          }`}>
+            }`}>
           Pending
         </button>
         <button
           onClick={() => setActiveTab("completed")}
-          className={`px-16 py-3 rounded-full font-medium transition ${
-            activeTab === "completed"
+          className={`px-16 py-3 rounded-full font-medium transition ${activeTab === "completed"
               ? "bg-primary text-white"
               : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-          }`}>
+            }`}>
           Completed
         </button>
         <button
           onClick={() => setActiveTab("cancelled")}
-          className={`px-16 py-3 rounded-full font-medium transition ${
-            activeTab === "cancelled"
+          className={`px-16 py-3 rounded-full font-medium transition ${activeTab === "cancelled"
               ? "bg-primary text-white"
               : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-          }`}>
+            }`}>
           Canceled
         </button>
       </div>

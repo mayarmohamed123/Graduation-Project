@@ -12,6 +12,7 @@ import { Calendar, CheckCircle, XCircle, Clock, Package } from "lucide-react";
 import Image from "next/image";
 import { notificationEmptyImage } from "@/assets";
 import toast from "react-hot-toast";
+import PageHeaderWithBack from "@/Components/shared/PageHeaderWithBack";
 
 type TabType = "appointments" | "orders";
 
@@ -125,36 +126,26 @@ export default function NotificationsPage() {
   return (
     <div className="min-h-screen">
       {/* Header */}
-        <div className="max-w-7xl mx-auto px-6 py-10">
-             <div className="mb-8 flex">
-               <div className="flex gap-3 items-center w-full">
-                 <PrvButton />
-                 <h3 className="text-4xl font-semibold text-gray-900">Notifications</h3>
-               </div>
-             </div>
-             </div>
-      
+      <PageHeaderWithBack title="Notifications" />
 
-      <div className="max-w-7xl mx-auto px-4 py-6">
+      <div className="max-w-7xl mx-auto px-4 pb-4">
         {/* Tabs */}
         <div className="flex gap-3 mb-6">
           <button
             onClick={() => setActiveTab("appointments")}
-            className={`flex-1 py-3 px-6 rounded-full font-medium transition-all ${
-              activeTab === "appointments"
-                ? "bg-primary text-white shadow-md"
-                : "bg-white text-gray-700 hover:bg-gray-100"
-            }`}
+            className={`flex-1 py-3 px-6 rounded-full font-medium transition-all ${activeTab === "appointments"
+              ? "bg-primary text-white shadow-md"
+              : "bg-white text-gray-700 hover:bg-gray-100"
+              }`}
           >
             Appointments
           </button>
           <button
             onClick={() => setActiveTab("orders")}
-            className={`flex-1 py-3 px-6 rounded-full font-medium transition-all ${
-              activeTab === "orders"
-                ? "bg-primary text-white shadow-md"
-                : "bg-white text-gray-700 hover:bg-gray-100"
-            }`}
+            className={`flex-1 py-3 px-6 rounded-full font-medium transition-all ${activeTab === "orders"
+              ? "bg-primary text-white shadow-md"
+              : "bg-white text-gray-700 hover:bg-gray-100"
+              }`}
           >
             Medicine Order
           </button>
@@ -175,7 +166,7 @@ export default function NotificationsPage() {
               Nothing to display here!
             </h2>
             <p className="text-gray-600 text-center max-w-md">
-              We'll notify you once we have new notifications.
+              We&apos;ll notify you once we have new notifications.
             </p>
           </div>
         ) : (

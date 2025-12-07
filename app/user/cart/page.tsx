@@ -10,12 +10,13 @@ import { Button } from "@/Components/ui/button";
 import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { PharmacyCartCard, ConfirmDialog } from "@/Components";
+import PageHeaderWithBack from "@/Components/shared/PageHeaderWithBack";
 
 export default function CartPage() {
   const router = useRouter();
   const { data: session } = useSession();
   const dispatch = useAppDispatch();
-  
+
   const { cart, loading, error } = useAppSelector((state) => state.cart);
   const isLoggedIn = !!session;
   const [updatingItems, setUpdatingItems] = useState<Set<number>>(new Set());
@@ -27,13 +28,13 @@ export default function CartPage() {
       router.push("/login");
       return;
     }
-    
+
     dispatch(fetchUserCart());
   }, [isLoggedIn, dispatch, router]);
 
   const handleQuantityChange = async (itemId: number, newQuantity: number) => {
     if (newQuantity < 1) return;
-    
+
     setUpdatingItems(prev => new Set(prev).add(itemId));
     try {
       await cartService.updateQuantity(itemId, newQuantity);
@@ -138,25 +139,18 @@ export default function CartPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 pb-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-8 flex justify-between items-center">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Shopping Cart</h1>
-            <p className="text-gray-600 mt-1">
-              {cart.pharmacies.length} pharmacy(ies)
-            </p>
-          </div>
-          <Button 
-            variant="outline" 
-            onClick={handleClearCart}
-            disabled={clearingCart}
-            className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-300"
-          >
-            {clearingCart ? "Clearing..." : "Clear Cart"}
-          </Button>
-        </div>
+        <PageHeaderWithBack title="Shopping Cart" />
+        <Button
+          variant="outline"
+          onClick={handleClearCart}
+          disabled={clearingCart}
+          className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-300"
+        >
+          {clearingCart ? "Clearing..." : "Clear Cart"}
+        </Button>
 
         {/* Cart Items - Each Pharmacy */}
         <div className="space-y-8">

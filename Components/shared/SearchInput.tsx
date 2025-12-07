@@ -16,8 +16,8 @@ export default function SearchInput({ onSearch }: SearchInputProps) {
   return (
     <form
       onSubmit={handleSearch}
-      className="flex items-center justify-center mb-12 w-full">
-      <div className="relative flex w-full max-w-4xl border border-[#2BBBC5] rounded-full overflow-hidden shadow-2xl">
+      className="flex items-center justify-center mb-8 w-full">
+      <div className="relative flex w-full max-w-4xl border border-[#2BBBC5] rounded-full overflow-hidden shadow-2xl my-8">
         <input
           type="text"
           value={query}
