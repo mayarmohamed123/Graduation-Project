@@ -8,6 +8,7 @@ import { medicineService } from "@/Services/medicine";
 import { LoadingSpinner, MedicineCard, SearchInput } from "@/Components/shared";
 import { SlidersHorizontal } from "lucide-react";
 import PrvButton from "@/Components/shared/prvButton";
+import PageHeaderWithBack from "@/Components/shared/PageHeaderWithBack";
 
 export default function SearchMedicinePage() {
   const [medicines, setMedicines] = useState<Medicine[]>([]);
@@ -170,16 +171,11 @@ export default function SearchMedicinePage() {
   }, [selectedForm, selectedUnits, selectedCategory]);
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 pb-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center gap-4 mb-4">
-            <PrvButton />
-            <h3 className="text-3xl md:text-4xl font-semibold text-gray-900">
-              Medicine
-            </h3>
-          </div>
+        <div className="flex">
+          <PageHeaderWithBack title="Medicine" />
           {/* Search Input */}
           <SearchInput onSearch={handleSearch} />
         </div>

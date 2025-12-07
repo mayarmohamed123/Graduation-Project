@@ -1,7 +1,7 @@
 import PrvButton from "./prvButton";
 
 export default function PageHeaderWithBack({ title }: { title: string }) {
-    return <div className="max-w-7xl mx-auto px-6 py-8">
+    return <div className="max-w-7xl mx-auto py-8">
         <div className="flex">
             <div className="flex gap-3 items-center w-full">
                 <PrvButton />

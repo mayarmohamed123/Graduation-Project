@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Medicine } from "@/types";
 import { FavoriteMedicine } from "@/types/favorites";
 import { Heart, Plus, Loader2, Star, MapPin } from "lucide-react";
+import PrimaryButton from "./PrimaryButton";
 import { cartService } from "@/Services/cartService";
 import { favoritesService } from "@/Services/favoritesService";
 import { useAppDispatch } from "@/store/hooks";
@@ -118,7 +119,7 @@ export default function MedicineCard({
   const isOutOfStock = medicine.quantity === 0;
 
   return (
-    <div className="bg-white rounded-2xl border-2 border-primary overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+    <div className="bg-white rounded-2xl border-2 border-primary overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 h-full flex flex-col">
       {/* Image Section */}
       <div className="relative h-40 bg-gradient-to-br from-blue-50 to-white p-4">
         {/* Out of Stock Overlay */}
@@ -189,7 +190,7 @@ export default function MedicineCard({
       </div>
 
       {/* Content Section */}
-      <div className="p-3 bg-gray-50">
+      <div className="p-3 bg-gray-50 flex-1 flex flex-col">
         {/* Name and Price */}
         <div className="mb-2">
           <h3 className="text-lg font-semibold text-gray-900 mb-0.5 line-clamp-1">
@@ -211,12 +212,12 @@ export default function MedicineCard({
           </div>
 
           {/* Generic Name */}
-          <div className="text-sm text-gray-600">
+          <div className="text-sm text-gray-600 line-clamp-1">
             <span className="font-medium">Generic:</span> {medicine.genericName}
           </div>
 
           {/* Strength */}
-          <div className="text-sm text-gray-600">
+          <div className="text-sm text-gray-600 line-clamp-1">
             <span className="font-medium">Strength:</span> {medicine.strength}{" "}
             {medicine.strengthUnit}
           </div>
@@ -243,16 +244,14 @@ export default function MedicineCard({
         </div>
 
         {/* View Details Button */}
-        <Link href={`/user/search-medicine/${medicine.id}`} className="block">
-          <button
+        <Link href={`/user/search-medicine/${medicine.id}`} className="block mt-auto">
+          <PrimaryButton
             disabled={isOutOfStock}
-            className={`w-full py-2.5 px-4 rounded-xl font-medium transition-colors duration-200 ${isOutOfStock
-              ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-              : "bg-primary text-white hover:bg-primary/90"
-              }`}
+            fullWidth
+            className={isOutOfStock ? "!bg-gray-300 !text-gray-500 hover:!bg-gray-300" : ""}
           >
             {isOutOfStock ? "Unavailable" : "View Details"}
-          </button>
+          </PrimaryButton>
         </Link>
       </div>
     </div>
