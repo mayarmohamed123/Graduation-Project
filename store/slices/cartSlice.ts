@@ -11,7 +11,10 @@ const CART_API = `${process.env.NEXT_PUBLIC_API_BASE_URL}/cart`;
 export const fetchUserCart = createAsyncThunk(
   "cart/fetchUserCart",
   async () => {
-    const response = await fetchWithAuth(CART_API);
+    const response = await fetchWithAuth(CART_API , {
+  cache: "no-store",
+  next: { revalidate: 0 },
+});
     return response as UserCart;
   }
 );

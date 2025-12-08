@@ -21,7 +21,7 @@ export default function CartPage() {
   const { data: session } = useSession();
   const dispatch = useAppDispatch();
 
-  const { cart, loading, error } = useAppSelector((state) => state.cart);
+  const { cart, loading, error , totalItems } = useAppSelector((state) => state.cart);
   const isLoggedIn = !!session;
   const [updatingItems, setUpdatingItems] = useState<Set<number>>(new Set());
   const [clearingCart, setClearingCart] = useState(false);
@@ -37,7 +37,7 @@ export default function CartPage() {
     }
 
     dispatch(fetchUserCart());
-  }, [isLoggedIn, dispatch, router]);
+  }, [isLoggedIn, dispatch, totalItems , router]);
 
   const handleQuantityChange = async (itemId: number, newQuantity: number) => {
     if (newQuantity < 1) return;
