@@ -1,5 +1,5 @@
 "use client";
-import { useSession } from "next-auth/react";
+import { useAuth } from "@/lib/auth";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import {
@@ -18,9 +18,9 @@ import TopRatedDoctors from "@/components/features/sections/TopRatedDoctors";
 import PrimaryButton from "@/components/common/PrimaryButton";
 
 export default function Page() {
-  const { data: session } = useSession();
+  const { user } = useAuth();
   const router = useRouter();
-  const userName = session?.user?.name || "User";
+  const userName = user?.userName || "User";
 
   const actionCards = [
     {

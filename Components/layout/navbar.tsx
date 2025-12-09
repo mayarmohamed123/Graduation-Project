@@ -2,7 +2,7 @@
 
 import { Menu, X, LogOut } from "lucide-react";
 import React, { useState, useEffect } from "react";
-import { useSession, signOut } from "next-auth/react";
+import { useAuth } from "@/lib/auth";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui";
 import Image from "next/image";
@@ -18,16 +18,16 @@ import { Heart, ShoppingCart, Bell, User } from "lucide-react";
 
 
 export default function Navbar() {
-  const { data: session, status } = useSession();
+  const { isAuthenticated, isLoading, logout } = useAuth();
   const [activeLink, setActiveLink] = useState("home");
   const router = useRouter();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const isLoggedIn = !!session;
+  const isLoggedIn = isAuthenticated;
   const dispatch = useAppDispatch();
   const cartTotalItems = useAppSelector((state) => state.cart.totalItems);
   const pathname = usePathname();
 
-  // 🔑 Sync NextAuth session token to cookies
+  // 🔑 Sync token to cart
   useAuthToken();
 
   // Fetch cart when logged in
@@ -39,8 +39,8 @@ export default function Navbar() {
 
   const isActiveLink = (link: string) => pathname === link;
 
-  // Show loading state while session is being fetched
-  if (status === "loading") {
+  // Show loading state while auth is being checked
+  if (isLoading) {
     return (
       <nav className="bg-white border-b shadow-sm w-full">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -173,7 +173,7 @@ export default function Navbar() {
                   />
                 </Link>
                 <button
-                  onClick={() => signOut({ callbackUrl: "/" })}
+                  onClick={logout}
                   className="flex items-center space-x-2 text-gray-700 hover:text-primary transition">
                   <LogOut size={20} />
                   <span className="hidden lg:inline">Logout</span>
@@ -247,7 +247,7 @@ export default function Navbar() {
                 <button
                   onClick={() => {
                     setIsOpen(false);
-                    signOut({ callbackUrl: "/" });
+                    logout();
                   }}
                   className="w-full mt-3 flex items-center justify-center space-x-2 text-red-600 hover:text-red-700 transition py-2">
                   <LogOut size={20} />

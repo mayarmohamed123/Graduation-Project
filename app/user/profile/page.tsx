@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { Camera, Menu, X, MessageSquare, User, ShoppingBag, Calendar, Lock, LogOut } from "lucide-react";
-import { signOut } from "next-auth/react";
+import { useAuth } from "@/lib/auth";
 import {
   profile2UserIcon,
 } from "@/assets";
@@ -19,6 +19,7 @@ import PageHeaderWithBack from "@/components/common/PageHeaderWithBack";
 import type { UserProfileForm } from "@/types";
 
 export default function ProfilePage() {
+  const { logout } = useAuth();
   const { user: userData, isLoading, refetchUser } = useUser();
   const [user, setUser] = useState<UserProfileForm>({
     username: "",
@@ -129,7 +130,7 @@ export default function ProfilePage() {
 
   const handleLogout = async () => {
     try {
-      await signOut({ redirect: true, callbackUrl: "/" });
+      logout();
     } catch (error) {
       toast.error("Failed to logout");
     }

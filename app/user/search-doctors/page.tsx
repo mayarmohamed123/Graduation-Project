@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
+import { useAuth } from "@/lib/auth";
 import { useDoctors } from "@/hooks/useDoctors";
 import { FilterState } from "@/types/doctors";
 import { useAuthToken } from "@/hooks/useAuthToken";
@@ -34,8 +34,8 @@ const specialties = [
 ];
 
 export default function SearchDoctorsPage() {
-  const { status: sessionStatus } = useSession();
-  const { isAuthenticated, isLoading: authLoading } = useAuthToken();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
+  const { token } = useAuthToken();
   const { doctors, loading, error, refetch } = useDoctors();
 
   const [filters, setFilters] = useState<FilterState>({
@@ -103,7 +103,7 @@ export default function SearchDoctorsPage() {
   }, [filters, refetch, isAuthenticated]);
 
   // Show loading while checking authentication
-  if (sessionStatus === "loading" || authLoading) {
+  if (authLoading) {
     return <LoadingSpinner />;
   }
 

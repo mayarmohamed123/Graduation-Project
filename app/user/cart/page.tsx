@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useAuth } from "@/lib/auth";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchUserCart, clearLocalCart } from "@/store/slices/cartSlice";
 import { cartService } from "@/services/cartService";
@@ -18,11 +18,10 @@ import toast from "react-hot-toast";
 
 export default function CartPage() {
   const router = useRouter();
-  const { data: session } = useSession();
+  const { user } = useAuth();
   const dispatch = useAppDispatch();
 
   const { cart, loading, error , totalItems } = useAppSelector((state) => state.cart);
-  const isLoggedIn = !!session;
   const [updatingItems, setUpdatingItems] = useState<Set<number>>(new Set());
   const [clearingCart, setClearingCart] = useState(false);
   const [showClearDialog, setShowClearDialog] = useState(false);
@@ -31,13 +30,10 @@ export default function CartPage() {
   const [selectedPharmacy, setSelectedPharmacy] = useState<{id: number, name: string} | null>(null);
 
   useEffect(() => {
-    if (!isLoggedIn) {
-      router.push("/login");
-      return;
-    }
+    
 
     dispatch(fetchUserCart());
-  }, [isLoggedIn, dispatch, totalItems , router]);
+  }, [dispatch, totalItems , router]);
 
   const handleQuantityChange = async (itemId: number, newQuantity: number) => {
     if (newQuantity < 1) return;

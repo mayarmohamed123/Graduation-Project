@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useAuth } from "@/lib/auth";
 import { userService } from "@/services/userService";
 import { createNotificationConnection } from "@/services/notificationHub";
 import { Notification } from "@/types";
@@ -18,17 +18,17 @@ type TabType = "appointments" | "orders";
 
 export default function NotificationsPage() {
   const router = useRouter();
-  const { data: session } = useSession();
+  const { user, token } = useAuth();
   const [activeTab, setActiveTab] = useState<TabType>("appointments");
   const [appointments, setAppointments] = useState<Notification[]>([]);
   const [orders, setOrders] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!session?.accessToken) return;
+    if (!token) return;
 
     // 1- Create SignalR connection
-    const connection = createNotificationConnection(session.accessToken);
+    const connection = createNotificationConnection(token);
 
     // 2- Define notification handler
     const handleNotification = (data: Notification) => {
@@ -78,7 +78,7 @@ export default function NotificationsPage() {
     return () => {
       connection.off("ReceiveNotification", handleNotification);
     };
-  }, [session]);
+  }, [token]);
 
   const fetchNotifications = async () => {
     try {

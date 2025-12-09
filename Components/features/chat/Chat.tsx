@@ -4,14 +4,14 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { fetchMyThreads, Thread } from "@/services/chatServices";
 import { useChat } from "@/hooks/useChat";
 import { toast } from "react-hot-toast";
-import { useSession } from "next-auth/react";
+import { useAuth } from "@/lib/auth";
 import ChatThreadList from "./ChatThreadList";
 import ChatMessages from "./ChatMessages";
 
 export default function Chat() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { data: session } = useSession();
+  const { user } = useAuth();
   
   const [threads, setThreads] = useState<Thread[]>([]);
   const [selectedThreadId, setSelectedThreadId] = useState<number | null>(null);
@@ -68,7 +68,7 @@ export default function Chat() {
     }
   };
 
-  const currentUserId = (session?.user as { id?: string })?.id || session?.user?.email || "";
+  const currentUserId = user?.email || "";
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-[calc(100vh-12rem)]">

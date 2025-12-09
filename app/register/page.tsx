@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Lock, Mail, User } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,86 +15,44 @@ import {
   facebookIcon,
   vector36,
 } from "@/assets";
-import { authService } from "@/services/authService";
+import { useAuth } from "@/lib/auth";
+import { registerSchema, type RegisterFormData } from "@/lib/validations/auth";
 
 export default function RegisterPage() {
   const router = useRouter();
+  const { register: registerUser } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    phonenumber: "",
-    address: "",
-    password: "",
-    confirmPassword: "",
-    role: "regularuser",
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (data: RegisterFormData) => {
     setIsLoading(true);
-    setError("");
-
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
-      setIsLoading(false);
-      return;
-    }
-
     try {
-      // Transform form data to match API requirements
-      const registerData = {
-        username: formData.username,
-        email: formData.email,
-        phonenumber: formData.phonenumber,
-        address: formData.address,
-        password: formData.password,
-        confirmpassword: formData.confirmPassword,
-        role: formData.role,
-      };
-      await authService.register(registerData);
-
-      // Auto-login after successful registration
-      const result = await signIn("credentials", {
-        email: formData.email,
-        password: formData.password,
-        redirect: false,
+      await registerUser({
+        username: data.username,
+        email: data.email,
+        phonenumber: data.phonenumber,
+        address: data.address,
+        password: data.password,
+        confirmpassword: data.confirmPassword,
+        role: "regularuser",
       });
-
-      if (result?.error) {
-        router.push(
-          `/login?message=${encodeURIComponent(
-            "Registration successful. Please login."
-          )}`
-        );
-      } else {
-        router.push("/user");
-        router.refresh();
-      }
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Registration failed";
-      setError(errorMessage);
+      // Error is handled in the register function with toast
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleSocialSignIn = async (provider: "google" | "facebook") => {
-    try {
-      await signIn(provider, { callbackUrl: "/user" });
-    } catch {
-      setError(`Failed to sign in with ${provider}`);
-    }
+    // TODO: Implement social login flow
+    alert(`Social login with ${provider} - To be implemented`);
   };
 
   return (
@@ -114,122 +73,116 @@ export default function RegisterPage() {
 
         {/* Right Side (Form Section) */}
         <div className="w-full md:w-2/3 flex flex-col justify-center p-6 md:p-8">
-          <form onSubmit={handleSubmit} className="w-full max-w-[350px] mx-auto">
+          <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-[350px] mx-auto">
             <h2 className="text-[#2BBBC5] text-4xl font-semibold mb-5">
               Sign Up
             </h2>
 
-            {error && (
-              <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-                {error}
-              </div>
-            )}
-
             <div className="space-y-1">
               {/* Username */}
-              <div className="relative mb-4">
+              <div className="relative mb-1">
                 <User
                   className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2BBBC5]"
                   size={18}
                 />
                 <Input
                   id="username"
-                  name="username"
-                  value={formData.username}
-                  onChange={handleChange}
+                  {...register("username")}
                   placeholder="User Name"
                   className="pl-9 rounded-3xl border-2 border-[#2BBBC5] placeholder-[#2BBBC5] focus-visible:ring-0 focus-visible:border-[#2BBBC5] focus:border-[#2BBBC5]"
-                  required
                 />
               </div>
+              {errors.username && (
+                <p className="text-red-500 text-xs mb-2 ml-3">{errors.username.message}</p>
+              )}
 
               {/* Email */}
-              <div className="relative mb-4">
+              <div className="relative mb-1 mt-3">
                 <Mail
                   className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2BBBC5]"
                   size={18}
                 />
                 <Input
                   id="email"
-                  name="email"
                   type="email"
-                  value={formData.email}
-                  onChange={handleChange}
+                  {...register("email")}
                   placeholder="example@email.com"
                   className="pl-9 rounded-3xl border-2 border-[#2BBBC5] placeholder-[#2BBBC5] focus-visible:ring-0 focus-visible:border-[#2BBBC5] focus:border-[#2BBBC5]"
-                  required
                 />
               </div>
+              {errors.email && (
+                <p className="text-red-500 text-xs mb-2 ml-3">{errors.email.message}</p>
+              )}
 
             {/* Phone Number */}
-            <div className="relative mb-4">
+            <div className="relative mb-1 mt-3">
               <Input
                 id="phonenumber"
-                name="phonenumber"
                 type="tel"
-                value={formData.phonenumber}
-                onChange={handleChange}
+                {...register("phonenumber")}
                 placeholder="Phone Number"
                 className="pl-4 rounded-3xl border-2 border-[#2BBBC5] placeholder-[#2BBBC5] focus-visible:ring-0 focus-visible:border-[#2BBBC5] focus:border-[#2BBBC5]"
-                required
               />
             </div>
+            {errors.phonenumber && (
+              <p className="text-red-500 text-xs mb-2 ml-3">{errors.phonenumber.message}</p>
+            )}
 
             {/* Address */}
-            <div className="relative mb-4">
+            <div className="relative mb-1 mt-3">
               <Input
                 id="address"
-                name="address"
-                value={formData.address}
-                onChange={handleChange}
+                {...register("address")}
                 placeholder="City / Address"
                 className="pl-4 rounded-3xl border-2 border-[#2BBBC5] placeholder-[#2BBBC5] focus-visible:ring-0 focus-visible:border-[#2BBBC5] focus:border-[#2BBBC5]"
-                required
               />
             </div>
+            {errors.address && (
+              <p className="text-red-500 text-xs mb-2 ml-3">{errors.address.message}</p>
+            )}
 
               {/* Password */}
-              <div className="relative mb-4">
+              <div className="relative mb-1 mt-3">
                 <Lock
                   className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2BBBC5]"
                   size={18}
                 />
                 <Input
                   id="password"
-                  name="password"
                   type="password"
-                  value={formData.password}
-                  onChange={handleChange}
+                  {...register("password")}
                   placeholder="Enter password"
                   className="pl-9 rounded-3xl border-2 border-[#2BBBC5] placeholder-[#2BBBC5] focus-visible:ring-0 focus-visible:border-[#2BBBC5] focus:border-[#2BBBC5]"
-                  required
                 />
               </div>
+              {errors.password && (
+                <p className="text-red-500 text-xs mb-2 ml-3">{errors.password.message}</p>
+              )}
 
               {/* Confirm Password */}
-              <div className="relative mb-4">
+              <div className="relative mb-1 mt-3">
                 <Lock
                   className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2BBBC5]"
                   size={18}
                 />
                 <Input
                   id="confirmPassword"
-                  name="confirmPassword"
                   type="password"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
+                  {...register("confirmPassword")}
                   placeholder="Confirm password"
                   className="pl-9 rounded-3xl border-2 border-[#2BBBC5] placeholder-[#2BBBC5] focus-visible:ring-0 focus-visible:border-[#2BBBC5] focus:border-[#2BBBC5]"
-                  required
                 />
               </div>
+              {errors.confirmPassword && (
+                <p className="text-red-500 text-xs mb-2 ml-3">{errors.confirmPassword.message}</p>
+              )}
 
               {/* Button */}
               <Button
                 type="submit"
                 size="lg"
                 disabled={isLoading}
-                className="bg-[#2BBBC5] text-white px-8 py-3 rounded-3xl w-full hover:bg-[#249da5] disabled:opacity-50">
+                className="bg-[#2BBBC5] text-white px-8 py-3 rounded-3xl w-full hover:bg-[#249da5] disabled:opacity-50 mt-4">
                 {isLoading ? "Creating Account..." : "Sign Up"}
               </Button>
 

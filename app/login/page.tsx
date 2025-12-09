@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useEffect, Suspense } from "react";
-import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { Lock, Mail } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,16 +15,22 @@ import {
   facebookIcon,
   vector36,
 } from "@/assets";
+import { useAuth } from "@/lib/auth";
+import { loginSchema, type LoginFormData } from "@/lib/validations/auth";
 
 function SignInForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { login } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
   });
 
   useEffect(() => {
@@ -35,45 +42,20 @@ function SignInForm() {
     }
   }, [searchParams, router]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
-    setError("");
-
     try {
-      const result = await signIn("credentials", {
-        email: formData.email,
-        password: formData.password,
-        redirect: false,
-      });
-
-      if (result?.error) {
-        setError("Invalid email or password");
-      } else {
-        router.push("/user");
-        router.refresh();
-      }
-    } catch {
-      setError("An error occurred during login");
+      await login(data.email, data.password);
+    } catch (error) {
+      // Error is handled in the login function with toast
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleSocialSignIn = async (provider: "google" | "facebook") => {
-    try {
-      await signIn(provider, { callbackUrl: "/user" });
-    } catch {
-      setError(`Failed to sign in with ${provider}`);
-    }
+    // TODO: Implement social login flow
+    alert(`Social login with ${provider} - To be implemented`);
   };
 
   return (
@@ -94,7 +76,7 @@ function SignInForm() {
 
         {/* Right Side (Form Section) */}
         <div className="w-full md:w-2/3 flex flex-col justify-center p-6 md:p-8">
-          <form onSubmit={handleSubmit} className="w-full max-w-[350px] mx-auto">
+          <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-[350px] mx-auto">
             <h2 className="text-[#2BBBC5] text-4xl font-semibold mb-5 text-center">
               Sign In
             </h2>
@@ -104,50 +86,45 @@ function SignInForm() {
                 {success}
               </div>
             )}
-            {error && (
-              <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-                {error}
-              </div>
-            )}
 
             {/* Email */}
-            <div className="relative mb-4">
+            <div className="relative mb-1">
               <Mail
                 className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2BBBC5]"
                 size={18}
               />
               <Input
                 id="email"
-                name="email"
                 type="email"
-                value={formData.email}
-                onChange={handleChange}
+                {...register("email")}
                 placeholder="example@email.com"
                 className="pl-9 rounded-3xl border-2 border-[#2BBBC5] placeholder-[#2BBBC5] focus-visible:ring-0 focus-visible:border-[#2BBBC5] focus:border-[#2BBBC5]"
-                required
               />
             </div>
+            {errors.email && (
+              <p className="text-red-500 text-xs mb-3 ml-3">{errors.email.message}</p>
+            )}
 
             {/* Password */}
-            <div className="relative mb-2">
+            <div className="relative mb-1 mt-4">
               <Lock
                 className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2BBBC5]"
                 size={18}
               />
               <Input
                 id="password"
-                name="password"
                 type="password"
-                value={formData.password}
-                onChange={handleChange}
+                {...register("password")}
                 placeholder="Enter password"
                 className="pl-9 rounded-3xl border-2 border-[#2BBBC5] placeholder-[#2BBBC5] focus-visible:ring-0 focus-visible:border-[#2BBBC5] focus:border-[#2BBBC5]"
-                required
               />
             </div>
+            {errors.password && (
+              <p className="text-red-500 text-xs mb-2 ml-3">{errors.password.message}</p>
+            )}
 
             {/* Forgot Password */}
-            <div className="text-right mb-4">
+            <div className="text-right mb-4 mt-2">
               <a
                 href="/forgot-password"
                 className="text-sm text-[#2BBBC5] hover:underline">

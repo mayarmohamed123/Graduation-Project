@@ -1,26 +1,20 @@
-import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
-export default withAuth(
-  function middleware() {
-    // Add any additional middleware logic here
-    return NextResponse.next();
-  },
-  {
-    callbacks: {
-      authorized: ({ token, req }) => {
-        // Only protect /user route
-        if (req.nextUrl.pathname.startsWith("/user")) {
-          return !!token;
-        }
-        return true;
-      },
-    },
-    pages: {
-      signIn: "/login",
-    },
+export function middleware(request: NextRequest) {
+  // Check for token in cookies
+  const token = request.cookies.get("token")?.value;
+
+  // If accessing /user routes without a token, redirect to login
+  if (request.nextUrl.pathname.startsWith("/user")) {
+    if (!token) {
+      const url = new URL("/login", request.url);
+      return NextResponse.redirect(url);
+    }
   }
-);
+
+  return NextResponse.next();
+}
 
 export const config = {
   matcher: [
