@@ -118,4 +118,26 @@ export const doctorService = {
       `${baseUrl}/payments/verify-session?sessionId=${sessionId}`
     );
   },
+
+  // Register doctor with FormData
+  registerDoctor: async (formData: FormData): Promise<{
+    message: string;
+    userId: string;
+    email: string;
+    role: string;
+  }> => {
+    const token = localStorage.getItem("token");
+    
+    const response = await fetch(`${baseUrl}/doctors/register`, {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      throw new Error(errorData?.message || "Doctor registration failed");
+    }
+
+    return response.json();
+  },
 };

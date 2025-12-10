@@ -8,6 +8,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import Switch from "@/components/common/Switch";
+import { Tab } from "@/types/favorites";
 import {
   vector37,
   doctorsIllustration,
@@ -24,6 +26,13 @@ function SignInForm() {
   const { login } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState("");
+  const [activeTab, setActiveTab] = useState<string>("user");
+
+  const tabs: Tab[] = [
+    { id: "user", label: "User" },
+    { id: "doctor", label: "Doctor" },
+    { id: "pharmacy", label: "Pharmacy" },
+  ];
 
   const {
     register,
@@ -77,9 +86,19 @@ function SignInForm() {
         {/* Right Side (Form Section) */}
         <div className="w-full md:w-2/3 flex flex-col justify-center p-6 md:p-8">
           <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-[350px] mx-auto">
+
             <h2 className="text-[#2BBBC5] text-4xl font-semibold mb-5 text-center">
               Sign In
             </h2>
+
+            {/* Account Type Switch */}
+            <div className="mb-6 flex justify-center">
+              <Switch 
+                tabs={tabs}
+                activeTab={activeTab}
+                onTabChange={setActiveTab}
+              />
+            </div>
 
             {success && (
               <div className="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded">

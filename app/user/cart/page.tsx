@@ -18,7 +18,6 @@ import toast from "react-hot-toast";
 
 export default function CartPage() {
   const router = useRouter();
-  const { user } = useAuth();
   const dispatch = useAppDispatch();
 
   const { cart, loading, error , totalItems } = useAppSelector((state) => state.cart);
@@ -30,8 +29,6 @@ export default function CartPage() {
   const [selectedPharmacy, setSelectedPharmacy] = useState<{id: number, name: string} | null>(null);
 
   useEffect(() => {
-    
-
     dispatch(fetchUserCart());
   }, [dispatch, totalItems , router]);
 
