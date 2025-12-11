@@ -14,7 +14,7 @@ export default function DoctorNavbar() {
   
   // Get doctor name from auth context
   const doctorName = user?.userName || "Doctor";
-  const doctorImage = "/default-avatar.png";
+  const doctorImage = "@/assets/images/doctor.png";
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
