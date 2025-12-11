@@ -93,36 +93,14 @@ class AuthService {
     return response.json();
   }
 
-  async googleLogin(): Promise<AuthResponse> {
-    const response = await fetch(`${API_BASE_URL}/User/google-login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => null);
-      throw new Error(errorData?.message || "Google login failed");
-    }
-
-    return response.json();
+  async googleLogin(): Promise<void> {
+    // Redirect to backend OAuth endpoint
+    window.location.href = `${API_BASE_URL}/User/google-login`;
   }
 
-  async facebookLogin(): Promise<AuthResponse> {
-    const response = await fetch(`${API_BASE_URL}/User/facebook-login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => null);
-      throw new Error(errorData?.message || "Facebook login failed");
-    }
-
-    return response.json();
+  async facebookLogin(): Promise<void> {
+    // Redirect to backend OAuth endpoint
+    window.location.href = `${API_BASE_URL}/User/facebook-login`;
   }
 
   async logout(): Promise<void> {

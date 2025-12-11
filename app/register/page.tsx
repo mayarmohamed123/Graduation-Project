@@ -80,26 +80,25 @@ export default function RegisterPage() {
 
             <div className="space-y-1">
               {/* Username */}
-              <div className="relative mb-1">
+              <div className="relative mb-3">
                 <User
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2BBBC5]"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2BBBC5] z-10"
                   size={18}
                 />
                 <Input
                   id="username"
                   {...register("username")}
                   placeholder="User Name"
+                  isInvalid={Boolean(errors.username?.message)}
+                  errorMessage={errors.username?.message}
                   className="pl-9 rounded-3xl border-2 border-[#2BBBC5] placeholder-[#2BBBC5] focus-visible:ring-0 focus-visible:border-[#2BBBC5] focus:border-[#2BBBC5]"
                 />
               </div>
-              {errors.username && (
-                <p className="text-red-500 text-xs mb-2 ml-3">{errors.username.message}</p>
-              )}
 
               {/* Email */}
-              <div className="relative mb-1 mt-3">
+              <div className="relative mb-3">
                 <Mail
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2BBBC5]"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2BBBC5] z-10"
                   size={18}
                 />
                 <Input
@@ -107,44 +106,41 @@ export default function RegisterPage() {
                   type="email"
                   {...register("email")}
                   placeholder="example@email.com"
+                  isInvalid={Boolean(errors.email?.message)}
+                  errorMessage={errors.email?.message}
                   className="pl-9 rounded-3xl border-2 border-[#2BBBC5] placeholder-[#2BBBC5] focus-visible:ring-0 focus-visible:border-[#2BBBC5] focus:border-[#2BBBC5]"
                 />
               </div>
-              {errors.email && (
-                <p className="text-red-500 text-xs mb-2 ml-3">{errors.email.message}</p>
-              )}
 
             {/* Phone Number */}
-            <div className="relative mb-1 mt-3">
+            <div className="relative mb-3">
               <Input
                 id="phonenumber"
                 type="tel"
                 {...register("phonenumber")}
                 placeholder="Phone Number"
+                isInvalid={Boolean(errors.phonenumber?.message)}
+                errorMessage={errors.phonenumber?.message}
                 className="pl-4 rounded-3xl border-2 border-[#2BBBC5] placeholder-[#2BBBC5] focus-visible:ring-0 focus-visible:border-[#2BBBC5] focus:border-[#2BBBC5]"
               />
             </div>
-            {errors.phonenumber && (
-              <p className="text-red-500 text-xs mb-2 ml-3">{errors.phonenumber.message}</p>
-            )}
 
             {/* Address */}
-            <div className="relative mb-1 mt-3">
+            <div className="relative mb-3">
               <Input
                 id="address"
                 {...register("address")}
                 placeholder="City / Address"
+                isInvalid={Boolean(errors.address?.message)}
+                errorMessage={errors.address?.message}
                 className="pl-4 rounded-3xl border-2 border-[#2BBBC5] placeholder-[#2BBBC5] focus-visible:ring-0 focus-visible:border-[#2BBBC5] focus:border-[#2BBBC5]"
               />
             </div>
-            {errors.address && (
-              <p className="text-red-500 text-xs mb-2 ml-3">{errors.address.message}</p>
-            )}
 
               {/* Password */}
-              <div className="relative mb-1 mt-3">
+              <div className="relative mb-3">
                 <Lock
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2BBBC5]"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2BBBC5] z-10"
                   size={18}
                 />
                 <Input
@@ -152,17 +148,16 @@ export default function RegisterPage() {
                   type="password"
                   {...register("password")}
                   placeholder="Enter password"
+                  isInvalid={Boolean(errors.password?.message)}
+                  errorMessage={errors.password?.message}
                   className="pl-9 rounded-3xl border-2 border-[#2BBBC5] placeholder-[#2BBBC5] focus-visible:ring-0 focus-visible:border-[#2BBBC5] focus:border-[#2BBBC5]"
                 />
               </div>
-              {errors.password && (
-                <p className="text-red-500 text-xs mb-2 ml-3">{errors.password.message}</p>
-              )}
 
               {/* Confirm Password */}
-              <div className="relative mb-1 mt-3">
+              <div className="relative mb-3">
                 <Lock
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2BBBC5]"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2BBBC5] z-10"
                   size={18}
                 />
                 <Input
@@ -170,12 +165,11 @@ export default function RegisterPage() {
                   type="password"
                   {...register("confirmPassword")}
                   placeholder="Confirm password"
+                  isInvalid={Boolean(errors.confirmPassword?.message)}
+                  errorMessage={errors.confirmPassword?.message}
                   className="pl-9 rounded-3xl border-2 border-[#2BBBC5] placeholder-[#2BBBC5] focus-visible:ring-0 focus-visible:border-[#2BBBC5] focus:border-[#2BBBC5]"
                 />
               </div>
-              {errors.confirmPassword && (
-                <p className="text-red-500 text-xs mb-2 ml-3">{errors.confirmPassword.message}</p>
-              )}
 
               {/* Button */}
               <Button

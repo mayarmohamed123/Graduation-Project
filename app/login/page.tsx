@@ -63,8 +63,13 @@ function SignInForm() {
   };
 
   const handleSocialSignIn = async (provider: "google" | "facebook") => {
-    // TODO: Implement social login flow
-    alert(`Social login with ${provider} - To be implemented`);
+    const { authService } = await import("@/services/authService");
+    
+    if (provider === "google") {
+      authService.googleLogin();
+    } else {
+      authService.facebookLogin();
+    }
   };
 
   return (
@@ -107,9 +112,9 @@ function SignInForm() {
             )}
 
             {/* Email */}
-            <div className="relative mb-1">
+            <div className="relative mb-4">
               <Mail
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2BBBC5]"
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2BBBC5] z-10"
                 size={18}
               />
               <Input
@@ -117,17 +122,16 @@ function SignInForm() {
                 type="email"
                 {...register("email")}
                 placeholder="example@email.com"
+                isInvalid={Boolean(errors.email?.message)}
+                errorMessage={errors.email?.message}
                 className="pl-9 rounded-3xl border-2 border-[#2BBBC5] placeholder-[#2BBBC5] focus-visible:ring-0 focus-visible:border-[#2BBBC5] focus:border-[#2BBBC5]"
               />
             </div>
-            {errors.email && (
-              <p className="text-red-500 text-xs mb-3 ml-3">{errors.email.message}</p>
-            )}
 
             {/* Password */}
-            <div className="relative mb-1 mt-4">
+            <div className="relative mb-2">
               <Lock
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2BBBC5]"
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2BBBC5] z-10"
                 size={18}
               />
               <Input
@@ -135,12 +139,11 @@ function SignInForm() {
                 type="password"
                 {...register("password")}
                 placeholder="Enter password"
+                isInvalid={Boolean(errors.password?.message)}
+                errorMessage={errors.password?.message}
                 className="pl-9 rounded-3xl border-2 border-[#2BBBC5] placeholder-[#2BBBC5] focus-visible:ring-0 focus-visible:border-[#2BBBC5] focus:border-[#2BBBC5]"
               />
             </div>
-            {errors.password && (
-              <p className="text-red-500 text-xs mb-2 ml-3">{errors.password.message}</p>
-            )}
 
             {/* Forgot Password */}
             <div className="text-right mb-4 mt-2">
@@ -160,28 +163,35 @@ function SignInForm() {
               {isLoading ? "Signing In..." : "Sign In"}
             </Button>
 
-            {/* Or Section */}
-            <div className="my-6 flex items-center gap-4">
-              <hr className="flex-1 border-t border-gray-200" />
-              <span className="text-sm text-gray-400">Or Sign In with</span>
-              <hr className="flex-1 border-t border-gray-200" />
-            </div>
+            {/* Social Login - Only for User tab */}
+            {activeTab === "user" && (
+              <>
+                {/* Or Section */}
+                <div className="my-6 flex items-center gap-4">
+                  <hr className="flex-1 border-t border-gray-200" />
+                  <span className="text-sm text-gray-400">Or Sign In with</span>
+                  <hr className="flex-1 border-t border-gray-200" />
+                </div>
 
-            {/* Social Icons */}
-            <div className="flex items-center justify-center gap-6">
-              <button
-                type="button"
-                onClick={() => handleSocialSignIn("google")}
-                className="hover:scale-110 transition-transform duration-200">
-                <Image src={googleIcon} alt="Google" width={35} height={35} />
-              </button>
-              <button
-                type="button"
-                onClick={() => handleSocialSignIn("facebook")}
-                className="hover:scale-110 transition-transform duration-200">
-                <Image src={facebookIcon} alt="Facebook" width={35} height={35} />
-              </button>
-            </div>
+                {/* Social Icons */}
+                <div className="flex items-center justify-center gap-6">
+                  <button
+                    type="button"
+                    onClick={() => handleSocialSignIn("google")}
+                    disabled={isLoading}
+                    className="hover:scale-110 transition-transform duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                    <Image src={googleIcon} alt="Google" width={35} height={35} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleSocialSignIn("facebook")}
+                    disabled={isLoading}
+                    className="hover:scale-110 transition-transform duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                    <Image src={facebookIcon} alt="Facebook" width={35} height={35} />
+                  </button>
+                </div>
+              </>
+            )}
 
             {/* Register Link */}
             <p className="text-center text-sm text-gray-400 mt-6">
