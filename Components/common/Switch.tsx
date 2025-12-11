@@ -8,6 +8,7 @@ export default function Switch({ tabs, activeTab, onTabChange }: SwitchProps) {
         <div className="inline-flex bg-gray-100 rounded-full p-1 w-full md:w-auto">
             {tabs.map((tab) => (
                 <button
+                type="button"
                     key={tab.id}
                     onClick={() => onTabChange(tab.id)}
                     className={`

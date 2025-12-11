@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth";
 import { useDoctors } from "@/hooks/useDoctors";
 import { FilterState } from "@/types/doctors";
-import { useAuthToken } from "@/hooks/useAuthToken";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import SearchInput from "@/components/common/SearchInput";
 import DoctorCard from "@/components/features/doctor/DoctorCard";
@@ -34,8 +33,7 @@ const specialties = [
 ];
 
 export default function SearchDoctorsPage() {
-  const { isAuthenticated, isLoading: authLoading } = useAuth();
-  const { token } = useAuthToken();
+  const { isAuthenticated, isLoading: authLoading, token } = useAuth();
   const { doctors, loading, error, refetch } = useDoctors();
 
   const [filters, setFilters] = useState<FilterState>({

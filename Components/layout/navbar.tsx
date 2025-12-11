@@ -12,7 +12,6 @@ import {
 } from "@/assets";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchUserCart } from "@/store/slices/cartSlice";
-import { useAuthToken } from "@/hooks/useAuthToken";
 import { usePathname } from "next/navigation";
 import { Heart, ShoppingCart, Bell, User } from "lucide-react";
 
@@ -27,8 +26,7 @@ export default function Navbar() {
   const cartTotalItems = useAppSelector((state) => state.cart.totalItems);
   const pathname = usePathname();
 
-  // 🔑 Sync token to cart
-  useAuthToken();
+
 
   // Fetch cart when logged in
   useEffect(() => {
