@@ -3,13 +3,13 @@
 import { useState, useEffect, useCallback } from "react";
 import { Doctor } from "@/types/doctors";
 import { doctorService } from "@/services/doctorService";
-import { useAuthToken } from "./useAuthToken";
+import { useAuth } from "@/lib/auth";
 
 export const useDoctors = () => {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { isAuthenticated, isLoading: authLoading } = useAuthToken();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
 
   const fetchDoctors = useCallback(
     async (filters?: {
