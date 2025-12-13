@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+
 import Image from "next/image";
 import { Lock, Mail, User } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -15,11 +15,11 @@ import {
   facebookIcon,
   vector36,
 } from "@/assets";
-import { useAuth } from "@/lib/auth";
+import { useAuth } from "@/hooks/useAuth";
 import { registerSchema, type RegisterFormData } from "@/lib/validations/auth";
 
 export default function RegisterPage() {
-  const router = useRouter();
+
   const { register: registerUser } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -43,7 +43,7 @@ export default function RegisterPage() {
         confirmpassword: data.confirmPassword,
         role: "regularuser",
       });
-    } catch (error) {
+    } catch {
       // Error is handled in the register function with toast
     } finally {
       setIsLoading(false);

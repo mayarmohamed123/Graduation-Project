@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/lib/auth";
+
+import { useAuth } from "@/hooks/useAuth";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchUserCart, clearLocalCart } from "@/store/slices/cartSlice";
 import { cartService } from "@/services/cartService";
@@ -17,10 +17,10 @@ import { CheckoutRequest } from "@/types";
 import toast from "react-hot-toast";
 
 export default function CartPage() {
-  const router = useRouter();
+
   const dispatch = useAppDispatch();
 
-  const { cart, loading, error , totalItems } = useAppSelector((state) => state.cart);
+  const { cart, loading, error } = useAppSelector((state) => state.cart);
   const [updatingItems, setUpdatingItems] = useState<Set<number>>(new Set());
   const [clearingCart, setClearingCart] = useState(false);
   const [showClearDialog, setShowClearDialog] = useState(false);
@@ -30,7 +30,7 @@ export default function CartPage() {
 
   useEffect(() => {
     dispatch(fetchUserCart());
-  }, [dispatch, totalItems , router]);
+  }, [dispatch]);
 
   const handleQuantityChange = async (itemId: number, newQuantity: number) => {
     if (newQuantity < 1) return;

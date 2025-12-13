@@ -19,7 +19,7 @@ export function useAuth() {
 
   const router = useRouter();
 
-  const handleRedirect = (user: any) => {
+  const handleRedirect = (user: { roles: string | string[] }) => {
       const roles = user.roles;
       const role = Array.isArray(roles) ? roles[0] : roles;
 

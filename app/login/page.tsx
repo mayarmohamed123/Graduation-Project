@@ -17,7 +17,7 @@ import {
   facebookIcon,
   vector36,
 } from "@/assets";
-import { useAuth } from "@/lib/auth";
+import { useAuth } from "@/hooks/useAuth";
 import { loginSchema, type LoginFormData } from "@/lib/validations/auth";
 
 function SignInForm() {
@@ -55,7 +55,7 @@ function SignInForm() {
     setIsLoading(true);
     try {
       await login(data.email, data.password);
-    } catch (error) {
+    } catch {
       // Error is handled in the login function with toast
     } finally {
       setIsLoading(false);

@@ -29,15 +29,14 @@ export default function DoctorRegisterPage() {
     handleSubmit,
     formState: { errors },
     setValue,
-    watch,
+
     trigger,
   } = useForm<DoctorRegistrationFormData>({
     resolver: zodResolver(doctorRegistrationSchema),
     mode: "onChange",
   });
 
-  const profilePicture = watch("profilePicture");
-  const clinicImage = watch("clinicImage");
+
 
   // Handle profile picture selection
   const handleProfilePictureChange = (e: React.ChangeEvent<HTMLInputElement>) => {

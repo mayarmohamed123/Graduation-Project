@@ -1,43 +1,32 @@
 import { Pharmacy } from "@/types";
-import { fetchWithAuth } from "./api";
+import { apiRequest } from "./api";
 
 class PharmacyService {
   // Get The All pharmacies
   async getPharmacies(): Promise<Pharmacy[]> {
-    const res = await fetch(
+    const res = await apiRequest<{ data: Pharmacy[] } | Pharmacy[]>(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/Pharmacy`,
       {
         next: { revalidate: 60 }, // ✅ ISR enabled
+        requiresAuth: false,
       }
     );
-
-    if (!res.ok) {
-      throw new Error("Failed to load pharmacies");
-    }
-
-    const json = await res.json();
-    return (json.data || json) as Pharmacy[];
+    if ("data" in res) return res.data;
+    return res;
   }
 
   // Get Top Rated Pharmacies
   async getTopRatedPharmacies(): Promise<Pharmacy[]> {
-    const res = await fetch(
+    const res = await apiRequest<{ data: Pharmacy[] } | Pharmacy[]>(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/pharmacy/top-pharmacies`,
       {
-        next: { revalidate: 60 }, 
+        next: { revalidate: 60 },
+        requiresAuth: false,
       }
     );
-
-    if (!res.ok) {
-      throw new Error("Failed to load top-rated pharmacies");
-    }
-
-    const json = await res.json();
-    return (json.data || json) as Pharmacy[];
+    if ("data" in res) return res.data;
+    return res;
   }
-
-
-
 }
 
 // 👉 Export a single instance

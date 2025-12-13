@@ -11,6 +11,12 @@ import MedicineCard from "@/components/common/MedicineCard";
 import SearchInput from "@/components/common/SearchInput";
 import PageHeaderWithBack from "@/components/common/PageHeaderWithBack";
 
+interface MedicineFilters {
+  dosageForm?: string;
+  strengthUnit?: string;
+  category?: string;
+}
+
 export default function SearchMedicinePage() {
   const [medicines, setMedicines] = useState<Medicine[]>([]);
   const [loading, setLoading] = useState(false);
@@ -80,7 +86,7 @@ export default function SearchMedicinePage() {
 
       // If filters are applied, use filter API
       if (form || units.length > 0 || category) {
-        const filters: any = {};
+        const filters: MedicineFilters = {};
         if (form) {
           filters.dosageForm = form;
         }
@@ -93,12 +99,12 @@ export default function SearchMedicinePage() {
         results = await medicineService.filterMedicines(filters);
       } else if (query.trim()) {
         // If only search query, use search API
-        const response: any = await medicineService.searchMedicineByName(query);
+        const response = await medicineService.searchMedicineByName(query);
 
         // Check if response is the specific "No alternative medicines found" message (as requested)
         // or if it's not an array (implying some other message object)
         if (
-          response?.message === "No alternative medicines found." ||
+          !Array.isArray(response) && response?.message === "No alternative medicines found." ||
           !Array.isArray(response)
         ) {
           // Fallback to alternatives
@@ -116,7 +122,7 @@ export default function SearchMedicinePage() {
             console.error("Error fetching alternatives:", altErr);
             results = [];
           }
-        } else {
+        } else if (Array.isArray(response)) {
           results = response;
         }
       }
