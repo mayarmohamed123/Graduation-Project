@@ -121,7 +121,7 @@ export default function Favorites() {
                                             variant="favorite"
                                             initialFavoriteState={true}
                                             onRemoveFavorite={handleRemoveDoctor}
-                                            showExtraInfo={true}
+
                                         />
                                     ))
                                 ) : (

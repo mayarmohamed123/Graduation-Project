@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/lib/auth";
+import { useAuth } from "@/hooks/useAuth";
 import { userService } from "@/services/userService";
 import { createNotificationConnection } from "@/services/notificationHub";
 import { Notification } from "@/types";

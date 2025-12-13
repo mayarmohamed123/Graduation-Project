@@ -7,28 +7,21 @@ import {
   Review,
   VerifySessionResponse,
 } from "@/types/doctors";
-import { FilterParams, fetchWithAuth, postWithAuth } from "./api";
+import { FilterParams, apiRequest } from "./api";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export const doctorService = {
   // Get all doctors
   getAllDoctors: async (): Promise<Doctor[]> => {
-    return await fetchWithAuth(
+    return await apiRequest<Doctor[]>(
       `${baseUrl}/doctors/allDoctorsShowToRegularUser`,
       { next: { revalidate: 60 } }
     );
   },
 
-  // Get doctors by specialty
-  getDoctorsBySpecialty: async (specialty: string): Promise<Doctor[]> => {
-    return await fetchWithAuth(`${baseUrl}/doctors/specialty/${specialty}`, {
-      next: { revalidate: 60 },
-    });
-  },
-
   // Get doctors with filters
-  getDoctorsWithFilters: async (filters: FilterParams): Promise<Doctor[]> => {
+  getFilteredDoctors: async (filters: FilterParams): Promise<Doctor[]> => {
     const queryParams = new URLSearchParams();
 
     Object.entries(filters).forEach(([key, value]) => {
@@ -38,23 +31,12 @@ export const doctorService = {
     });
 
     const url = `${baseUrl}/doctors/filterDoctors?${queryParams.toString()}`;
-    return await fetchWithAuth(url, { next: { revalidate: 60 } });
-  },
-
-  // Combined method that handles all filtering scenarios
-  getFilteredDoctors: async (filters: FilterParams): Promise<Doctor[]> => {
-    // If specialty is specified, use specialty endpoint
-    if (filters.specialty) {
-      return await doctorService.getDoctorsBySpecialty(filters.specialty);
-    }
-
-    // Otherwise use the general filter endpoint
-    return await doctorService.getDoctorsWithFilters(filters);
+    return await apiRequest<Doctor[]>(url, { next: { revalidate: 60 } });
   },
 
   // Get doctor by ID
   getDoctorById: async (id: number): Promise<Doctor> => {
-    return await fetchWithAuth(`${baseUrl}/doctors/${id}`, {
+    return await apiRequest<Doctor>(`${baseUrl}/doctors/${id}`, {
       next: { revalidate: 60 },
     });
   },
@@ -63,12 +45,18 @@ export const doctorService = {
   bookAppointmentInClinic: async (
     data: BookAppointmentData
   ): Promise<AppointmentResponse> => {
-    return await postWithAuth(`${baseUrl}/appointment/book`, data);
+    return await apiRequest<AppointmentResponse>(
+      `${baseUrl}/appointment/book`,
+      {
+        method: "POST",
+        data,
+      }
+    );
   },
 
   // Get Doctor Reviews
   GetDoctorReviews: async (id: number): Promise<Review> => {
-    return await fetchWithAuth(`${baseUrl}/Review/doctor/${id}`, {
+    return await apiRequest<Review>(`${baseUrl}/Review/doctor/${id}`, {
       next: { revalidate: 60 },
     });
   },
@@ -79,7 +67,10 @@ export const doctorService = {
     Rating: number;
     Comment: string;
   }) => {
-    return await postWithAuth(`${baseUrl}/Review/add-review`, data);
+    return await apiRequest<{ message: string }>(`${baseUrl}/Review/add-review`, {
+      method: "POST",
+      data,
+    });
   },
 
   // Update Review
@@ -87,34 +78,46 @@ export const doctorService = {
     reviewId: number,
     data: { Rating: number; Comment: string }
   ): Promise<{ message: string }> => {
-    return await fetchWithAuth(`${baseUrl}/Review/${reviewId}`, {
-      method: "PUT",
-      body: JSON.stringify(data),
-    });
+    return await apiRequest<{ message: string }>(
+      `${baseUrl}/Review/${reviewId}`,
+      {
+        method: "PUT",
+        data,
+      }
+    );
   },
 
   // Delete Review
   deleteReview: async (reviewId: number): Promise<{ message: string }> => {
-    return await fetchWithAuth(`${baseUrl}/Review/${reviewId}`, {
-      method: "DELETE",
-    });
+    return await apiRequest<{ message: string }>(
+      `${baseUrl}/Review/${reviewId}`,
+      {
+        method: "DELETE",
+      }
+    );
   },
 
   // Create payment session after appointment
   createPaymentSession: async (
     appointmentId: number
   ): Promise<CreateSessionResponse> => {
-    return await postWithAuth(`${baseUrl}/payments/create-session`, {
-      paymentFor: "Appointment",
-      appointmentId,
-    });
+    return await apiRequest<CreateSessionResponse>(
+      `${baseUrl}/payments/create-session`,
+      {
+        method: "POST",
+        data: {
+          paymentFor: "Appointment",
+          appointmentId,
+        },
+      }
+    );
   },
 
   // Verify payment session after appointment
   verifyPaymentSession: async (
     sessionId: string
   ): Promise<VerifySessionResponse> => {
-    return await fetchWithAuth(
+    return await apiRequest<VerifySessionResponse>(
       `${baseUrl}/payments/verify-session?sessionId=${sessionId}`
     );
   },
@@ -126,18 +129,15 @@ export const doctorService = {
     email: string;
     role: string;
   }> => {
-    const token = localStorage.getItem("token");
-    
-    const response = await fetch(`${baseUrl}/doctors/register`, {
-      method: "POST",
-      body: formData,
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => null);
-      throw new Error(errorData?.message || "Doctor registration failed");
-    }
-
-    return response.json();
+    return await apiRequest(
+      `${baseUrl}/doctors/register`,
+      {
+        method: "POST",
+        data: formData,
+        requiresAuth: false, // Registration usually doesn't require auth token, but let's check. 
+                             // Wait, existing code didn't use fetchWithAuth, just fetch.
+                             // And it's registration. So likely public.
+      }
+    );
   },
 };

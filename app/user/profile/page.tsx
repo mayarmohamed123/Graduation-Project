@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { Camera, Menu, X, MessageSquare, User, ShoppingBag, Calendar, Lock, LogOut } from "lucide-react";
-import { useAuth } from "@/lib/auth";
+import { useAuth } from "@/hooks/useAuth";
 import {
   profile2UserIcon,
 } from "@/assets";

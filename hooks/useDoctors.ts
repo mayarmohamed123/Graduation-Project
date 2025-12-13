@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Doctor } from "@/types/doctors";
 import { doctorService } from "@/services/doctorService";
-import { useAuth } from "@/lib/auth";
+import { useAuth } from "@/hooks/useAuth";
 
 export const useDoctors = () => {
   const [doctors, setDoctors] = useState<Doctor[]>([]);

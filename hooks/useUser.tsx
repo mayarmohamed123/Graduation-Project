@@ -3,7 +3,7 @@
 import { useEffect, useCallback } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchUserData } from "@/store/slices/userSlice";
-import { useAuth } from "@/lib/auth";
+import { useAuth } from "@/hooks/useAuth";
 
 export const useUser = () => {
   const dispatch = useAppDispatch();

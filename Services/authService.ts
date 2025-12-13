@@ -1,4 +1,6 @@
 // Services/authService.ts
+import { apiRequest } from "./api";
+
 export interface LoginCredentials {
   email: string;
   password: string;
@@ -43,54 +45,30 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 class AuthService {
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
-    const response = await fetch(`${API_BASE_URL}/User/login`, {
+    return apiRequest<AuthResponse>(`${API_BASE_URL}/User/login`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(credentials),
+      data: credentials,
+      requiresAuth: false,
     });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => null);
-      throw new Error(errorData?.message || "Login failed");
-    }
-
-    return response.json();
   }
 
   async register(credentials: RegisterCredentials): Promise<RegisterResponse> {
-    const response = await fetch(`${API_BASE_URL}/User/register`, {
+    return apiRequest<RegisterResponse>(`${API_BASE_URL}/User/register`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(credentials),
+      data: credentials,
+      requiresAuth: false,
     });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => null);
-      throw new Error(errorData?.message || "Registration failed");
-    }
-
-    return response.json();
   }
 
   async forgotPassword(email: string): Promise<ForgotPasswordResponse> {
-    const response = await fetch(`${API_BASE_URL}/User/forgot-password`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email }),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => null);
-      throw new Error(errorData?.message || "Password reset failed");
-    }
-
-    return response.json();
+    return apiRequest<ForgotPasswordResponse>(
+      `${API_BASE_URL}/User/forgot-password`,
+      {
+        method: "POST",
+        data: { email },
+        requiresAuth: false,
+      }
+    );
   }
 
   async googleLogin(): Promise<void> {
@@ -115,17 +93,17 @@ class AuthService {
     }
 
     const allCookies = document.cookie;
-  
+
     const cookies = allCookies.split(";");
     const tokenCookie = cookies.find((cookie) =>
       cookie.trim().startsWith("token=")
     );
-    
+
     if (tokenCookie) {
       const token = decodeURIComponent(tokenCookie.split("=")[1]);
       return token;
     }
-  
+
     return null;
   }
 
@@ -144,7 +122,6 @@ class AuthService {
     document.cookie = `token=${encodeURIComponent(
       token
     )}; expires=${expirationDate.toUTCString()}; path=/; ${secureFlag}samesite=lax`;
-    
   }
 }
 

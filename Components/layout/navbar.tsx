@@ -2,8 +2,8 @@
 
 import { Menu, X, LogOut } from "lucide-react";
 import React, { useState, useEffect } from "react";
-import { useAuth } from "@/lib/auth";
-import { useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
+
 import { Button } from "../ui";
 import Image from "next/image";
 import Link from "next/link";
@@ -19,7 +19,7 @@ import { Heart, ShoppingCart, Bell, User } from "lucide-react";
 export default function Navbar() {
   const { isAuthenticated, isLoading, logout } = useAuth();
   const [activeLink, setActiveLink] = useState("home");
-  const router = useRouter();
+
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const isLoggedIn = isAuthenticated;
   const dispatch = useAppDispatch();

@@ -1,4 +1,3 @@
-// services/api.ts
 import { authService } from "@/services/authService";
 
 export interface FilterParams {
@@ -9,170 +8,99 @@ export interface FilterParams {
   sort?: string;
 }
 
-// Generic fetch function with auth from cookies
-export const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
-  const token = authService.getToken();
+type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 
-  if (!token) {
-    throw new Error("No authentication token found. Please log in again.");
-  }
+interface ApiRequestOptions extends Omit<RequestInit, "method" | "body"> {
+  method?: HttpMethod;
+  data?: unknown;
+  requiresAuth?: boolean;
+  returnType?: "json" | "text" | "blob";
+}
+
+export const apiRequest = async <T = unknown>(
+  url: string,
+  options: ApiRequestOptions = {}
+): Promise<T> => {
+  const {
+    method = "GET",
+    data,
+    requiresAuth = true,
+    returnType = "json",
+    headers: customHeaders = {},
+    ...restOptions
+  } = options;
 
   const headers: Record<string, string> = {
-    Authorization: `Bearer ${token}`,
-    ...(options.headers as Record<string, string>),
+    ...(customHeaders as Record<string, string>),
   };
 
-  // Only set Content-Type to application/json if body is NOT FormData
-  // and Content-Type isn't explicitly set (though spreading options.headers handles the explicit set usually, 
-  // we just want to avoid overwriting it or setting it for FormData)
-  if (
-    !(options.body instanceof FormData) &&
-    !headers["Content-Type"]
-  ) {
-    headers["Content-Type"] = "application/json";
+  // Handle Authentication
+  if (requiresAuth) {
+    const token = authService.getToken();
+    if (!token) {
+      throw new Error("No authentication token found. Please log in again.");
+    }
+    headers["Authorization"] = `Bearer ${token}`;
   }
 
-  const response = await fetch(url, {
-    ...options,
-    headers,
-  });
-
-  if (response.status === 401) {
-    // Token expired or invalid
-    authService.logout();
-    throw new Error("Session expired. Please log in again.");
+  // Handle Body and Content-Type
+  let body: BodyInit | null = null;
+  if (data) {
+    if (data instanceof FormData) {
+      body = data;
+      // Content-Type header should not be set for FormData, browser sets it with boundary
+      delete headers["Content-Type"];
+    } else {
+      body = JSON.stringify(data);
+      if (!headers["Content-Type"]) {
+        headers["Content-Type"] = "application/json";
+      }
+    }
   }
 
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => null);
-    throw new Error(
-      errorData?.message ||
-        `API error: ${response.status} ${response.statusText}`
-    );
+  try {
+    const response = await fetch(url, {
+      method,
+      headers,
+      body,
+      ...restOptions,
+    });
+
+    if (response.status === 401 && requiresAuth) {
+      authService.logout();
+      throw new Error("Session expired. Please log in again.");
+    }
+
+    if (!response.ok) {
+      let errorMessage = `API error: ${response.status} ${response.statusText}`;
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData?.message || errorMessage;
+      } catch {
+        try {
+            const errorText = await response.text();
+            errorMessage = errorText || errorMessage;
+        } catch {
+            // ignore
+        }
+      }
+      throw new Error(errorMessage);
+    }
+
+    if (response.status === 204) {
+        return {} as T;
+    }
+
+    switch (returnType) {
+      case "text":
+        return (await response.text()) as unknown as T;
+      case "blob":
+        return (await response.blob()) as unknown as T;
+      case "json":
+      default:
+        return (await response.json()) as T;
+    }
+  } catch (error) {
+    throw error; // Re-throw to be handled by caller
   }
-
-  return response.json();
-};
-// POST request with token + JSON body
-export const postWithAuth = async (
-  url: string,
-  data?: unknown,
-  options: RequestInit = {}
-) => {
-  const token = authService.getToken();
-
-  if (!token) {
-    throw new Error("No authentication token found. Please log in again.");
-  }
-
-  const headers: Record<string, string> = {
-    Authorization: `Bearer ${token}`,
-    ...(options.headers as Record<string, string>),
-  };
-
-  const isFormData = data instanceof FormData;
-
-  if (!isFormData && !headers["Content-Type"]) {
-    headers["Content-Type"] = "application/json";
-  }
-
-  const response = await fetch(url, {
-    method: "POST",
-    body: isFormData ? (data as FormData) : data ? JSON.stringify(data) : undefined,
-    ...options,
-    headers,
-  });
-
-  if (response.status === 401) {
-    authService.logout();
-    throw new Error("Session expired. Please log in again.");
-  }
-
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => null);
-    throw new Error(
-      errorData?.message ||
-        `API error: ${response.status} ${response.statusText}`
-    );
-  }
-
-  return response.json();
-};
-
-// POST request that returns raw text response
-export const postWithAuthText = async (
-  url: string,
-  data?: unknown,
-  options: RequestInit = {}
-) => {
-  const token = authService.getToken();
-
-  if (!token) {
-    throw new Error("No authentication token found. Please log in again.");
-  }
-
-  const headers = {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${token}`,
-    ...options.headers,
-  };
-
-  const response = await fetch(url, {
-    method: "POST",
-    ...(data ? { body: JSON.stringify(data) } : {}),
-    ...options,
-    headers,
-  });
-
-  if (response.status === 401) {
-    authService.logout();
-    throw new Error("Session expired. Please log in again.");
-  }
-
-  if (!response.ok) {
-    const errorText = await response.text().catch(() => null);
-    throw new Error(
-      errorText || `API error: ${response.status} ${response.statusText}`
-    );
-  }
-
-  return response.text();
-};
-
-// DELETE request that returns raw text response
-export const deleteWithAuthText = async (
-  url: string,
-  options: RequestInit = {}
-) => {
-  const token = authService.getToken();
-
-  if (!token) {
-    throw new Error("No authentication token found. Please log in again.");
-  }
-
-  const headers = {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${token}`,
-    ...options.headers,
-  };
-
-  const response = await fetch(url, {
-    method: "DELETE",
-    ...options,
-    headers,
-  });
-
-  if (response.status === 401) {
-    authService.logout();
-    throw new Error("Session expired. Please log in again.");
-  }
-
-  if (!response.ok) {
-    const errorText = await response.text().catch(() => null);
-    throw new Error(
-      errorText || `API error: ${response.status} ${response.statusText}`
-    );
-  }
-
-  return response.text();
 };

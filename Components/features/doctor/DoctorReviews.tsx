@@ -115,7 +115,6 @@ export default function DoctorReviews({
                     />
                     <div>
                       <p className="font-semibold">{author?.userName}</p>
-                      <p className="text-gray-500 text-sm">{author?.email}</p>
                     </div>
                     <div className="ml-auto flex flex-col items-end gap-2">
                       <span className="bg-yellow-100 px-3 py-1 rounded-full text-sm">

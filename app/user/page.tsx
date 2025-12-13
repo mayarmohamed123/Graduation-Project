@@ -1,5 +1,6 @@
 "use client";
-import { useAuth } from "@/lib/auth";
+import { useEffect } from "react";
+import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import {
@@ -20,6 +21,22 @@ import PrimaryButton from "@/components/common/PrimaryButton";
 export default function Page() {
   const { user } = useAuth();
   const router = useRouter();
+  
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          console.log("Latitude:", position.coords.latitude);
+          console.log("Longitude:", position.coords.longitude);
+        },
+        (error) => {
+          console.error("Error getting location:", error);
+        }
+      );
+    } else {
+      console.error("Geolocation is not supported by this browser.");
+    }
+  }, []);
   const userName = user?.userName || "User";
 
   const actionCards = [
@@ -61,9 +78,9 @@ export default function Page() {
       <section className="min-h-screen bg-gray-50 flex flex-col items-center justify-center py-10 px-4">
         <div className="max-w-4xl w-full">
           {/* Header with Logout */}
-          <div className="flex items-center justify-between mb-6">
-            <h1 className="heading">Welcome back, {userName}!👋</h1>
-          </div>
+      
+            <h1 className="heading text-center">Welcome back, {userName}!👋</h1>
+
           <p className="text-[#8E8E8E] text-lg mb-10 text-center">
             Take care of your health today ,explore trusted doctors, order
             medicines, or help others by donating blood.
