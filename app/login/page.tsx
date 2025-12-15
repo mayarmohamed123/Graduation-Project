@@ -63,7 +63,7 @@ function SignInForm() {
   };
 
   const handleSocialSignIn = async (provider: "google" | "facebook") => {
-    const { authService } = await import("@/services/authService");
+    const { authService } = await import("@/Services/authService");
 
     if (provider === "google") {
       authService.googleLogin();
