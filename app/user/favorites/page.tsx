@@ -2,18 +2,18 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import Switch from "@/components/common/Switch";
-import DoctorCard from "@/components/features/doctor/DoctorCard";
-import MedicineCard from "@/components/common/MedicineCard";
-import ClinicCard from "@/components/common/ClinicCard";
-import PageHeaderWithBack from "@/components/common/PageHeaderWithBack";
+import Switch from "@/Components/common/Switch";
+import DoctorCard from "@/Components/features/doctor/DoctorCard";
+import MedicineCard from "@/Components/common/MedicineCard";
+import ClinicCard from "@/Components/common/ClinicCard";
+import PageHeaderWithBack from "@/Components/common/PageHeaderWithBack";
 import noFavorites from "@/assets/noFavorites.png";
 import {
     FavoriteDoctor,
     FavoriteMedicine,
     FavoriteClinic,
 } from "@/types/favorites";
-import { favoritesService } from "@/services/favoritesService";
+import { favoritesService } from "@/Services/favoritesService";
 import { toast } from "react-hot-toast";
 
 
@@ -121,7 +121,7 @@ export default function Favorites() {
                                             variant="favorite"
                                             initialFavoriteState={true}
                                             onRemoveFavorite={handleRemoveDoctor}
-                                            showExtraInfo={true}
+
                                         />
                                     ))
                                 ) : (

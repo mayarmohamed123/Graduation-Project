@@ -2,8 +2,8 @@
 
 import { Menu, X, LogOut } from "lucide-react";
 import React, { useState, useEffect } from "react";
-import { useAuth } from "@/lib/auth";
-import { useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
+
 import { Button } from "../ui";
 import Image from "next/image";
 import Link from "next/link";
@@ -12,7 +12,6 @@ import {
 } from "@/assets";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchUserCart } from "@/store/slices/cartSlice";
-import { useAuthToken } from "@/hooks/useAuthToken";
 import { usePathname } from "next/navigation";
 import { Heart, ShoppingCart, Bell, User } from "lucide-react";
 
@@ -20,15 +19,14 @@ import { Heart, ShoppingCart, Bell, User } from "lucide-react";
 export default function Navbar() {
   const { isAuthenticated, isLoading, logout } = useAuth();
   const [activeLink, setActiveLink] = useState("home");
-  const router = useRouter();
+
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const isLoggedIn = isAuthenticated;
   const dispatch = useAppDispatch();
   const cartTotalItems = useAppSelector((state) => state.cart.totalItems);
   const pathname = usePathname();
 
-  // 🔑 Sync token to cart
-  useAuthToken();
+
 
   // Fetch cart when logged in
   useEffect(() => {

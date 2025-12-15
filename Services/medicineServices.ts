@@ -3,7 +3,7 @@ import {
   MedicineFilterParams,
   MedicineSearchResponse,
 } from "@/types";
-import { fetchWithAuth } from "./api";
+import { apiRequest } from "./api";
 
 class MedicineService {
   // Filter Medicines
@@ -21,14 +21,14 @@ class MedicineService {
       queryParams.toString() ? `?${queryParams.toString()}` : ""
     }`;
 
-    return await fetchWithAuth(url, {
+    return await apiRequest<Medicine[]>(url, {
       next: { revalidate: 60 }, // ✅ ISR enabled
     });
   }
 
   // Search Medicine by Name
   async searchMedicineByName(name: string): Promise<MedicineSearchResponse> {
-    return await fetchWithAuth(
+    return await apiRequest<MedicineSearchResponse>(
       `${
         process.env.NEXT_PUBLIC_API_BASE_URL
       }/medicine/search/${encodeURIComponent(name)}`,
@@ -40,7 +40,7 @@ class MedicineService {
 
   // Get Medicine by ID
   async getMedicineById(id: number): Promise<Medicine> {
-    return await fetchWithAuth(
+    return await apiRequest<Medicine>(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/medicine/${id}`,
       {
         next: { revalidate: 60 }, // ✅ ISR enabled
@@ -50,7 +50,7 @@ class MedicineService {
 
   // Get Alternatives Medicines
   async getAlternativesMedicines(name: string): Promise<Medicine[]> {
-    return await fetchWithAuth(
+    return await apiRequest<Medicine[]>(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/medicine/${encodeURIComponent(
         name
       )}/alternatives`,

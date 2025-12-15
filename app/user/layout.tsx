@@ -1,7 +1,7 @@
 import "../globals.css";
-import ProtectedRoute from "@/components/auth/ProtectedRoute";
-import Navbar from "@/components/layout/navbar";
-import Footer from "@/components/layout/footer";
+import Navbar from "@/Components/layout/navbar";
+import Footer from "@/Components/layout/footer";
+import { ProtectedRoute } from "@/Components";
 
 export default function UserLayout({
   children,
@@ -9,10 +9,13 @@ export default function UserLayout({
   children: React.ReactNode;
 }) {
   return (
+    <>
     <ProtectedRoute>
       <Navbar />
       {children}
       <Footer />
     </ProtectedRoute>
+    </>
   );
+  
 }

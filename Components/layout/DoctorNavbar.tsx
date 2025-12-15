@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Settings, Bell, ChevronDown, LogOut, User } from "lucide-react";
-import { useAuth } from "@/lib/auth";
+import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import image from "@/assets/user-profile.webp";
 
 export default function DoctorNavbar() {
   const { logout, user } = useAuth();
@@ -14,7 +15,7 @@ export default function DoctorNavbar() {
   
   // Get doctor name from auth context
   const doctorName = user?.userName || "Doctor";
-  const doctorImage = "@/assets/images/doctor.png";
+  const doctorImage = image
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();

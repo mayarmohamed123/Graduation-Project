@@ -6,15 +6,15 @@ import Image from "next/image";
 import { Lock, Mail, User, Phone, MapPin, Building, DollarSign, Camera } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Input } from "@/Components/ui/input";
+import { Button } from "@/Components/ui/button";
 import {
   vector37,
   doctorsIllustration,
   vector36,
 } from "@/assets";
 import { doctorRegistrationSchema, type DoctorRegistrationFormData } from "@/lib/validations/doctor";
-import { doctorService } from "@/services/doctorService";
+import { doctorService } from "@/Services/doctorService";
 import toast from "react-hot-toast";
 
 export default function DoctorRegisterPage() {
@@ -29,15 +29,14 @@ export default function DoctorRegisterPage() {
     handleSubmit,
     formState: { errors },
     setValue,
-    watch,
+
     trigger,
   } = useForm<DoctorRegistrationFormData>({
     resolver: zodResolver(doctorRegistrationSchema),
     mode: "onChange",
   });
 
-  const profilePicture = watch("profilePicture");
-  const clinicImage = watch("clinicImage");
+
 
   // Handle profile picture selection
   const handleProfilePictureChange = (e: React.ChangeEvent<HTMLInputElement>) => {

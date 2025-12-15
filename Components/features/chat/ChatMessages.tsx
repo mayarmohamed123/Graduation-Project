@@ -1,5 +1,5 @@
 "use client";
-import { Message } from "@/services/chatServices";
+import { Message } from "@/Services/chatServices";
 import { useEffect, useRef } from "react";
 import { format } from "date-fns";
 import { Send } from "lucide-react";

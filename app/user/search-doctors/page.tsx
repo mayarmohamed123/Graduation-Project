@@ -1,21 +1,19 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useAuth } from "@/lib/auth";
+import { useAuth } from "@/hooks/useAuth";
 import { useDoctors } from "@/hooks/useDoctors";
 import { FilterState } from "@/types/doctors";
-import { useAuthToken } from "@/hooks/useAuthToken";
-import LoadingSpinner from "@/components/common/LoadingSpinner";
-import SearchInput from "@/components/common/SearchInput";
-import DoctorCard from "@/components/features/doctor/DoctorCard";
-import PrvButton from "@/components/common/prvButton";
-import { Button } from "@/components/ui/button";
-import SpecialtyIcon from "@/components/common/SpecialtyIcon";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import PageHeaderWithBack from "@/components/common/PageHeaderWithBack";
-import { Filter, X } from "lucide-react";
+import LoadingSpinner from "@/Components/common/LoadingSpinner";
+import SearchInput from "@/Components/common/SearchInput";
+import DoctorCard from "@/Components/features/doctor/DoctorCard";
+import { Button } from "@/Components/ui/button";
+import SpecialtyIcon from "@/Components/common/SpecialtyIcon";
+import { RadioGroup, RadioGroupItem } from "@/Components/ui/radio-group";
+import { Label } from "@/Components/ui/label";
+import { Checkbox } from "@/Components/ui/checkbox";
+import PageHeaderWithBack from "@/Components/common/PageHeaderWithBack";
+import { Filter } from "lucide-react";
 
 // Medical specialties list
 const specialties = [
@@ -35,7 +33,6 @@ const specialties = [
 
 export default function SearchDoctorsPage() {
   const { isAuthenticated, isLoading: authLoading } = useAuth();
-  const { token } = useAuthToken();
   const { doctors, loading, error, refetch } = useDoctors();
 
   const [filters, setFilters] = useState<FilterState>({
@@ -107,26 +104,7 @@ export default function SearchDoctorsPage() {
     return <LoadingSpinner />;
   }
 
-  // Show login prompt if not authenticated
-  // if (!isAuthenticated) {
-  //   return (
-  //     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-  //       <div className="text-center">
-  //         <h2 className="text-2xl font-bold text-gray-900 mb-4">
-  //           Authentication Required
-  //         </h2>
-  //         <p className="text-gray-600 mb-6">
-  //           Please log in to search for doctors.
-  //         </p>
-  //         <a
-  //           href="/login"
-  //           className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors">
-  //           Go to Login
-  //         </a>
-  //       </div>
-  //     </div>
-  //   );
-  // }
+ 
 
   return (
     <div className="min-h-screen bg-gray-50 pb-8">
@@ -337,7 +315,6 @@ export default function SearchDoctorsPage() {
                     <DoctorCard
                       key={doctor.id}
                       doctor={doctor}
-                      showExtraInfo={true}
                     />
                   ))}
                 </div>

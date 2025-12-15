@@ -15,7 +15,7 @@ import {
   LogOut,
 } from "lucide-react";
 import { sehhaLogo } from "@/assets";
-import { useAuth } from "@/lib/auth";
+import { useAuth } from "@/hooks/useAuth";
 
 const menuItems = [
   { name: "Dashboard", icon: LayoutDashboard, href: "/doctor" },

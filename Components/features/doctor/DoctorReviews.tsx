@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import AddReviewDialog from "./AddReview";
-import { doctorService } from "@/services/doctorService";
+import { doctorService } from "@/Services/doctorService";
 import { Review } from "@/types/doctors";
 import { userProfileImage, penIcon } from "@/assets";
 import { useUser } from "@/hooks/useUser";
@@ -115,7 +115,6 @@ export default function DoctorReviews({
                     />
                     <div>
                       <p className="font-semibold">{author?.userName}</p>
-                      <p className="text-gray-500 text-sm">{author?.email}</p>
                     </div>
                     <div className="ml-auto flex flex-col items-end gap-2">
                       <span className="bg-yellow-100 px-3 py-1 rounded-full text-sm">

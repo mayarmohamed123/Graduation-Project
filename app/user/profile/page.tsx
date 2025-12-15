@@ -3,19 +3,19 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { Camera, Menu, X, MessageSquare, User, ShoppingBag, Calendar, Lock, LogOut } from "lucide-react";
-import { useAuth } from "@/lib/auth";
+import { useAuth } from "@/hooks/useAuth";
 import {
   profile2UserIcon,
 } from "@/assets";
 import { useUser } from "@/hooks/useUser";
 import { toast } from "react-hot-toast";
-import { userService } from "@/services/userService";
-import Appointments from "@/components/features/user/Appointments";
-import Orders from "@/components/features/user/Orders";
-import PasswordManagement from "@/components/features/user/PasswordManagement";
-import PersonalInfo from "@/components/features/user/PersonalInfo";
-import Chat from "@/components/features/chat/Chat";
-import PageHeaderWithBack from "@/components/common/PageHeaderWithBack";
+import { userService } from "@/Services/userService";
+import Appointments from "@/Components/features/user/Appointments";
+import Orders from "@/Components/features/user/Orders";
+import PasswordManagement from "@/Components/features/user/PasswordManagement";
+import PersonalInfo from "@/Components/features/user/PersonalInfo";
+import Chat from "@/Components/features/chat/Chat";
+import PageHeaderWithBack from "@/Components/common/PageHeaderWithBack";
 import type { UserProfileForm } from "@/types";
 
 export default function ProfilePage() {

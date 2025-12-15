@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import PageHeaderWithBack from "@/components/common/PageHeaderWithBack";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import PageHeaderWithBack from "@/Components/common/PageHeaderWithBack";
+import { Button } from "@/Components/ui/button";
+import { Input } from "@/Components/ui/input";
 import { AlertCircle, CheckCircle2 } from "lucide-react";
 
 type Answers = {

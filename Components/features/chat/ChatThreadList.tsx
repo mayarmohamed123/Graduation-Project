@@ -1,5 +1,5 @@
 "use client";
-import { Thread } from "@/services/chatServices";
+import { Thread } from "@/Services/chatServices";
 import Image from "next/image";
 import { formatDistanceToNow } from "date-fns";
 

@@ -2,16 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/lib/auth";
-import { userService } from "@/services/userService";
-import { createNotificationConnection } from "@/services/notificationHub";
+import { useAuth } from "@/hooks/useAuth";
+import { userService } from "@/Services/userService";
+import { createNotificationConnection } from "@/Services/notificationHub";
 import { Notification } from "@/types";
 import Image from "next/image";
 import { notificationEmptyImage } from "@/assets";
 import toast from "react-hot-toast";
-import PageHeaderWithBack from "@/components/common/PageHeaderWithBack";
-import Switch from "@/components/common/Switch";
-import NotificationCard from "@/components/common/NotificationCard";
+import PageHeaderWithBack from "@/Components/common/PageHeaderWithBack";
+import Switch from "@/Components/common/Switch";
+import NotificationCard from "@/Components/common/NotificationCard";
 import { HubConnectionState } from "@microsoft/signalr";
 
 type TabType = "appointments" | "orders";

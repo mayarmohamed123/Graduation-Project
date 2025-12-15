@@ -1,10 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { fetchMyThreads, Thread } from "@/services/chatServices";
+import { fetchMyThreads, Thread } from "@/Services/chatServices";
 import { useChat } from "@/hooks/useChat";
 import { toast } from "react-hot-toast";
-import { useAuth } from "@/lib/auth";
+import { useAuth } from "@/hooks/useAuth";
 import ChatThreadList from "./ChatThreadList";
 import ChatMessages from "./ChatMessages";
 

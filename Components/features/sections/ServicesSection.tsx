@@ -6,7 +6,7 @@ import {
   secureServiceIcon,
 } from "@/assets";
 import Image from "next/image";
-import WaveLines from "@/components/common/WaveLines";
+import WaveLines from "@/Components/common/WaveLines";
 
 export default function ServicesSection() {
   const services = [
@@ -46,8 +46,8 @@ export default function ServicesSection() {
       <div className="text-center mb-20">
         <h2 className="heading">Top Services We Offer</h2>
         <p className="paragraph">
-          In today's fast-moving world, your health deserves care that's both
-          accessible and convenient. That's why Sehha brings together a suite of
+          In today&apos;s fast-moving world, your health deserves care that&apos;s both
+          accessible and convenient. That&apos;s why Sehha brings together a suite of
           digital healthcare services designed to connect you with doctors,
           pharmacies, and donors — all in one trusted platform.
         </p>

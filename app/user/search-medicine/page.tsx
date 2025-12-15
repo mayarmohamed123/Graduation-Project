@@ -3,13 +3,19 @@
 
 import TopRatedPharmacies from "@/Components/features/sections/TopRatedPharmacies";
 import React, { useState } from "react";
-import { Medicine, MedicineFilterParams } from "@/types";
+import { Medicine } from "@/types";
 import { medicineService } from "@/Services/medicineServices";
 import { SlidersHorizontal } from "lucide-react";
 import LoadingSpinner from "@/Components/common/LoadingSpinner";
 import MedicineCard from "@/Components/common/MedicineCard";
 import SearchInput from "@/Components/common/SearchInput";
 import PageHeaderWithBack from "@/Components/common/PageHeaderWithBack";
+
+interface MedicineFilters {
+  dosageForm?: string;
+  strengthUnit?: string;
+  category?: string;
+}
 
 export default function SearchMedicinePage() {
   const [medicines, setMedicines] = useState<Medicine[]>([]);
@@ -80,7 +86,11 @@ export default function SearchMedicinePage() {
 
       // If filters are applied, use filter API
       if (form || units.length > 0 || category) {
+<<<<<<< HEAD
         const filters: MedicineFilterParams = {};
+=======
+        const filters: MedicineFilters = {};
+>>>>>>> 404e5fe210996a52f32f0533916882242897ecd3
         if (form) {
           filters.dosageForm = form;
         }
@@ -93,12 +103,12 @@ export default function SearchMedicinePage() {
         results = await medicineService.filterMedicines(filters);
       } else if (query.trim()) {
         // If only search query, use search API
-        const response: any = await medicineService.searchMedicineByName(query);
+        const response = await medicineService.searchMedicineByName(query);
 
         // Check if response is the specific "No alternative medicines found" message (as requested)
         // or if it's not an array (implying some other message object)
         if (
-          response?.message === "No alternative medicines found." ||
+          !Array.isArray(response) && response?.message === "No alternative medicines found." ||
           !Array.isArray(response)
         ) {
           // Fallback to alternatives
@@ -116,7 +126,7 @@ export default function SearchMedicinePage() {
             console.error("Error fetching alternatives:", altErr);
             results = [];
           }
-        } else {
+        } else if (Array.isArray(response)) {
           results = response;
         }
       }

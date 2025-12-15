@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Doctor } from "@/types";
 import Link from "next/link";
-import LoadingSpinner from "@/components/common/LoadingSpinner";
+import LoadingSpinner from "@/Components/common/LoadingSpinner";
 import DoctorCard from "../doctor/DoctorCard";
 
 export default function TopRatedDoctors() {
@@ -62,7 +62,7 @@ export default function TopRatedDoctors() {
       {/* Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {doctors.map((doctor) => (
-          <DoctorCard key={doctor.id} doctor={doctor} showChat={true} />
+          <DoctorCard key={doctor.id} doctor={doctor} />
         ))}
       </div>
     </div>

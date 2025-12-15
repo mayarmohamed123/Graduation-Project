@@ -7,15 +7,15 @@ import {
   messagesIcon,
   userProfileImage,
 } from "@/assets";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import DoctorReviews from "@/components/features/doctor/DoctorReviews";
-import LoadingSpinner from "@/components/common/LoadingSpinner";
-import PrvButton from "@/components/common/prvButton";
+import { Button } from "@/Components/ui/button";
+import { Calendar } from "@/Components/ui/calendar";
+import DoctorReviews from "@/Components/features/doctor/DoctorReviews";
+import LoadingSpinner from "@/Components/common/LoadingSpinner";
+import PrvButton from "@/Components/common/prvButton";
 import { cn } from "@/lib/utils";
-import { doctorService } from "@/services/doctorService";
+import { doctorService } from "@/Services/doctorService";
 import { Doctor, Review } from "@/types/doctors";
-import { startConversationWithDoctor } from "@/services/chatServices";
+import { startConversationWithDoctor } from "@/Services/chatServices";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { MessageCircle } from "lucide-react";

@@ -4,12 +4,11 @@ import { useEffect, useState } from "react";
 import {useParams } from "next/navigation";
 import Image from "next/image";
 import { Medicine } from "@/types";
-import { medicineService } from "@/services/medicineServices";
-import { cartService } from "@/services/cartService";
-import LoadingSpinner from "@/components/common/LoadingSpinner";
-import PrvButton from "@/components/common/prvButton";
+import { medicineService } from "@/Services/medicineServices";
+import { cartService } from "@/Services/cartService";
+import LoadingSpinner from "@/Components/common/LoadingSpinner";
+import PrvButton from "@/Components/common/prvButton";
 import { Heart, Check, X } from "lucide-react";
-import { toast } from "react-hot-toast";
 import { useAppDispatch } from "@/store/hooks";
 import { fetchUserCart } from "@/store/slices/cartSlice";
 

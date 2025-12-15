@@ -3,12 +3,12 @@
 import { useEffect, useCallback } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchUserData } from "@/store/slices/userSlice";
-import { useAuthToken } from "./useAuthToken";
+import { useAuth } from "@/hooks/useAuth";
 
 export const useUser = () => {
   const dispatch = useAppDispatch();
   const { user, isLoading, error } = useAppSelector((state) => state.user);
-  const { token, isAuthenticated } = useAuthToken();
+  const { token, isAuthenticated } = useAuth();
 
   useEffect(() => {
     const loadUserData = async () => {
