@@ -32,6 +32,7 @@ export const apiRequest = async <T = unknown>(
 
   const headers: Record<string, string> = {
     ...(customHeaders as Record<string, string>),
+    "ngrok-skip-browser-warning": "true",
   };
 
   // Handle Authentication
