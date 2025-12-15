@@ -7,8 +7,8 @@ import {
   setMessagesForThread,
   setCurrentThread,
 } from "@/store/slices/chatSlice";
-import { fetchMessagesOfThread, sendMessageApi } from "@/services/chatServices";
-import { signalRService } from "@/services/signalRServices";
+import { fetchMessagesOfThread, sendMessageApi } from "@/Services/chatServices";
+import { signalRService } from "@/Services/signalRServices";
 import { RootState } from "@/store/store";
 
 export function useChat(threadId: number) {

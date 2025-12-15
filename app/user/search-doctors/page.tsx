@@ -4,15 +4,15 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useDoctors } from "@/hooks/useDoctors";
 import { FilterState } from "@/types/doctors";
-import LoadingSpinner from "@/components/common/LoadingSpinner";
-import SearchInput from "@/components/common/SearchInput";
-import DoctorCard from "@/components/features/doctor/DoctorCard";
-import { Button } from "@/components/ui/button";
-import SpecialtyIcon from "@/components/common/SpecialtyIcon";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import PageHeaderWithBack from "@/components/common/PageHeaderWithBack";
+import LoadingSpinner from "@/Components/common/LoadingSpinner";
+import SearchInput from "@/Components/common/SearchInput";
+import DoctorCard from "@/Components/features/doctor/DoctorCard";
+import { Button } from "@/Components/ui/button";
+import SpecialtyIcon from "@/Components/common/SpecialtyIcon";
+import { RadioGroup, RadioGroupItem } from "@/Components/ui/radio-group";
+import { Label } from "@/Components/ui/label";
+import { Checkbox } from "@/Components/ui/checkbox";
+import PageHeaderWithBack from "@/Components/common/PageHeaderWithBack";
 import { Filter } from "lucide-react";
 
 // Medical specialties list

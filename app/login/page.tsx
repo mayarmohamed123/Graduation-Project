@@ -6,9 +6,9 @@ import Image from "next/image";
 import { Lock, Mail } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import Switch from "@/components/common/Switch";
+import { Input } from "@/Components/ui/input";
+import { Button } from "@/Components/ui/button";
+import Switch from "@/Components/common/Switch";
 import { Tab } from "@/types/favorites";
 import {
   vector37,
@@ -63,7 +63,7 @@ function SignInForm() {
   };
 
   const handleSocialSignIn = async (provider: "google" | "facebook") => {
-    const { authService } = await import("@/services/authService");
+    const { authService } = await import("@/Services/authService");
     
     if (provider === "google") {
       authService.googleLogin();

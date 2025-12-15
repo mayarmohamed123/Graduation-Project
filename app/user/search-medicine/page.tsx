@@ -1,15 +1,15 @@
 "use client";
 
 
-import TopRatedPharmacies from "@/components/features/sections/TopRatedPharmacies";
+import TopRatedPharmacies from "@/Components/features/sections/TopRatedPharmacies";
 import React, { useState } from "react";
 import { Medicine } from "@/types";
-import { medicineService } from "@/services/medicineServices";
+import { medicineService } from "@/Services/medicineServices";
 import { SlidersHorizontal } from "lucide-react";
-import LoadingSpinner from "@/components/common/LoadingSpinner";
-import MedicineCard from "@/components/common/MedicineCard";
-import SearchInput from "@/components/common/SearchInput";
-import PageHeaderWithBack from "@/components/common/PageHeaderWithBack";
+import LoadingSpinner from "@/Components/common/LoadingSpinner";
+import MedicineCard from "@/Components/common/MedicineCard";
+import SearchInput from "@/Components/common/SearchInput";
+import PageHeaderWithBack from "@/Components/common/PageHeaderWithBack";
 
 interface MedicineFilters {
   dosageForm?: string;

@@ -5,10 +5,10 @@ import { MessageCircle, Calendar, Clock } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import type { Appointment } from "@/types";
-import { userService } from "@/services/userService";
+import { userService } from "@/Services/userService";
 import { toast } from "react-hot-toast";
 import { formatDate, formatTime } from "@/lib/dateUtils";
-import { startConversationWithDoctor } from "@/services/chatServices";
+import { startConversationWithDoctor } from "@/Services/chatServices";
 
 type TabType = "pending" | "completed" | "cancelled";
 

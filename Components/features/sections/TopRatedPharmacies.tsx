@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Pharmacy } from "@/types";
 import Link from "next/link";
-import { pharmacyService } from "@/services/pharmaciesServices";
+import { pharmacyService } from "@/Services/pharmaciesServices";
 import { Clock, MapPin, Star } from "lucide-react";
-import LoadingSpinner from "@/components/common/LoadingSpinner";
-import PrimaryButton from "@/components/common/PrimaryButton";
+import LoadingSpinner from "@/Components/common/LoadingSpinner";
+import PrimaryButton from "@/Components/common/PrimaryButton";
 
 export default function TopRatedPharmacies() {
   const [pharmacies, setPharmacies] = useState<Pharmacy[]>([]);

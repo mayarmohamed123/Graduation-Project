@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { PharmacyCart } from "@/types";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/Components/ui/button";
 import { Trash2, Minus, Plus, Loader2 } from "lucide-react";
 import Image from "next/image";
 

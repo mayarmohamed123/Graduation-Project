@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Doctor } from "@/types";
 import { FavoriteDoctor } from "@/types/favorites";
 import { Heart, MapPin, Phone, DollarSign, Star } from "lucide-react";
-import { favoritesService } from "@/services/favoritesService";
+import { favoritesService } from "@/Services/favoritesService";
 import { toast } from "react-hot-toast";
 import PrimaryButton from "../../common/PrimaryButton";
 import { userProfileImage } from "@/assets";

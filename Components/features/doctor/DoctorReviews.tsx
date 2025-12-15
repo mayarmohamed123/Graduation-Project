@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import AddReviewDialog from "./AddReview";
-import { doctorService } from "@/services/doctorService";
+import { doctorService } from "@/Services/doctorService";
 import { Review } from "@/types/doctors";
 import { userProfileImage, penIcon } from "@/assets";
 import { useUser } from "@/hooks/useUser";

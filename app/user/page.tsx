@@ -15,8 +15,8 @@ import {
 // Import Swiper
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
-import TopRatedDoctors from "@/components/features/sections/TopRatedDoctors";
-import PrimaryButton from "@/components/common/PrimaryButton";
+import TopRatedDoctors from "@/Components/features/sections/TopRatedDoctors";
+import PrimaryButton from "@/Components/common/PrimaryButton";
 
 export default function Page() {
   const { user } = useAuth();

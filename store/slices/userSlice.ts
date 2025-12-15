@@ -1,6 +1,6 @@
 import { User, UserSliceState } from "@/types";
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { authService, LoginCredentials, RegisterCredentials } from "@/services/authService";
+import { authService, LoginCredentials, RegisterCredentials } from "@/Services/authService";
 import toast from "react-hot-toast";
 
 const initialState: UserSliceState = {

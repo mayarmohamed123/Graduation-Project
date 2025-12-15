@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Doctor } from "@/types";
 import Link from "next/link";
-import LoadingSpinner from "@/components/common/LoadingSpinner";
+import LoadingSpinner from "@/Components/common/LoadingSpinner";
 import DoctorCard from "../doctor/DoctorCard";
 
 export default function TopRatedDoctors() {

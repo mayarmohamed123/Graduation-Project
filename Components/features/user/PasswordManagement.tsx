@@ -5,7 +5,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { Button } from "../../ui/button";
 import { Input } from "../../ui/input";
 import { Label } from "../../ui/label";
-import { userService } from "@/services/userService";
+import { userService } from "@/Services/userService";
 import { toast } from "react-hot-toast";
 
 export default function PasswordManagement() {

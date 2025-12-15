@@ -2,7 +2,7 @@
 
 import { useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { authService } from "@/services/authService";
+import { authService } from "@/Services/authService";
 import toast from "react-hot-toast";
 
 function CallbackContent() {

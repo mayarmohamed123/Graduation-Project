@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { apiRequest } from "@/services/api";
+import { apiRequest } from "@/Services/api";
 import { UserCart, PharmacyCart } from "@/types";
 
 // ⭐ Replace with your actual backend API endpoint
