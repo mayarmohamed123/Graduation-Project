@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import type { UserProfileForm } from "@/types";
-import { Button, Input, Label } from "@/components/ui";
+import { Button, Input, Label } from "@/Components/ui";
 
 // Re-export for backward compatibility
 export type UserState = UserProfileForm;

@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 
 import { filledStarIcon, emptyStarIcon } from "@/assets";
-import { doctorService } from "@/services/doctorService";
+import { doctorService } from "@/Services/doctorService";
 import { toast } from "react-hot-toast";
-import { Button, Dialog, DialogContent, DialogTrigger } from "@/components/ui";
+import { Button, Dialog, DialogContent, DialogTrigger } from "@/Components/ui";
 
 export default function AddReviewDialog({
   trigger,

@@ -3,7 +3,7 @@
 import React from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { loginUser, logoutUser, registerUser } from "@/store/slices/userSlice";
-import type { RegisterCredentials } from "@/services/authService";
+import type { RegisterCredentials } from "@/Services/authService";
 import { useRouter } from "next/navigation";
 
 // Deprecated: Auth state is now managed by Redux. 
