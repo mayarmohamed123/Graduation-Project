@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { Camera, Menu, X, MessageSquare, User, ShoppingBag, Calendar, Lock, LogOut } from "lucide-react";
+import { Camera, Menu, X, User, ShoppingBag, Calendar, Lock, LogOut } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import {
   profile2UserIcon,
@@ -14,8 +14,8 @@ import Appointments from "@/Components/features/user/Appointments";
 import Orders from "@/Components/features/user/Orders";
 import PasswordManagement from "@/Components/features/user/PasswordManagement";
 import PersonalInfo from "@/Components/features/user/PersonalInfo";
-import Chat from "@/Components/features/chat/Chat";
 import PageHeaderWithBack from "@/Components/common/PageHeaderWithBack";
+import SidebarNav from "@/Components/common/SidebarNav";
 import type { UserProfileForm } from "@/types";
 
 export default function ProfilePage() {
@@ -194,31 +194,12 @@ export default function ProfilePage() {
             <p className="text-sm text-gray-500 text-center mt-1">{user.email}</p>
           </div>
 
-          <nav className="flex-1 space-y-2">
-            {menuItems.map((item) => {
-              const IconComponent = item.icon;
-              const isActive = activeTab === item.id;
-
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => {
-                    setActiveTab(item.id);
-                    setIsMobileMenuOpen(false); // Close mobile menu on selection
-                  }}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition ${isActive
-                    ? "bg-primary text-white border-l-4 border-primary"
-                    : "text-gray-700 hover:bg-gray-100"
-                    }`}>
-                  <IconComponent
-                    size={20}
-                    className={isActive ? "text-white" : "text-gray-700"}
-                  />
-                  <span className="font-medium">{item.label}</span>
-                </button>
-              );
-            })}
-          </nav>
+          <SidebarNav
+            items={menuItems}
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+            onMobileClick={() => setIsMobileMenuOpen(false)}
+          />
 
           <button
             onClick={handleLogout}

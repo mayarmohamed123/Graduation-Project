@@ -1,6 +1,5 @@
 "use client";
 import { Thread } from "@/Services/chatServices";
-import Image from "next/image";
 import { formatDistanceToNow } from "date-fns";
 
 interface ChatThreadListProps {
@@ -8,6 +7,7 @@ interface ChatThreadListProps {
   selectedThreadId: number | null;
   onSelectThread: (threadId: number) => void;
   isLoading: boolean;
+  currentUserId: string;
 }
 
 export default function ChatThreadList({
@@ -15,6 +15,7 @@ export default function ChatThreadList({
   selectedThreadId,
   onSelectThread,
   isLoading,
+  currentUserId,
 }: ChatThreadListProps) {
   if (isLoading) {
     return (
@@ -56,7 +57,9 @@ export default function ChatThreadList({
         <h2 className="text-xl font-bold text-gray-900">Messages</h2>
       </div>
       <div className="flex-1 overflow-y-auto">
-        {threads.map((thread) => (
+        {threads.map((thread) => {
+          const otherParticipant = thread.participants.find(p => p.userId !== currentUserId) || thread.participants[0];
+          return (
           <button
             key={thread.id}
             onClick={() => onSelectThread(thread.id)}
@@ -67,7 +70,7 @@ export default function ChatThreadList({
             {/* Avatar */}
             <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary/20 to-primary/40 flex items-center justify-center flex-shrink-0 overflow-hidden">
                 <span className="text-primary font-bold text-sm">
-                  {(thread.participants[1].userName || "U").substring(0, 2).toUpperCase()}
+                  {(otherParticipant?.userName || "U").substring(0, 2).toUpperCase()}
                 </span>
             </div>
 
@@ -75,7 +78,7 @@ export default function ChatThreadList({
             <div className="flex-1 text-left min-w-0">
               <div className="flex items-center justify-between mb-1">
                 <h3 className="font-semibold text-gray-900 truncate">
-                  {thread.participants[1].userName}
+                  {otherParticipant?.userName || "Unknown User"}
                 </h3>
                 {thread.lastMessage && (
                   <span className="text-xs text-gray-500 ml-2 flex-shrink-0">
@@ -92,7 +95,7 @@ export default function ChatThreadList({
               )}
             </div>
           </button>
-        ))}
+        );})}
       </div>
     </div>
   );

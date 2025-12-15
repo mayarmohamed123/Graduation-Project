@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { userService } from "@/Services/userService";
 import { createNotificationConnection } from "@/Services/notificationHub";
@@ -17,8 +16,7 @@ import { HubConnectionState } from "@microsoft/signalr";
 type TabType = "appointments" | "orders";
 
 export default function NotificationsPage() {
-  const router = useRouter();
-  const { user, token } = useAuth();
+  const { token } = useAuth();
   const [activeTab, setActiveTab] = useState<TabType>("appointments");
   const [appointments, setAppointments] = useState<Notification[]>([]);
   const [orders, setOrders] = useState<Notification[]>([]);

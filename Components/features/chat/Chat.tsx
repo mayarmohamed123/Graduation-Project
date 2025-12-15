@@ -8,7 +8,11 @@ import { useAuth } from "@/hooks/useAuth";
 import ChatThreadList from "./ChatThreadList";
 import ChatMessages from "./ChatMessages";
 
-export default function Chat() {
+interface ChatProps {
+  basePath?: string;
+}
+
+export default function Chat({ basePath = "/user/chat" }: ChatProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user } = useAuth();
@@ -53,7 +57,7 @@ export default function Chat() {
   const handleSelectThread = (threadId: number) => {
     setSelectedThreadId(threadId);
     // Update URL without navigation
-    router.push(`/user/chat?threadId=${threadId}`, { scroll: false });
+    router.push(`${basePath}?threadId=${threadId}`, { scroll: false });
   };
 
   const handleSendMessage = async (text: string) => {
@@ -68,7 +72,7 @@ export default function Chat() {
     }
   };
 
-  const currentUserId = user?.email || "";
+  const currentUserId = user?.id || user?.email || "";
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-[calc(100vh-12rem)]">
@@ -79,6 +83,7 @@ export default function Chat() {
           selectedThreadId={selectedThreadId}
           onSelectThread={handleSelectThread}
           isLoading={isLoadingThreads}
+          currentUserId={currentUserId}
         />
       </div>
 
