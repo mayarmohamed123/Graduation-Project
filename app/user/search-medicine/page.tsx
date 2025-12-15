@@ -80,7 +80,7 @@ export default function SearchMedicinePage() {
 
       // If filters are applied, use filter API
       if (form || units.length > 0 || category) {
-        const filters: any = {};
+        const filters: MedicineFilterParams = {};
         if (form) {
           filters.dosageForm = form;
         }

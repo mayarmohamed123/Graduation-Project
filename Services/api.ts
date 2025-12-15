@@ -23,12 +23,9 @@ export const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
   };
 
   // Only set Content-Type to application/json if body is NOT FormData
-  // and Content-Type isn't explicitly set (though spreading options.headers handles the explicit set usually, 
+  // and Content-Type isn't explicitly set (though spreading options.headers handles the explicit set usually,
   // we just want to avoid overwriting it or setting it for FormData)
-  if (
-    !(options.body instanceof FormData) &&
-    !headers["Content-Type"]
-  ) {
+  if (!(options.body instanceof FormData) && !headers["Content-Type"]) {
     headers["Content-Type"] = "application/json";
   }
 
@@ -78,7 +75,11 @@ export const postWithAuth = async (
 
   const response = await fetch(url, {
     method: "POST",
-    body: isFormData ? (data as FormData) : data ? JSON.stringify(data) : undefined,
+    body: isFormData
+      ? (data as FormData)
+      : data
+      ? JSON.stringify(data)
+      : undefined,
     ...options,
     headers,
   });

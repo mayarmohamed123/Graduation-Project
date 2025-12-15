@@ -15,7 +15,7 @@ function CallbackContent() {
         // Get the full response from URL hash or search params
         const hash = window.location.hash.substring(1);
         const params = new URLSearchParams(hash || window.location.search);
-        
+
         // Try to get data from multiple sources
         let token = params.get("token") || searchParams.get("token");
         let userDataStr = params.get("user") || searchParams.get("user");
@@ -40,15 +40,15 @@ function CallbackContent() {
         if (token && userDataStr) {
           // Store token
           authService.setToken(token);
-          
+
           // Parse user data
           const user = typeof userDataStr === "string" ? JSON.parse(userDataStr) : userDataStr;
-          
+
           toast.success(`Welcome back, ${user.userName}!`);
-          
+
           // Navigate based on role
           const roles = Array.isArray(user.roles) ? user.roles : [user.roles];
-          
+
           if (roles.includes("Admin")) {
             router.push("/admin");
           } else if (roles.includes("Doctor")) {

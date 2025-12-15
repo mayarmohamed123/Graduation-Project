@@ -63,8 +63,8 @@ function SignInForm() {
   };
 
   const handleSocialSignIn = async (provider: "google" | "facebook") => {
-    const { authService } = await import("@/services/authService");
-    
+    const { authService } = await import("@/Services/authService");
+
     if (provider === "google") {
       authService.googleLogin();
     } else {
@@ -78,7 +78,7 @@ function SignInForm() {
       <div className="absolute z-0 left-0 hidden md:block">
         <Image src={vector36} alt="vector2" />
       </div>
-      
+
       <div className="flex flex-col md:flex-row max-w-4xl mx-auto w-full bg-white shadow-lg rounded-lg overflow-hidden">
         {/* Left Side (Image Section) - Hidden on mobile, visible on md+ */}
         <div className="hidden md:block md:w-1/3 relative">
@@ -98,7 +98,7 @@ function SignInForm() {
 
             {/* Account Type Switch */}
             <div className="mb-6 flex justify-center">
-              <Switch 
+              <Switch
                 tabs={tabs}
                 activeTab={activeTab}
                 onTabChange={setActiveTab}

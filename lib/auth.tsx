@@ -58,14 +58,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async (email: string, password: string) => {
     try {
       const response: AuthResponse = await authService.login({ email, password });
-      
+
       // Store token
       authService.setToken(response.token);
       setToken(response.token);
 
       // Normalize roles
-      const roles = Array.isArray(response.user.roles) 
-        ? response.user.roles 
+      const roles = Array.isArray(response.user.roles)
+        ? response.user.roles
         : [response.user.roles];
 
       // Set user
@@ -98,7 +98,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const response: RegisterResponse = await authService.register(data);
 
       toast.success("Registration successful!");
-      
+
       // Auto-login after registration
       await login(data.email, data.password);
     } catch (error) {
