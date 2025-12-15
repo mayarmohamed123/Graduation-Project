@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { useRouter } from "next/navigation";
-import { authService, AuthResponse, RegisterResponse } from "@/services/authService";
+import { authService, AuthResponse, RegisterResponse } from "@/Services/authService";
 import toast from "react-hot-toast";
 
 interface User {
