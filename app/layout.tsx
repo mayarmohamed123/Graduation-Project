@@ -16,7 +16,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Medical App",
+  title: {
+    default: "Medical App",
+    template: "%s | Medical App",
+  },
   description: "Healthcare application",
 };
 
