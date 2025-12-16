@@ -85,6 +85,17 @@ class UserService {
       }
     );
   }
+
+
+  async updateUserLocation(latitude: number, longitude: number): Promise<void> {
+    return apiRequest<void>(`${API_BASE_URL}/User/location`, {
+      method: "PUT",
+      data: {
+        Latitude: latitude,
+        Longitude: longitude,
+      },
+    });
+  }
 }
 
 export const userService = new UserService();

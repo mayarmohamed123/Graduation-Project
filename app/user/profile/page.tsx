@@ -131,7 +131,7 @@ export default function ProfilePage() {
   const handleLogout = async () => {
     try {
       logout();
-    } catch (error) {
+    } catch {
       toast.error("Failed to logout");
     }
   };

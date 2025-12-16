@@ -1,25 +1,137 @@
 "use client";
 
-import { useState } from "react";
-import { Building, Phone, MapPin, DollarSign, Link as LinkIcon, Globe } from "lucide-react";
+import Image from "next/image";
+import dynamic from "next/dynamic";
+import { useState, useRef, useEffect } from "react";
+import { Building, Phone, MapPin, DollarSign, Link as LinkIcon, Loader2, Map as MapIcon } from "lucide-react";
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/Components/ui/avatar";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/Components/ui/dialog";
 import { cn } from "@/lib/utils";
+import { doctorService } from "@/Services/doctorService";
+import toast from "react-hot-toast";
+
+const LocationMap = dynamic(() => import("./LocationMap"), {
+  ssr: false,
+  loading: () => <div className="h-[400px] w-full flex items-center justify-center bg-gray-100 rounded-lg">Loading Map...</div>
+});
 
 export default function ClinicInformation() {
+  const [isLoading, setIsLoading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  
+  // Map state
+  const [isMapOpen, setIsMapOpen] = useState(false);
+  const [mapPosition, setMapPosition] = useState<{ lat: number; lng: number } | null>(null);
+
   const [formData, setFormData] = useState({
     clinicName: "",
     phone: "",
-    address: "",
+    country: "",
+    city: "",
+    street: "",
     longitude: "",
     latitude: "",
     consultationType: "",
     price: "",
   });
 
+  // Auto-detect location on mount
+  useEffect(() => {
+    if ("geolocation" in navigator && !formData.latitude && !formData.longitude) {
+       navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setFormData(prev => ({
+            ...prev,
+            latitude: latitude.toString(),
+            longitude: longitude.toString()
+          }));
+          setMapPosition({ lat: latitude, lng: longitude });
+        },
+        (error) => {
+          console.error("Error getting location:", error);
+          // Optional: toast.error("Could not automatically detect location.");
+        }
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleImageClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+      const imageUrl = URL.createObjectURL(file);
+      setSelectedImage(imageUrl);
+    }
+  };
+
+  const handleMapLocationSelect = (lat: number, lng: number) => {
+    setMapPosition({ lat, lng });
+    setFormData(prev => ({
+      ...prev,
+      latitude: lat.toString(),
+      longitude: lng.toString()
+    }));
+  };
+
+  const handleOpenMap = () => {
+    // If we have coordinates in inputs, use them as initial map center
+    if (formData.latitude && formData.longitude) {
+      const lat = parseFloat(formData.latitude);
+      const lng = parseFloat(formData.longitude);
+      if (!isNaN(lat) && !isNaN(lng)) {
+        setMapPosition({ lat, lng });
+      }
+    }
+    setIsMapOpen(true);
+  };
+
+  const handleSubmit = async () => {
+    try {
+      setIsLoading(true);
+      const data = new FormData();
+
+      if (formData.clinicName) data.append("clinicName", formData.clinicName);
+      if (formData.phone) data.append("phone", formData.phone);
+      
+      const fullAddress = [formData.street, formData.city, formData.country].filter(Boolean).join(", ");
+      if (fullAddress) data.append("address", fullAddress);
+      
+      if (formData.longitude) data.append("longitude", formData.longitude);
+      if (formData.latitude) data.append("latitude", formData.latitude);
+      if (formData.consultationType) data.append("consultationType", formData.consultationType);
+      if (formData.price) data.append("price", formData.price);
+      
+      if (imageFile) {
+        data.append("ClinicImage", imageFile);
+      }
+
+      await doctorService.updateDoctorProfile(data);
+      toast.success("Clinic details updated successfully!");
+    } catch (error: unknown) {
+      console.error("Failed to update clinic info:", error);
+      toast.error(error instanceof Error ? error.message : "Failed to update clinic details");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -31,9 +143,16 @@ export default function ClinicInformation() {
       <div className="bg-white rounded-2xl shadow-sm p-8 max-w-2xl">
         {/* Clinic Image Upload */}
          <div className="flex flex-col items-center mb-10">
-          <div className="relative group cursor-pointer">
+          <div className="relative group cursor-pointer" onClick={handleImageClick}>
+            <input 
+              type="file" 
+              ref={fileInputRef} 
+              className="hidden" 
+              accept="image/*"
+              onChange={handleImageChange}
+            />
             <Avatar className="h-28 w-28 bg-gray-50 border-2 border-dashed border-[#2BBBC5]">
-               <AvatarImage src="" />
+               <AvatarImage src={selectedImage || ""} />
                <AvatarFallback className="bg-gray-50 flex flex-col items-center justify-center text-[#2BBBC5]">
                   <div className="border border-[#2BBBC5] rounded p-1">
                       <CameraIcon className="h-5 w-5" />
@@ -70,8 +189,14 @@ export default function ClinicInformation() {
           {/* Phone */}
           <div className="flex gap-4">
              <div className="relative w-32 shrink-0">
-                 <div className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center">
-                    <img src="https://flagcdn.com/w20/eg.png" alt="Egypt" className="w-5 h-auto rounded-sm" />
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center">
+                    <Image 
+                      src="https://flagcdn.com/w20/eg.png" 
+                      alt="Egypt" 
+                      width={20} 
+                      height={15} 
+                      className="w-5 h-auto rounded-sm" 
+                    />
                  </div>
                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
                     <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -95,18 +220,34 @@ export default function ClinicInformation() {
               </div>
           </div>
 
-          {/* Address */}
+  {/* Address - Country, City, Street */}
           <div className="space-y-2">
-              <div className="relative">
-                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-[#2BBBC5]" />
-                <Input
-                  name="address"
-                  placeholder="Country, City, Street"
-                  value={formData.address}
-                  onChange={handleChange}
-                  className="pl-9 rounded-3xl border-2 border-[#2BBBC5] placeholder-[#2BBBC5] focus-visible:ring-0 focus-visible:border-[#2BBBC5] h-11"
-                />
-              </div>
+            <div className="relative">
+               <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-[#2BBBC5]" />
+               <div className="flex gap-4">
+                 <Input
+                    name="country"
+                    placeholder="Country"
+                    value={formData.country}
+                    onChange={handleChange}
+                    className="pl-9 rounded-3xl border-2 border-[#2BBBC5] placeholder-[#2BBBC5] focus-visible:ring-0 focus-visible:border-[#2BBBC5] h-11"
+                  />
+                  <Input
+                    name="city"
+                    placeholder="City"
+                    value={formData.city}
+                    onChange={handleChange}
+                    className="rounded-3xl border-2 border-[#2BBBC5] placeholder-[#2BBBC5] focus-visible:ring-0 focus-visible:border-[#2BBBC5] h-11"
+                  />
+                  <Input
+                    name="street"
+                    placeholder="Street"
+                    value={formData.street}
+                    onChange={handleChange}
+                    className="rounded-3xl border-2 border-[#2BBBC5] placeholder-[#2BBBC5] focus-visible:ring-0 focus-visible:border-[#2BBBC5] h-11"
+                  />
+               </div>
+            </div>
           </div>
 
           {/* Location Coordinates */}
@@ -129,7 +270,13 @@ export default function ClinicInformation() {
                   className="text-[#2BBBC5] placeholder:text-[#2BBBC5] border-2 border-[#2BBBC5] focus-visible:ring-0 focus-visible:border-[#2BBBC5] rounded-3xl h-11 px-6"
                 />
             </div>
-             <Button variant="outline" size="icon" className="h-11 w-11 rounded-xl border-2 border-[#2BBBC5] text-[#2BBBC5] hover:text-[#2BBBC5] hover:bg-teal-50">
+             <Button 
+                variant="outline" 
+                size="icon" 
+                onClick={handleOpenMap}
+                className="h-11 w-11 rounded-xl border-2 border-[#2BBBC5] text-[#2BBBC5] hover:text-[#2BBBC5] hover:bg-teal-50"
+                type="button"
+              >
                 <LinkIcon className="h-5 w-5" />
              </Button>
           </div>
@@ -177,11 +324,45 @@ export default function ClinicInformation() {
         {/* Save Button */}
         <div className="mt-8">
           <Button
-            className="w-full sm:w-auto px-12 bg-[#2BBBC5] text-white rounded-3xl py-6 text-lg hover:bg-[#249da5] shadow-md shadow-[#2BBBC5]/20">
-            Save Changes
+            onClick={handleSubmit}
+            disabled={isLoading}
+            className="w-full sm:w-auto px-12 bg-[#2BBBC5] text-white rounded-3xl py-6 text-lg hover:bg-[#249da5] shadow-md shadow-[#2BBBC5]/20 disabled:opacity-70">
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              "Save Changes"
+            )}
           </Button>
         </div>
       </div>
+
+       {/* Map Dialog */}
+       <Dialog open={isMapOpen} onOpenChange={setIsMapOpen}>
+          <DialogContent className="sm:max-w-[600px]">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2 text-[#2BBBC5]">
+                <MapIcon className="h-5 w-5" />
+                Select Clinic Location
+              </DialogTitle>
+            </DialogHeader>
+            <div className="mt-4">
+              <LocationMap 
+                position={mapPosition} 
+                onPositionChange={handleMapLocationSelect} 
+              />
+              <p className="text-sm text-gray-500 mt-2 text-center">
+                Click on the map to set your clinic location.
+              </p>
+              <div className="flex justify-end gap-2 mt-4">
+                 <Button variant="outline" onClick={() => setIsMapOpen(false)}>Cancel</Button>
+                 <Button className="bg-[#2BBBC5] hover:bg-[#249da5] text-white" onClick={() => setIsMapOpen(false)}>Confirm Location</Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
     </div>
   );
 }

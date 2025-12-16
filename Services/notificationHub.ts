@@ -14,7 +14,7 @@ export function createNotificationConnection(token: string): signalR.HubConnecti
 
   connection = new signalR.HubConnectionBuilder()
     .withUrl(
-      "https://e-healthhub-dfcjb0cuazc3crfj.australiaeast-01.azurewebsites.net/hubs/notification",
+      `${process.env.NEXT_PUBLIC_HUB_URL}/hubs/notification`,
       {
         accessTokenFactory: () => token,
         skipNegotiation: true,

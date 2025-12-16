@@ -1,13 +1,20 @@
 "use client";
 
-import { useState } from "react";
-import { Camera, Building, User, Mail } from "lucide-react";
+import { useState, useRef } from "react";
+import { Camera, Building, User, Mail, Loader2 } from "lucide-react";
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/Components/ui/avatar";
 import { cn } from "@/lib/utils";
+import { doctorService } from "@/Services/doctorService";
+import toast from "react-hot-toast";
 
 export default function PersonalInformation() {
+  const [isLoading, setIsLoading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -20,6 +27,49 @@ export default function PersonalInformation() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleImageClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+      const imageUrl = URL.createObjectURL(file);
+      setSelectedImage(imageUrl);
+    }
+  };
+
+  const handleSubmit = async () => {
+    try {
+      setIsLoading(true);
+      const data = new FormData();
+
+      // Append only if value exists to allow partial updates (or send all if API expects replacement)
+      // Assuming API handles empty strings as "no change" or we only send changed values?
+      // For now, sending what's in the form. Ideally we should populate form with existing data first.
+      // Combine firstName and lastName into userName
+      const fullName = `${formData.firstName} ${formData.lastName}`.trim();
+      if (fullName) data.append("userName", fullName);
+      
+      if (formData.specialty) data.append("specialty", formData.specialty);
+      if (formData.gender) data.append("gender", formData.gender);
+      if (formData.email) data.append("email", formData.email);
+      
+      if (imageFile) {
+        data.append("ImageFile", imageFile);
+      }
+
+      await doctorService.updateDoctorProfile(data);
+      toast.success("Profile updated successfully!");
+    } catch (error: unknown) {
+      console.error("Failed to update profile:", error);
+      toast.error(error instanceof Error ? error.message : "Failed to update profile");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div>
       <h2 className="text-xl font-semibold text-gray-900 mb-8">
@@ -29,9 +79,16 @@ export default function PersonalInformation() {
       <div className="bg-white rounded-2xl shadow-sm p-8 max-w-2xl">
         {/* Profile Picture Upload */}
         <div className="flex flex-col items-center mb-10">
-          <div className="relative group cursor-pointer">
+          <div className="relative group cursor-pointer" onClick={handleImageClick}>
+            <input 
+              type="file" 
+              ref={fileInputRef} 
+              className="hidden" 
+              accept="image/*"
+              onChange={handleImageChange}
+            />
             <Avatar className="h-28 w-28 bg-gray-50 border-2 border-dashed border-[#2BBBC5]">
-               <AvatarImage src="" />
+               <AvatarImage src={selectedImage || ""} />
                <AvatarFallback className="bg-gray-50 flex flex-col items-center justify-center text-[#2BBBC5]">
                   <Camera className="h-8 w-8 mb-1" />
                </AvatarFallback>
@@ -135,8 +192,17 @@ export default function PersonalInformation() {
         {/* Save Button */}
         <div className="mt-8">
           <Button
-            className="w-full bg-[#2BBBC5] text-white rounded-3xl py-6 text-lg hover:bg-[#249da5] shadow-md shadow-[#2BBBC5]/20">
-            Save Changes
+            onClick={handleSubmit}
+            disabled={isLoading}
+            className="w-full bg-[#2BBBC5] text-white rounded-3xl py-6 text-lg hover:bg-[#249da5] shadow-md shadow-[#2BBBC5]/20 disabled:opacity-70">
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              "Save Changes"
+            )}
           </Button>
         </div>
       </div>

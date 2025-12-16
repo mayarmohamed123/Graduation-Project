@@ -1,6 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
+import { userService } from "@/Services/userService";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import {
@@ -25,9 +26,16 @@ export default function Page() {
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (position) => {
-          console.log("Latitude:", position.coords.latitude);
-          console.log("Longitude:", position.coords.longitude);
+        async (position) => {
+          try {
+            await userService.updateUserLocation(
+              position.coords.latitude,
+              position.coords.longitude
+            );
+            console.log("Location updated successfully");
+          } catch (error) {
+            console.error("Error updating location:", error);
+          }
         },
         (error) => {
           console.error("Error getting location:", error);

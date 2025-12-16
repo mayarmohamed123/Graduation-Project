@@ -1,8 +1,8 @@
-"use client";
+"use client"
 import { Message } from "@/Services/chatServices";
 import { useEffect, useRef } from "react";
 import { format } from "date-fns";
-import { Send } from "lucide-react";
+import { Send, ArrowLeft } from "lucide-react";
 
 interface ChatMessagesProps {
   messages: Message[];
@@ -10,6 +10,7 @@ interface ChatMessagesProps {
   onSendMessage: (text: string) => void;
   isLoading: boolean;
   connectionStatus: string;
+  onBack?: () => void;
 }
 
 export default function ChatMessages({
@@ -18,6 +19,7 @@ export default function ChatMessages({
   onSendMessage,
   isLoading,
   connectionStatus,
+  onBack,
 }: ChatMessagesProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -43,7 +45,17 @@ export default function ChatMessages({
     <div className="flex flex-col h-full bg-white rounded-2xl shadow-sm border border-gray-200">
       {/* Header */}
       <div className="p-4 border-b border-gray-200 flex items-center justify-between">
-        <h3 className="font-semibold text-gray-900">Conversation</h3>
+        <div className="flex items-center gap-3">
+          {onBack && (
+            <button
+              onClick={onBack}
+              className="md:hidden p-2 -ml-2 text-gray-600 hover:bg-gray-100 rounded-full transition"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+          )}
+          <h3 className="font-semibold text-gray-900">Conversation</h3>
+        </div>
         <div className="flex items-center gap-2">
           <div
             className={`w-2 h-2 rounded-full ${

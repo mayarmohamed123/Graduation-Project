@@ -12,7 +12,7 @@ export default function DoctorDashboardPage() {
         </div>
         
         <div className="bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-gray-600 text-sm font-medium">Today's Appointments</h3>
+          <h3 className="text-gray-600 text-sm font-medium">Today&apos;s Appointments</h3>
           <p className="text-3xl font-bold text-[#2BBBC5] mt-2">8</p>
         </div>
         
