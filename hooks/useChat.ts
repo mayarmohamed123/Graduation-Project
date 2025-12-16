@@ -7,15 +7,17 @@ import {
   setMessagesForThread,
   setCurrentThread,
 } from "@/store/slices/chatSlice";
-import { fetchMessagesOfThread, sendMessageApi } from "@/Services/chatServices";
+import { fetchMessagesOfThread, sendMessageApi, Message } from "@/Services/chatServices";
 import { signalRService } from "@/Services/signalRServices";
 import { RootState } from "@/store/store";
 
-export function useChat(threadId: number) {
+const EMPTY_MESSAGES: Message[] = [];
+
+export function useChat(threadId: number | null) {
   const dispatch = useDispatch();
 
   const messages =
-    useSelector((state: RootState) => state.chat.messages[threadId]) || [];
+    useSelector((state: RootState) => (threadId ? state.chat.messages[threadId] : undefined)) || EMPTY_MESSAGES;
 
   const connectionStatus = useSelector(
     (state: RootState) => state.chat.status
@@ -23,6 +25,8 @@ export function useChat(threadId: number) {
 
   // load thread messages + start real-time connection
   useEffect(() => {
+    if (!threadId) return;
+
     dispatch(setCurrentThread(threadId));
 
     fetchMessagesOfThread(threadId).then((msgs) => {
@@ -38,6 +42,7 @@ export function useChat(threadId: number) {
 
   // send message
   const sendMessage = async (text: string) => {
+    if (!threadId) return;
     await sendMessageApi(threadId, text);
   };
 

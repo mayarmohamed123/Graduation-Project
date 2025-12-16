@@ -134,9 +134,19 @@ export const doctorService = {
       {
         method: "POST",
         data: formData,
-        requiresAuth: false, // Registration usually doesn't require auth token, but let's check. 
-                             // Wait, existing code didn't use fetchWithAuth, just fetch.
-                             // And it's registration. So likely public.
+        requiresAuth: false, 
+      }
+    );
+  },
+
+  // Update doctor profile with FormData
+  updateDoctorProfile: async (formData: FormData): Promise<{ message: string }> => {
+    return await apiRequest<{ message: string }>(
+      `${baseUrl}/doctors/update-profile`,
+      {
+        method: "PUT",
+        data: formData,
+        requiresAuth: true,
       }
     );
   },

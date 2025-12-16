@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { apiRequest } from "@/Services/api";
+import { apiRequest } from "@/services/api";
 import { UserCart, PharmacyCart } from "@/types";
 
 // ⭐ Replace with your actual backend API endpoint
@@ -71,7 +71,7 @@ const cartSlice = createSlice({
         // ⭐ Auto-calc total items
         state.totalItems = countTotalItems(action.payload);
       })
-      .addCase(fetchUserCart.rejected, (state, action: any) => {
+      .addCase(fetchUserCart.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error?.message || "Failed to fetch cart";
       });

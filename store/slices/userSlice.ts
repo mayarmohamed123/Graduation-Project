@@ -62,8 +62,10 @@ export const loginUser = createAsyncThunk(
       await dispatch(fetchUserData(response.token));
 
       return response;
-    } catch (error: any) {
-      return rejectWithValue(error.message || "Login failed");
+      return response;
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : "Login failed";
+      return rejectWithValue(message);
     }
   }
 );
@@ -79,8 +81,9 @@ export const registerUser = createAsyncThunk(
         password: data.password 
       })).unwrap();
       return loginResponse;
-    } catch (error: any) {
-      return rejectWithValue(error.message || "Registration failed");
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : "Registration failed";
+      return rejectWithValue(message);
     }
   }
 );
@@ -91,8 +94,9 @@ export const logoutUser = createAsyncThunk(
     try {
       await authService.logout();
       return;
-    } catch (error: any) {
-      return rejectWithValue(error.message || "Logout failed");
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : "Logout failed";
+      return rejectWithValue(message);
     }
   }
 );
@@ -108,11 +112,12 @@ export const checkAuth = createAsyncThunk(
       // Ideally verify token here or fetch user profile
       const user = await dispatch(fetchUserData(token)).unwrap();
       return { token, user };
-    } catch (error: any) {
+    } catch (error: unknown) {
       // If fetching user fails (e.g. token expired), we should probably logout
       // But for now let's just return null or let the error propagate if strictly needed
       // authService.logout(); 
-      return rejectWithValue(error.message || "Session expired");
+      const message = error instanceof Error ? error.message : "Session expired";
+      return rejectWithValue(message);
     }
   }
 );
@@ -230,7 +235,7 @@ const userSlice = createSlice({
       })
 
       // Fetch User Data
-      .addCase(fetchUserData.pending, (state) => {
+      .addCase(fetchUserData.pending, () => {
          // Optionally set loading here
       })
       .addCase(fetchUserData.fulfilled, (state, action) => {

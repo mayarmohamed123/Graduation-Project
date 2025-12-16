@@ -6,6 +6,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "epharmahubimages2025.blob.core.windows.net",
       },
+      {
+        protocol: "https",
+        hostname: "flagcdn.com",
+      },
     ],
   },
 };

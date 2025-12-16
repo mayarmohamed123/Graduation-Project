@@ -8,7 +8,11 @@ import { useAuth } from "@/hooks/useAuth";
 import ChatThreadList from "./ChatThreadList";
 import ChatMessages from "./ChatMessages";
 
-export default function Chat() {
+interface ChatProps {
+  basePath?: string;
+}
+
+export default function Chat({ basePath = "/user/chat" }: ChatProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user } = useAuth();
@@ -17,7 +21,7 @@ export default function Chat() {
   const [selectedThreadId, setSelectedThreadId] = useState<number | null>(null);
   const [isLoadingThreads, setIsLoadingThreads] = useState(true);
 
-  const { messages, sendMessage, connectionStatus } = useChat(selectedThreadId || 0);
+  const { messages, sendMessage, connectionStatus } = useChat(selectedThreadId);
 
   // Load threads on mount
   useEffect(() => {
@@ -53,7 +57,7 @@ export default function Chat() {
   const handleSelectThread = (threadId: number) => {
     setSelectedThreadId(threadId);
     // Update URL without navigation
-    router.push(`/user/chat?threadId=${threadId}`, { scroll: false });
+    router.push(`${basePath}?threadId=${threadId}`, { scroll: false });
   };
 
   const handleSendMessage = async (text: string) => {
@@ -68,22 +72,30 @@ export default function Chat() {
     }
   };
 
-  const currentUserId = user?.email || "";
+  const currentUserId = user?.id || user?.email || "";
+
+  const handleBack = () => {
+    setSelectedThreadId(null);
+    router.push(basePath, { scroll: false });
+  };
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-[calc(100vh-12rem)]">
       {/* Thread List - Left Sidebar */}
-      <div className="md:col-span-1 bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+      {/* Show on mobile if NO thread is selected. Always show on desktop. */}
+      <div className={`md:col-span-1 bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden ${selectedThreadId ? 'hidden md:block' : 'block'}`}>
         <ChatThreadList
           threads={threads}
           selectedThreadId={selectedThreadId}
           onSelectThread={handleSelectThread}
           isLoading={isLoadingThreads}
+          currentUserId={currentUserId}
         />
       </div>
 
       {/* Messages - Right Side */}
-      <div className="md:col-span-2">
+      {/* Show on mobile if thread IS selected. Always show on desktop. */}
+      <div className={`md:col-span-2 ${selectedThreadId ? 'block' : 'hidden md:block'}`}>
         {selectedThreadId ? (
           <ChatMessages
             messages={messages}
@@ -91,6 +103,7 @@ export default function Chat() {
             onSendMessage={handleSendMessage}
             isLoading={false}
             connectionStatus={connectionStatus}
+            onBack={handleBack}
           />
         ) : (
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 h-full flex items-center justify-center">
