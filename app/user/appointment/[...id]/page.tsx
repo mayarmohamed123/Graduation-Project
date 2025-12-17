@@ -19,6 +19,7 @@ import { startConversationWithDoctor } from "@/Services/chatServices";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { MessageCircle } from "lucide-react";
+import PatientInfoDialog from "@/Components/features/appointment/PatientInfoDialog";
 
 export default function AppointmentPage({
   params,
@@ -35,10 +36,20 @@ export default function AppointmentPage({
   const [selectedTime, setSelectedTime] = useState<string>("10:00");
   const [loading, setLoading] = useState(true);
   const [chatLoading, setChatLoading] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
-  const handleBooking = async () => {
+  const handleBookNowClick = () => {
+    setDialogOpen(true);
+  };
+
+  const handlePatientInfoSubmit = async (patientInfo: {
+    PatientName: string;
+    PatientPhone: string;
+    patientAge: number;
+    patientGender: string;
+  }) => {
     try {
-      setBookLoading(true); // START loading
+      setBookLoading(true);
 
       if (!doctor) return;
 
@@ -56,6 +67,10 @@ export default function AppointmentPage({
         clinicId: doctor.clinicId,
         startAt,
         endAt,
+        PatientName: patientInfo.PatientName,
+        PatientPhone: patientInfo.PatientPhone,
+        patientAge: patientInfo.patientAge,
+        patientGender: patientInfo.patientGender,
       };
 
       // 1️⃣ Book the appointment
@@ -68,19 +83,20 @@ export default function AppointmentPage({
         bookingResponse.appointment.id
       );
 
-      // 3️⃣ Redirect to Stripe checkout
+      // 3️⃣ Close dialog and redirect to Stripe checkout
+      setDialogOpen(false);
       window.location.href = sessionResponse.sessionUrl;
 
       // 4️⃣ Verify payment session (optional, can be handled in a separate page)
       await doctorService.verifyPaymentSession(sessionResponse.sessionId);
     } catch (err) {
       if (err instanceof Error) {
-        alert(err.message || "Failed to book appointment");
+        toast.error(err.message || "Failed to book appointment");
       } else {
-        alert("Failed to book appointment");
+        toast.error("Failed to book appointment");
       }
     } finally {
-      setBookLoading(false); // STOP loading
+      setBookLoading(false);
     }
   };
 
@@ -305,8 +321,7 @@ export default function AppointmentPage({
               {chatLoading ? "Opening..." : "Message Doctor"}
             </button>
             <Button
-              isLoading={bookLoading}
-              onClick={handleBooking}
+              onClick={handleBookNowClick}
               className="bg-primary text-white px-6 py-5 text-lg rounded-full hover:opacity-90 transition">
               Book Now
             </Button>
@@ -321,6 +336,14 @@ export default function AppointmentPage({
           />
         </div>
       </div>
+
+      {/* Patient Info Dialog */}
+      <PatientInfoDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        onSubmit={handlePatientInfoSubmit}
+        isLoading={bookLoading}
+      />
     </div>
   );
 }

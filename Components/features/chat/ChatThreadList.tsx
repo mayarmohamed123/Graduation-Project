@@ -53,10 +53,16 @@ export default function ChatThreadList({
 
   return (
     <div className="flex flex-col h-full">
-      <div className="p-4 border-b border-gray-200">
+      <div className="flex-shrink-0 p-4 border-b border-gray-200">
         <h2 className="text-xl font-bold text-gray-900">Messages</h2>
       </div>
-      <div className="flex-1 overflow-y-auto">
+      <div 
+        className="flex-1 min-h-0 overflow-y-scroll chat-scroll"
+        style={{
+          scrollbarWidth: 'thin',
+          scrollbarColor: '#D1D5DB #F3F4F6'
+        }}
+      >
         {threads.map((thread) => {
           const otherParticipant = thread.participants.find(p => p.userId !== currentUserId) || thread.participants[0];
           return (
