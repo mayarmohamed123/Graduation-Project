@@ -27,6 +27,7 @@ export default function Chat({ basePath = "/user/chat" }: ChatProps) {
   useEffect(() => {
     const loadThreads = async () => {
       try {
+        console.log("user", user?.id);
         const data = await fetchMyThreads();
         setThreads(data);
         
@@ -52,7 +53,7 @@ export default function Chat({ basePath = "/user/chat" }: ChatProps) {
     };
 
     loadThreads();
-  }, [searchParams]);
+  }, [searchParams, user]);
 
   const handleSelectThread = (threadId: number) => {
     setSelectedThreadId(threadId);

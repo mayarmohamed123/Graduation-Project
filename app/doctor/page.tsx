@@ -1,4 +1,23 @@
+"use client";
+
+import { useUser } from "@/hooks/useUser";
+import { useEffect } from "react";
+
 export default function DoctorDashboardPage() {
+  const { user, isLoading } = useUser();
+
+  useEffect(() => {
+    console.log("user", user);
+  }, [user]);
+
+  if (isLoading) {
+    return (
+      <div className="flex h-96 items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#2BBBC5] border-t-transparent"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-7xl mx-auto">
       <h1 className="text-3xl font-bold text-gray-800 mb-6">Dashboard</h1>
@@ -25,7 +44,7 @@ export default function DoctorDashboardPage() {
       {/* Welcome message */}
       <div className="mt-8 bg-white rounded-lg shadow-md p-6">
         <h2 className="text-xl font-semibold text-gray-800 mb-2">
-          Welcome to Your Dashboard
+          Welcome to Your Dashboard, Dr. {user?.userName}
         </h2>
         <p className="text-gray-600">
           Manage your patients, appointments, and messages all in one place.

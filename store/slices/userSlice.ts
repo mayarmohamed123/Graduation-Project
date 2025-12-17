@@ -24,24 +24,35 @@ export const fetchUserData = createAsyncThunk(
         throw new Error("API base URL is not configured");
       }
 
+      console.log("📡 fetchUserData: Making request to /User/profile");
       const response = await fetch(`${API_BASE_URL}/User/profile`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "true",
         },
       });
 
+      console.log("📡 fetchUserData: Response status:", response.status);
+
       if (!response.ok) {
         const errorData = await response.json().catch(() => null);
+        console.error("❌ fetchUserData error:", {
+          status: response.status,
+          statusText: response.statusText,
+          errorData
+        });
         throw new Error(
-          errorData?.message || "Failed to fetch user profile information"
+          errorData?.message || `Failed to fetch user profile (${response.status})`
         );
       }
 
       const userData: User = await response.json();
+      console.log("✅ fetchUserData success:", userData);
       return userData;
     } catch (error: unknown) {
+      console.error("❌ fetchUserData catch block:", error);
       const message =
         error instanceof Error
           ? error.message
@@ -105,18 +116,22 @@ export const checkAuth = createAsyncThunk(
   "user/checkAuth",
   async (_, { dispatch, rejectWithValue }) => {
     try {
+      console.log("🔐 checkAuth: Starting...");
       const token = authService.getToken();
+      console.log("🔐 checkAuth: Token retrieved:", token ? "✅ Found" : "❌ Not found");
+      
       if (!token) {
+        console.log("🔐 checkAuth: No token, returning null");
         return null;
       }
-      // Ideally verify token here or fetch user profile
+      
+      console.log("🔐 checkAuth: Fetching user data with token...");
       const user = await dispatch(fetchUserData(token)).unwrap();
+      console.log("🔐 checkAuth: User data fetched successfully:", user);
       return { token, user };
     } catch (error: unknown) {
-      // If fetching user fails (e.g. token expired), we should probably logout
-      // But for now let's just return null or let the error propagate if strictly needed
-      // authService.logout(); 
       const message = error instanceof Error ? error.message : "Session expired";
+      console.error("🔐 checkAuth: Error -", message);
       return rejectWithValue(message);
     }
   }
@@ -194,7 +209,7 @@ const userSlice = createSlice({
                 ? authUser.roles 
                 : (typeof authUser.roles === 'string' ? [authUser.roles] : []);
              state.user = {
-                id: "",
+                id: authUser.id || "",
                 email: authUser.email,
                 userName: authUser.userName,
                 roles: roles,

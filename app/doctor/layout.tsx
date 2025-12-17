@@ -1,5 +1,6 @@
 import DoctorNavbar from "@/Components/layout/DoctorNavbar";
 import { DoctorSidebar } from "@/Components/features/doctor";
+import { ProtectedRoute } from "@/Components";
 
 export default function DoctorLayout({
   children,
@@ -8,6 +9,7 @@ export default function DoctorLayout({
 }) {
   return (
     <div className="min-h-screen bg-gray-50 flex">
+       <ProtectedRoute>
       {/* Sidebar */}
       <DoctorSidebar />
       
@@ -16,6 +18,7 @@ export default function DoctorLayout({
         <DoctorNavbar />
         <main className="flex-1 p-6">{children}</main>
       </div>
+      </ProtectedRoute>
     </div>
   );
 }
