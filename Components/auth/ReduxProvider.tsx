@@ -10,6 +10,7 @@ function AuthInitializer({ children }: { children: ReactNode }) {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    console.log("🔄 AuthInitializer: Mounting, dispatching checkAuth...");
     dispatch(checkAuth());
   }, [dispatch]);
 

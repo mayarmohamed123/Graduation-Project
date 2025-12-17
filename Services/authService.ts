@@ -23,6 +23,7 @@ export interface AuthResponse {
     userName: string;
     email: string;
     roles: string[] | string;
+    id?: string;
   };
 }
 
@@ -33,6 +34,7 @@ export interface RegisterResponse {
     userName: string;
     email: string;
     roles: string[] | string;
+    id?: string;
   };
 }
 
