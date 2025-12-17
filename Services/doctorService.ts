@@ -4,6 +4,7 @@ import {
   BookAppointmentData,
   CreateSessionResponse,
   Doctor,
+  PatientAppointment,
   Review,
   VerifySessionResponse,
 } from "@/types/doctors";
@@ -146,6 +147,17 @@ export const doctorService = {
       {
         method: "PUT",
         data: formData,
+        requiresAuth: true,
+      }
+    );
+  },
+
+  // Get all patients for a doctor
+  getAllPatients: async (): Promise<PatientAppointment[]> => {
+    return await apiRequest<PatientAppointment[]>(
+      `${baseUrl}/Appointment/patients`,
+      {
+        method: "GET",
         requiresAuth: true,
       }
     );

@@ -117,8 +117,6 @@ export default function ClinicInformation() {
       
       if (formData.longitude) data.append("longitude", formData.longitude);
       if (formData.latitude) data.append("latitude", formData.latitude);
-      if (formData.consultationType) data.append("consultationType", formData.consultationType);
-      if (formData.price) data.append("price", formData.price);
       
       if (imageFile) {
         data.append("ClinicImage", imageFile);
@@ -281,44 +279,7 @@ export default function ClinicInformation() {
              </Button>
           </div>
 
-          {/* Type and Price */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-               <div className="relative">
-                <select
-                  name="consultationType"
-                  value={formData.consultationType}
-                  onChange={handleChange}
-                  className={cn(
-                    "w-full px-4 text-sm h-11 rounded-3xl border-2 border-[#2BBBC5] text-[#2BBBC5] focus:outline-none focus:border-[#2BBBC5] appearance-none bg-white",
-                    !formData.consultationType && "text-[#2BBBC5]"
-                  )}
-                >
-                  <option value="" disabled>Consultation type</option>
-                  <option value="online" className="text-gray-900">Online</option>
-                  <option value="physical" className="text-gray-900">Physical</option>
-                </select>
-                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-[#2BBBC5]">
-                    <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                </div>
-              </div>
-            </div>
-            <div className="space-y-2">
-              <div className="relative">
-                <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-[#2BBBC5]" />
-                <Input
-                  name="price"
-                  placeholder="Price"
-                  value={formData.price}
-                  onChange={handleChange}
-                  className="pl-9 rounded-3xl border-2 border-[#2BBBC5] placeholder-[#2BBBC5] focus-visible:ring-0 focus-visible:border-[#2BBBC5] h-11"
-                />
-              </div>
-            </div>
-          </div>
-
+        
         </div>
 
         {/* Save Button */}
