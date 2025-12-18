@@ -1,13 +1,17 @@
 import { Notification, NotificationType } from "@/types";
 import { Calendar, CheckCircle, XCircle, Clock, Package } from "lucide-react";
+import { formatDistanceToNow, differenceInDays } from "date-fns";
 
 interface NotificationCardProps {
   notification: Notification;
+  onClick?: (id: number) => void;
 }
 
-export default function NotificationCard({ notification }: NotificationCardProps) {
+export default function NotificationCard({ notification, onClick }: NotificationCardProps) {
   const getNotificationIcon = (type: NotificationType) => {
     switch (type) {
+      case "newAppointmentForDoctor":
+        return { icon: Calendar, bg: "bg-purple-100", color: "text-purple-600" };
       case "appointmentStartingSoon":
         return { icon: Clock, bg: "bg-orange-100", color: "text-orange-600" };
       case "appointmentApproved":
@@ -25,6 +29,8 @@ export default function NotificationCard({ notification }: NotificationCardProps
 
   const getNotificationBg = (type: NotificationType) => {
     switch (type) {
+      case "newAppointmentForDoctor":
+        return "bg-purple-50";
       case "appointmentStartingSoon":
         return "bg-orange-50";
       case "appointmentApproved":
@@ -40,12 +46,26 @@ export default function NotificationCard({ notification }: NotificationCardProps
     }
   };
 
+  const formatTimeAgo = (dateStr: string) => {
+    const date = new Date(dateStr);
+    const now = new Date();
+    const daysDiff = differenceInDays(now, date);
+
+    if (daysDiff >= 7 && daysDiff < 30) {
+      const weeks = Math.floor(daysDiff / 7);
+      return `${weeks} week${weeks > 1 ? "s" : ""} ago`;
+    }
+
+    return formatDistanceToNow(date, { addSuffix: true, includeSeconds: true });
+  };
+
   const { icon: Icon, bg, color } = getNotificationIcon(notification.type);
   const bgClass = getNotificationBg(notification.type);
 
   return (
     <div
-      className={`${bgClass} rounded-xl p-4 flex gap-4 items-start hover:shadow-md transition-shadow`}
+      onClick={() => onClick && onClick(notification.id)}
+      className={`${bgClass} rounded-xl p-4 flex gap-4 items-start hover:shadow-md transition-shadow cursor-pointer`}
     >
       {/* Icon */}
       <div className={`${bg} rounded-full p-3 flex-shrink-0`}>
@@ -54,20 +74,16 @@ export default function NotificationCard({ notification }: NotificationCardProps
 
       {/* Content */}
       <div className="flex-1 min-w-0">
-        <h3 className="font-semibold text-gray-900 mb-1">
-          {notification.title}
-        </h3>
+        <div className="flex justify-between items-start gap-2">
+          <h3 className="font-semibold text-gray-900 mb-1">
+            {notification.title}
+          </h3>
+          <span className="text-xs text-gray-500 whitespace-nowrap mt-1">
+            {formatTimeAgo(notification.createdAt)}
+          </span>
+        </div>
         <p className="text-sm text-gray-600 leading-relaxed">
           {notification.message}
-        </p>
-        <p className="text-xs text-gray-500 mt-2">
-          {new Date(notification.createdAt).toLocaleDateString("en-US", {
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
         </p>
       </div>
 

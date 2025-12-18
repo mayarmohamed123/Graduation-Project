@@ -7,6 +7,7 @@ import {
   Review,
   VerifySessionResponse,
 } from "@/types/doctors";
+import { Notification } from "@/types";
 import { FilterParams, apiRequest } from "./api";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -67,10 +68,13 @@ export const doctorService = {
     Rating: number;
     Comment: string;
   }) => {
-    return await apiRequest<{ message: string }>(`${baseUrl}/Review/add-review`, {
-      method: "POST",
-      data,
-    });
+    return await apiRequest<{ message: string }>(
+      `${baseUrl}/Review/add-review`,
+      {
+        method: "POST",
+        data,
+      }
+    );
   },
 
   // Update Review
@@ -123,24 +127,25 @@ export const doctorService = {
   },
 
   // Register doctor with FormData
-  registerDoctor: async (formData: FormData): Promise<{
+  registerDoctor: async (
+    formData: FormData
+  ): Promise<{
     message: string;
     userId: string;
     email: string;
     role: string;
   }> => {
-    return await apiRequest(
-      `${baseUrl}/doctors/register`,
-      {
-        method: "POST",
-        data: formData,
-        requiresAuth: false, 
-      }
-    );
+    return await apiRequest(`${baseUrl}/doctors/register`, {
+      method: "POST",
+      data: formData,
+      requiresAuth: false,
+    });
   },
 
   // Update doctor profile with FormData
-  updateDoctorProfile: async (formData: FormData): Promise<{ message: string }> => {
+  updateDoctorProfile: async (
+    formData: FormData
+  ): Promise<{ message: string }> => {
     return await apiRequest<{ message: string }>(
       `${baseUrl}/doctors/update-profile`,
       {
@@ -149,5 +154,31 @@ export const doctorService = {
         requiresAuth: true,
       }
     );
+  },
+
+  // Get doctor notifications
+  getDoctorNotifications: async (): Promise<{
+    appointmentRequests: Notification[];
+  }> => {
+    return await apiRequest<{ appointmentRequests: Notification[] }>(
+      `${baseUrl}/notifications/user`,
+      {
+        next: { revalidate: 30 },
+      }
+    );
+  },
+
+  // Mark notification as read
+  markNotificationAsRead: async (id: number): Promise<void> => {
+    return await apiRequest<void>(`${baseUrl}/Notifications/${id}/read`, {
+      method: "PUT",
+    });
+  },
+
+  // Mark all notifications as read
+  markAllNotificationsAsRead: async (): Promise<void> => {
+    return await apiRequest<void>(`${baseUrl}/Notifications/read-all`, {
+      method: "PUT",
+    });
   },
 };

@@ -63,8 +63,6 @@ export interface ProfilePictureResponse {
   message: string;
 }
 
-
-
 /**
  * Redux user slice state
  */
@@ -147,7 +145,7 @@ export interface Notification {
   message: string;
   type: NotificationType;
   category?: "appointment" | "order";
-  user: null;
+  user: User | null;
   isRead: boolean;
   createdAt: string; // ISO datetime string
 }
@@ -160,7 +158,8 @@ export type NotificationType =
   | "orderDelivered"
   | "orderCancelled"
   | "appointmentApproved"
-  | "appointmentStartingSoon";
+  | "appointmentStartingSoon"
+  | "newAppointmentForDoctor";
 
 /**
  * Get user notifications API response
