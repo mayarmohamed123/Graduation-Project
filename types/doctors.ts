@@ -97,6 +97,7 @@ export interface PatientAppointment {
   patientName: string;
   patientPhone: string;
   patientAge: number;
+  patientId : string;
   patientGender: string;
   startAt: string;
   endAt: string;
