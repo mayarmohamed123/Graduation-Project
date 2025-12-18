@@ -1,5 +1,6 @@
 import DoctorNavbar from "@/Components/layout/DoctorNavbar";
 import { DoctorSidebar } from "@/Components/features/doctor";
+import { ProtectedRoute } from "@/Components";
 
 export default function DoctorLayout({
   children,
@@ -7,6 +8,7 @@ export default function DoctorLayout({
   children: React.ReactNode;
 }) {
   return (
+    <ProtectedRoute>
     <div className="flex h-screen bg-gray-50 overflow-hidden">
       {/* Sidebar */}
       <DoctorSidebar />
@@ -17,5 +19,6 @@ export default function DoctorLayout({
         <main className="flex-1 overflow-y-auto p-6">{children}</main>
       </div>
     </div>
+    </ProtectedRoute>
   );
 }

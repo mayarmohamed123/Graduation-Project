@@ -1,8 +1,7 @@
 "use client"
 
-import { Button } from "@/Components/ui/button"
 import { Input } from "@/Components/ui/input"
-import { Plus, Search } from "lucide-react"
+import { Search } from "lucide-react"
 import { PatientCard } from "@/Components/features/doctor/PatientCard"
 import { useEffect, useState } from "react"
 import { doctorService } from "@/Services/doctorService"
