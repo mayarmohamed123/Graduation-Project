@@ -44,6 +44,21 @@ export interface AddPrescriptionItemInput {
   notes: string;
 }
 
+// Update item in prescription input
+export interface UpdatePrescriptionItemInput {
+  medicationName: string;
+  medicationStrength: string;
+  dosage: string;
+  quantity: number;
+  duration: string;
+  notes: string;
+}
+
+// Common message response
+export interface CommonMessageResponse {
+  message: string;
+}
+
 // Response for create prescription
 export interface CreatePrescriptionResponse {
   message: string;
