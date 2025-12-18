@@ -29,7 +29,7 @@ export function PatientCard({
   id,
 }: PatientCardProps) {
   return (
-    <Card className="hover:shadow-md transition-shadow">
+    <Card className="hover:shadow-md transition-shadow rounded-2xl border border-primary">
       <CardContent className="p-6">
         <div className="flex items-start gap-4">
           <Avatar className="h-16 w-16">

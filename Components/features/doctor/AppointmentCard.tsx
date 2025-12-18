@@ -148,7 +148,7 @@ export default function AppointmentCard({
                         <div className="border-t border-gray-100"></div>
                         <button
                             onClick={() => onComplete(appointment.id)}
-                            className="w-full px-4 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-medium transition-all duration-200 hover:shadow-md active:scale-95"
+                            className="w-full px-4 py-2.5 bg-primary hover:bg-teal-700 text-white rounded-xl font-medium transition-all duration-200 hover:shadow-md active:scale-95"
                         >
                             Mark as Completed
                         </button>

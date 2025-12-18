@@ -5,6 +5,8 @@ import {
   CreatePrescriptionResponse,
   AddPrescriptionItemInput,
   PrescriptionItem,
+  UpdatePrescriptionItemInput,
+  CommonMessageResponse,
 } from "@/types/prescription";
 import { apiRequest } from "./api";
 
@@ -58,6 +60,34 @@ export const prescriptionService = {
   ): Promise<{ message: string }> => {
     return await apiRequest<{ message: string }>(
       `${baseUrl}/Prescription/${prescriptionId}`,
+      {
+        method: "DELETE",
+        requiresAuth: true,
+      }
+    );
+  },
+
+  // Update an item in a prescription
+  updatePrescriptionItem: async (
+    itemId: number,
+    data: UpdatePrescriptionItemInput
+  ): Promise<CommonMessageResponse> => {
+    return await apiRequest<CommonMessageResponse>(
+      `${baseUrl}/Prescription/items/${itemId}`,
+      {
+        method: "PUT",
+        data,
+        requiresAuth: true,
+      }
+    );
+  },
+
+  // Delete an item in a prescription
+  deletePrescriptionItem: async (
+    itemId: number
+  ): Promise<CommonMessageResponse> => {
+    return await apiRequest<CommonMessageResponse>(
+      `${baseUrl}/Prescription/items/${itemId}`,
       {
         method: "DELETE",
         requiresAuth: true,

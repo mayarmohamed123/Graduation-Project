@@ -4,7 +4,6 @@ import AppointmentCard from "@/Components/features/doctor/AppointmentCard";
 import React, { useState, useEffect } from "react";
 import {
     Search,
-    Bell,
     Calendar,
     Users,
     DollarSign,
