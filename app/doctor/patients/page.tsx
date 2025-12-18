@@ -76,7 +76,7 @@ export default function PatientsPage() {
           {filteredPatients.map((patient) => (
             <PatientCard 
               key={patient.appointmentId} 
-              id={patient.appointmentId.toString()}
+              id={patient.patientId}
               name={patient.patientName}
               age={patient.patientAge}
               gender={patient.patientGender}
