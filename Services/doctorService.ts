@@ -152,6 +152,18 @@ export const doctorService = {
     );
   },
 
+  // Update clinic information with FormData
+  updateClinicData: async (formData: FormData): Promise<{ message: string }> => {
+    return await apiRequest<{ message: string }>(
+      `${baseUrl}/doctors/update-clinic`,
+      {
+        method: "PUT",
+        data: formData,
+        requiresAuth: true,
+      }
+    );
+  },
+
   // Get all patients for a doctor
   getAllPatients: async (): Promise<PatientAppointment[]> => {
     return await apiRequest<PatientAppointment[]>(

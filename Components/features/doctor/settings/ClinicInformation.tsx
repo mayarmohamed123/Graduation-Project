@@ -37,6 +37,7 @@ export default function ClinicInformation() {
     phone: "",
     country: "",
     city: "",
+    postalCode: "",
     street: "",
     longitude: "",
     latitude: "",
@@ -109,20 +110,22 @@ export default function ClinicInformation() {
       setIsLoading(true);
       const data = new FormData();
 
-      if (formData.clinicName) data.append("clinicName", formData.clinicName);
-      if (formData.phone) data.append("phone", formData.phone);
-      
-      const fullAddress = [formData.street, formData.city, formData.country].filter(Boolean).join(", ");
-      if (fullAddress) data.append("address", fullAddress);
-      
-      if (formData.longitude) data.append("longitude", formData.longitude);
-      if (formData.latitude) data.append("latitude", formData.latitude);
+      if (formData.clinicName) data.append("Name", formData.clinicName);
+      if (formData.phone) data.append("Phone", formData.phone);
+      if (formData.country) data.append("country", formData.country);
+      if (formData.city) data.append("city", formData.city);
+      if (formData.street) data.append("street", formData.street);
+      if (formData.postalCode) data.append("postalCode", formData.postalCode);
+      if (formData.longitude) data.append("Longitude", formData.longitude);
+      if (formData.latitude) data.append("Latitude", formData.latitude);
+      if (formData.consultationType) data.append("ConsultationType", formData.consultationType);
+      if (formData.price) data.append("ConsultationPrice", formData.price);
       
       if (imageFile) {
         data.append("ClinicImage", imageFile);
       }
 
-      await doctorService.updateDoctorProfile(data);
+      await doctorService.updateClinicData(data);
       toast.success("Clinic details updated successfully!");
     } catch (error: unknown) {
       console.error("Failed to update clinic info:", error);
@@ -218,33 +221,48 @@ export default function ClinicInformation() {
               </div>
           </div>
 
-  {/* Address - Country, City, Street */}
-          <div className="space-y-2">
-            <div className="relative">
-               <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-[#2BBBC5]" />
-               <div className="flex gap-4">
-                 <Input
-                    name="country"
-                    placeholder="Country"
-                    value={formData.country}
-                    onChange={handleChange}
-                    className="pl-9 rounded-3xl border-2 border-[#2BBBC5] placeholder-[#2BBBC5] focus-visible:ring-0 focus-visible:border-[#2BBBC5] h-11"
-                  />
-                  <Input
-                    name="city"
-                    placeholder="City"
-                    value={formData.city}
-                    onChange={handleChange}
-                    className="rounded-3xl border-2 border-[#2BBBC5] placeholder-[#2BBBC5] focus-visible:ring-0 focus-visible:border-[#2BBBC5] h-11"
-                  />
-                  <Input
-                    name="street"
-                    placeholder="Street"
-                    value={formData.street}
-                    onChange={handleChange}
-                    className="rounded-3xl border-2 border-[#2BBBC5] placeholder-[#2BBBC5] focus-visible:ring-0 focus-visible:border-[#2BBBC5] h-11"
-                  />
-               </div>
+  {/* Address - Country, City, Street, Postal Code */}
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="relative">
+                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-[#2BBBC5]" />
+                <Input
+                  name="country"
+                  placeholder="Country"
+                  value={formData.country}
+                  onChange={handleChange}
+                  className="pl-9 rounded-3xl border-2 border-[#2BBBC5] placeholder-[#2BBBC5] focus-visible:ring-0 focus-visible:border-[#2BBBC5] h-11"
+                />
+              </div>
+              <div className="relative">
+                <Input
+                  name="city"
+                  placeholder="City"
+                  value={formData.city}
+                  onChange={handleChange}
+                  className="rounded-3xl border-2 border-[#2BBBC5] placeholder-[#2BBBC5] focus-visible:ring-0 focus-visible:border-[#2BBBC5] h-11"
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="relative">
+                <Input
+                  name="street"
+                  placeholder="Street"
+                  value={formData.street}
+                  onChange={handleChange}
+                  className="rounded-3xl border-2 border-[#2BBBC5] placeholder-[#2BBBC5] focus-visible:ring-0 focus-visible:border-[#2BBBC5] h-11"
+                />
+              </div>
+              <div className="relative">
+                <Input
+                  name="postalCode"
+                  placeholder="Postal Code"
+                  value={formData.postalCode}
+                  onChange={handleChange}
+                  className="rounded-3xl border-2 border-[#2BBBC5] placeholder-[#2BBBC5] focus-visible:ring-0 focus-visible:border-[#2BBBC5] h-11"
+                />
+              </div>
             </div>
           </div>
 
@@ -280,6 +298,40 @@ export default function ClinicInformation() {
           </div>
 
         
+          {/* Consultation Type and Price */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="relative">
+              <select
+                name="consultationType"
+                value={formData.consultationType}
+                onChange={handleChange}
+                className={cn(
+                  "w-full px-4 text-sm h-11 rounded-3xl border-2 border-[#2BBBC5] text-[#2BBBC5] focus:outline-none focus:border-[#2BBBC5] appearance-none bg-white",
+                  !formData.consultationType && "text-[#2BBBC5]"
+                )}
+              >
+                <option value="" disabled>Consultation type</option>
+                <option value="online" className="text-gray-900">Online</option>
+                <option value="physical" className="text-gray-900">Physical</option>
+              </select>
+              <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-[#2BBBC5]">
+                <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </div>
+            </div>
+            <div className="relative">
+              <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-[#2BBBC5]" />
+              <Input
+                name="price"
+                type="number"
+                placeholder="Consultation Price"
+                value={formData.price}
+                onChange={handleChange}
+                className="pl-9 rounded-3xl border-2 border-[#2BBBC5] placeholder-[#2BBBC5] focus-visible:ring-0 focus-visible:border-[#2BBBC5] h-11"
+              />
+            </div>
+          </div>
         </div>
 
         {/* Save Button */}
