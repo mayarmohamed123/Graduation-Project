@@ -81,10 +81,10 @@ export default function Chat({ basePath = "/user/chat" }: ChatProps) {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-[calc(100vh-12rem)]">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
       {/* Thread List - Left Sidebar */}
       {/* Show on mobile if NO thread is selected. Always show on desktop. */}
-      <div className={`md:col-span-1 bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden ${selectedThreadId ? 'hidden md:block' : 'block'}`}>
+      <div className={`md:col-span-1 bg-white rounded-2xl shadow-sm border border-gray-200 flex flex-col overflow-hidden ${selectedThreadId ? 'hidden md:flex' : 'flex'}`}>
         <ChatThreadList
           threads={threads}
           selectedThreadId={selectedThreadId}
@@ -96,7 +96,7 @@ export default function Chat({ basePath = "/user/chat" }: ChatProps) {
 
       {/* Messages - Right Side */}
       {/* Show on mobile if thread IS selected. Always show on desktop. */}
-      <div className={`md:col-span-2 ${selectedThreadId ? 'block' : 'hidden md:block'}`}>
+      <div className={`md:col-span-2 flex flex-col ${selectedThreadId ? 'flex' : 'hidden md:flex'}`}>
         {selectedThreadId ? (
           <ChatMessages
             messages={messages}

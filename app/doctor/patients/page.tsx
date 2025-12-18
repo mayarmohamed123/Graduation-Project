@@ -1,81 +1,47 @@
 "use client"
 
-import { Button } from "@/Components/ui/button"
 import { Input } from "@/Components/ui/input"
-import { Plus, Search } from "lucide-react"
+import { Search } from "lucide-react"
 import { PatientCard } from "@/Components/features/doctor/PatientCard"
-
-const MOCK_PATIENTS = [
-  {
-    id: "1",
-    name: "mayar mohamed",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&q=80",
-    age: 24,
-    gender: "Female",
-    phone: "+2012345678976",
-    symptoms: "Skin rash and allergic reaction symptoms",
-    status: "Active" as const,
-    lastVisit: "oct 12, 2025"
-  },
-  {
-    id: "2",
-    name: "mayar mohamed",
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&q=80",
-    age: 24,
-    gender: "Female",
-    phone: "+2012345678976",
-    symptoms: "Skin rash and allergic reaction symptoms",
-    status: "Recovered" as const,
-    lastVisit: "oct 12, 2025"
-  },
-  {
-    id: "3",
-    name: "mayar mohamed",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&q=80",
-    age: 24,
-    gender: "Female",
-    phone: "+2012345678976",
-    symptoms: "Skin rash and allergic reaction symptoms",
-    status: "Active" as const,
-    lastVisit: "oct 12, 2025"
-  },
-  {
-    id: "4",
-    name: "mayar mohamed",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&q=80",
-    age: 24,
-    gender: "Female",
-    phone: "+2012345678976",
-    symptoms: "Skin rash and allergic reaction symptoms",
-    status: "Recovered" as const,
-    lastVisit: "oct 12, 2025"
-  },
-  {
-    id: "5",
-    name: "mayar mohamed",
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&q=80",
-    age: 24,
-    gender: "Female",
-    phone: "+2012345678976",
-    symptoms: "Skin rash and allergic reaction symptoms",
-    status: "Active" as const,
-    lastVisit: "oct 12, 2025"
-  },
-  {
-    id: "6",
-    name: "mayar mohamed",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&q=80",
-    age: 24,
-    gender: "Female",
-    phone: "+2012345678976",
-    symptoms: "Skin rash and allergic reaction symptoms",
-    status: "Active" as const,
-    lastVisit: "oct 12, 2025"
-  },
-  
-]
+import { useEffect, useState } from "react"
+import { doctorService } from "@/Services/doctorService"
+import { PatientAppointment } from "@/types/doctors"
+import { toast } from "react-hot-toast"
+import LoadingSpinner from "@/Components/common/LoadingSpinner"
 
 export default function PatientsPage() {
+  const [patients, setPatients] = useState<PatientAppointment[]>([])
+  const [loading, setLoading] = useState(true)
+  const [searchQuery, setSearchQuery] = useState("")
+
+  useEffect(() => {
+    const fetchPatients = async () => {
+      try {
+        setLoading(true)
+        const data = await doctorService.getAllPatients()
+        setPatients(data)
+      } catch (error) {
+        console.error("Failed to load patients:", error)
+        toast.error(
+          error instanceof Error ? error.message : "Failed to load patients"
+        )
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchPatients()
+  }, [])
+
+  // Filter patients based on search query
+  const filteredPatients = patients.filter((patient) =>
+    patient.patientName.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+
+  if (loading) {
+    return <LoadingSpinner />
+  }
+
   return (
     <div className="space-y-6 max-w-7xl mx-auto p-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -90,20 +56,43 @@ export default function PatientsPage() {
             <Input 
               placeholder="Search Patients..." 
               className="pl-10 rounded-full bg-white"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Button className="bg-primary hover:bg-teal-600 text-white rounded-full px-6">
-            <Plus className="h-4 w-4 mr-2" />
-            Add Patient
-          </Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {MOCK_PATIENTS.map((patient) => (
-          <PatientCard key={patient.id} {...patient} />
-        ))}
-      </div>
+      {filteredPatients.length === 0 ? (
+        <div className="text-center py-12">
+          <p className="text-gray-500">
+            {searchQuery
+              ? "No patients found matching your search"
+              : "No patients yet"}
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredPatients.map((patient) => (
+            <PatientCard 
+              key={patient.appointmentId} 
+              id={patient.patientId}
+              name={patient.patientName}
+              age={patient.patientAge}
+              gender={patient.patientGender}
+              phone={patient.patientPhone}
+              status={patient.status as "Active" | "Recovered"}
+              lastVisit={new Date(patient.startAt).toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+                year: "numeric"
+              })}
+              image={`https://ui-avatars.com/api/?name=${encodeURIComponent(patient.patientName)}&background=2BBBC5&color=fff&size=400`}
+              symptoms={`Appointment at ${patient.clinicName}`}
+            />
+          ))}
+        </div>
+      )}
     </div>
   )
 }

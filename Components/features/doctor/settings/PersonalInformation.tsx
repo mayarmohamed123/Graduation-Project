@@ -52,9 +52,9 @@ export default function PersonalInformation() {
       const fullName = `${formData.firstName} ${formData.lastName}`.trim();
       if (fullName) data.append("userName", fullName);
       
-      if (formData.specialty) data.append("specialty", formData.specialty);
-      if (formData.gender) data.append("gender", formData.gender);
-      if (formData.email) data.append("email", formData.email);
+      if (formData.specialty) data.append("Specialty", formData.specialty);
+      if (formData.gender) data.append("Gender", formData.gender);
+      if (formData.email) data.append("Email", formData.email);
       
       if (imageFile) {
         data.append("ImageFile", imageFile);

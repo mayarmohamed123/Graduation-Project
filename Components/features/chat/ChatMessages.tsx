@@ -44,7 +44,7 @@ export default function ChatMessages({
   return (
     <div className="flex flex-col h-full bg-white rounded-2xl shadow-sm border border-gray-200">
       {/* Header */}
-      <div className="p-4 border-b border-gray-200 flex items-center justify-between">
+      <div className="flex-shrink-0 p-4 border-b border-gray-200 flex items-center justify-between">
         <div className="flex items-center gap-3">
           {onBack && (
             <button
@@ -71,7 +71,13 @@ export default function ChatMessages({
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div 
+        className="flex-1 min-h-0 overflow-y-scroll p-4 space-y-4 chat-scroll"
+        style={{
+          scrollbarWidth: 'thin',
+          scrollbarColor: '#D1D5DB #F3F4F6'
+        }}
+      >
         {isLoading ? (
           <div className="flex items-center justify-center h-full">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
@@ -114,7 +120,7 @@ export default function ChatMessages({
       </div>
 
       {/* Input */}
-      <form onSubmit={handleSubmit} className="p-4 border-t border-gray-200">
+      <form onSubmit={handleSubmit} className="flex-shrink-0 p-4 border-t border-gray-200">
         <div className="flex items-center gap-2">
           <input
             ref={inputRef}

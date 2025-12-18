@@ -4,6 +4,7 @@ import {
   BookAppointmentData,
   CreateSessionResponse,
   Doctor,
+  PatientAppointment,
   Review,
   VerifySessionResponse,
 } from "@/types/doctors";
@@ -167,6 +168,19 @@ export const doctorService = {
       }
     );
   },
+  // Update clinic information with FormData
+  updateClinicData: async (
+    formData: FormData
+  ): Promise<{ message: string }> => {
+    return await apiRequest<{ message: string }>(
+      `${baseUrl}/doctors/update-clinic`,
+      {
+        method: "PUT",
+        data: formData,
+        requiresAuth: true,
+      }
+    );
+  },
 
   // Mark notification as read
   markNotificationAsRead: async (id: number): Promise<void> => {
@@ -180,5 +194,15 @@ export const doctorService = {
     return await apiRequest<void>(`${baseUrl}/Notifications/read-all`, {
       method: "PUT",
     });
+  },
+  // Get all patients for a doctor
+  getAllPatients: async (): Promise<PatientAppointment[]> => {
+    return await apiRequest<PatientAppointment[]>(
+      `${baseUrl}/Appointment/patients`,
+      {
+        method: "GET",
+        requiresAuth: true,
+      }
+    );
   },
 };
