@@ -12,6 +12,7 @@ import PageHeaderWithBack from "@/Components/common/PageHeaderWithBack";
 import Switch from "@/Components/common/Switch";
 import NotificationCard from "@/Components/common/NotificationCard";
 import { HubConnectionState } from "@microsoft/signalr";
+import { doctorService } from "@/Services/doctorService";
 
 type TabType = "appointments" | "orders";
 
@@ -90,6 +91,42 @@ export default function NotificationsPage() {
       setLoading(false);
     }
   };
+  const handleMarkAsRead = async (id: number) => {
+    // Check both lists for the notification
+    const appointmentNotif = appointments.find((n) => n.id === id);
+    const orderNotif = orders.find((n) => n.id === id);
+
+    const notification = appointmentNotif || orderNotif;
+    if (!notification || notification.isRead) return;
+
+    // Optimistic update
+    if (appointmentNotif) {
+      setAppointments((prev) =>
+        prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
+      );
+    } else if (orderNotif) {
+      setOrders((prev) =>
+        prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
+      );
+    }
+
+    try {
+      await doctorService.markNotificationAsRead(id);
+    } catch (error) {
+      console.error("Failed to mark notification as read:", error);
+      // Revert on error
+      if (appointmentNotif) {
+        setAppointments((prev) =>
+          prev.map((n) => (n.id === id ? { ...n, isRead: false } : n))
+        );
+      } else if (orderNotif) {
+        setOrders((prev) =>
+          prev.map((n) => (n.id === id ? { ...n, isRead: false } : n))
+        );
+      }
+      toast.error("Failed to update notification status");
+    }
+  };
 
   const currentNotifications = activeTab === "appointments" ? appointments : orders;
   const hasNotifications = currentNotifications.length > 0;
@@ -144,6 +181,7 @@ export default function NotificationsPage() {
               <NotificationCard
                 key={notification.id}
                 notification={notification}
+                onClick={handleMarkAsRead}
               />
             ))}
           </div>
