@@ -3,30 +3,29 @@
 
 import TopRatedPharmacies from "@/Components/features/sections/TopRatedPharmacies";
 import React, { useState } from "react";
-import { Medicine } from "@/types";
-import { medicineService } from "@/Services/medicineServices";
 import { SlidersHorizontal } from "lucide-react";
 import LoadingSpinner from "@/Components/common/LoadingSpinner";
 import MedicineCard from "@/Components/common/MedicineCard";
 import SearchInput from "@/Components/common/SearchInput";
 import PageHeaderWithBack from "@/Components/common/PageHeaderWithBack";
 
-interface MedicineFilters {
-  dosageForm?: string;
-  strengthUnit?: string;
-  category?: string;
-}
+import { useMedicineSearch } from "@/hooks/useMedicineSearch";
 
 export default function SearchMedicinePage() {
-  const [medicines, setMedicines] = useState<Medicine[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [hasSearched, setHasSearched] = useState(false);
+  const {
+    medicines,
+    loading,
+    error,
+    hasSearched,
+    searchMedicines,
+    clearResults,
+  } = useMedicineSearch();
+
   const [searchQuery, setSearchQuery] = useState("");
 
   // Filter states
   const [selectedForm, setSelectedForm] = useState<string>("");
-  const [selectedUnits, setSelectedUnits] = useState<string[]>([]);
+  const [selectedUnit, setSelectedUnit] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
 
   const dosageForms = ["Tablet", "Syrup", "Capsule", "Injection", "Cream"];
@@ -41,143 +40,48 @@ export default function SearchMedicinePage() {
     "Supplement",
     "Respiratory",
     "Vitamin",
-
+    "Antidiabetic"
   ];
 
   const handleFormChange = (form: string) => {
-    // Toggle selection: if same form is clicked, deselect it
     setSelectedForm((prev) => (prev === form ? "" : form));
   };
 
   const handleUnitChange = (unit: string) => {
-    setSelectedUnits((prev) =>
-      prev.includes(unit) ? prev.filter((u) => u !== unit) : [...prev, unit]
-    );
+    setSelectedUnit((prev) => (prev === unit ? "" : unit));
   };
 
   const handleCategoryChange = (category: string) => {
-    // Toggle selection
     setSelectedCategory((prev) => (prev === category ? "" : category));
   };
 
   const clearFilters = () => {
     setSelectedForm("");
-    setSelectedUnits([]);
+    setSelectedUnit("");
     setSelectedCategory("");
+    if (!searchQuery) {
+        clearResults();
+    }
   };
 
-  const handleSearch = async (query: string) => {
+  const handleSearch = (query: string) => {
     setSearchQuery(query);
-    await fetchMedicines(query, selectedForm, selectedUnits, selectedCategory);
   };
 
-  const fetchMedicines = async (
-    query: string,
-    form: string,
-    units: string[],
-    category: string
-  ) => {
-    try {
-      setLoading(true);
-      setError(null);
-      setHasSearched(true);
-
-      let results: Medicine[] = [];
-
-      // If filters are applied, use filter API
-      if (form || units.length > 0 || category) {
-        const filters: MedicineFilters = {};
-        if (form) {
-          filters.dosageForm = form;
-        }
-        if (units.length > 0) {
-          filters.strengthUnit = units[0]; // API typically accepts one value
-        }
-        if (category) {
-          filters.category = category;
-        }
-        results = await medicineService.filterMedicines(filters);
-      } else if (query.trim()) {
-        // If only search query, use search API
-        const response = await medicineService.searchMedicineByName(query);
-
-        // Check if response is the specific "No alternative medicines found" message (as requested)
-        // or if it's not an array (implying some other message object)
-        if (
-          !Array.isArray(response) && response?.message === "No alternative medicines found." ||
-          !Array.isArray(response)
-        ) {
-          // Fallback to alternatives
-          try {
-            const alternatives = await medicineService.getAlternativesMedicines(
-              query
-            );
-            results = alternatives;
-            if (Array.isArray(alternatives) && alternatives.length > 0) {
-              setError(
-                `No exact match found for "${query}". Showing alternatives.`
-              );
-            }
-          } catch (altErr) {
-            console.error("Error fetching alternatives:", altErr);
-            results = [];
-          }
-        } else if (Array.isArray(response)) {
-          results = response;
-        }
-      }
-
-      setMedicines(Array.isArray(results) ? results : []);
-    } catch (err) {
-      console.error("Error fetching medicines:", err);
-
-      // Handle error case (e.g. 404 with message)
-      const errorMessage = err instanceof Error ? err.message : String(err);
-      if (
-        query.trim() &&
-        !form &&
-        units.length === 0 &&
-        !category &&
-        (errorMessage === "No alternative medicines found." ||
-          errorMessage.includes("No medicines found"))
-      ) {
-        try {
-          const alternatives = await medicineService.getAlternativesMedicines(
-            query
-          );
-          setMedicines(Array.isArray(alternatives) ? alternatives : []);
-          if (Array.isArray(alternatives) && alternatives.length > 0) {
-            setError(
-              `No exact match found for "${query}". Showing alternatives.`
-            );
-          } else {
-            setError("No medicines found.");
-          }
-          return;
-        } catch (altErr) {
-          console.error("Error fetching alternatives:", altErr);
-        }
-      }
-
-      setError("Failed to load medicines. Please try again.");
-      setMedicines([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Apply filters
-  const applyFilters = () => {
-    fetchMedicines(searchQuery, selectedForm, selectedUnits, selectedCategory);
-  };
-
-  // Auto-apply filters when changed
+  // Trigger search when query or filters change
   React.useEffect(() => {
-    if (hasSearched) {
-      applyFilters();
+    if (searchQuery || selectedForm || selectedUnit || selectedCategory) {
+      searchMedicines({
+        name: searchQuery,
+        dosageForm: selectedForm,
+        strengthUnit: selectedUnit,
+        category: selectedCategory,
+      });
+    } else if (hasSearched) {
+        clearResults();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedForm, selectedUnits, selectedCategory]);
+  }, [searchQuery, selectedForm, selectedUnit, selectedCategory, searchMedicines, clearResults, hasSearched]);
+
 
   return (
     <div className="min-h-screen bg-gray-50 pb-8">
@@ -275,7 +179,7 @@ export default function SearchMedicinePage() {
                     >
                       <input
                         type="checkbox"
-                        checked={selectedUnits.includes(unit)}
+                        checked={selectedUnit === unit}
                         onChange={() => handleUnitChange(unit)}
                         className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer"
                       />
