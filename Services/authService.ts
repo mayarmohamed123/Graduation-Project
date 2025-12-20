@@ -18,7 +18,6 @@ export interface RegisterCredentials {
 
 export interface AuthResponse {
   message: string;
-  token: string;
   user: {
     userName: string;
     email: string;
@@ -40,10 +39,9 @@ export interface RegisterResponse {
 
 export interface ForgotPasswordResponse {
   message: string;
-  token: string;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "/api";
 
 class AuthService {
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
@@ -83,47 +81,27 @@ class AuthService {
     window.location.href = `${API_BASE_URL}/User/facebook-login`;
   }
 
+  async refreshToken(): Promise<void> {
+    return apiRequest<void>(`${API_BASE_URL}/User/refresh`, {
+      method: "POST",
+      requiresAuth: false,
+    });
+  }
+
   async logout(): Promise<void> {
-    // Clear token from cookies
-    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-  }
-
-  // Helper to get token from cookies
-  getToken(): string | null {
-    if (typeof document === "undefined") {
-      return null;
+    try {
+      await apiRequest(`${API_BASE_URL}/User/logout`, {
+        method: "POST",
+        requiresAuth: false,
+      });
+    } catch (error) {
+      console.error("Logout error:", error);
+    } finally {
+      // Refresh to clear any client-side state
+      if (typeof window !== "undefined") {
+        window.location.href = "/";
+      }
     }
-
-    const allCookies = document.cookie;
-
-    const cookies = allCookies.split(";");
-    const tokenCookie = cookies.find((cookie) =>
-      cookie.trim().startsWith("token=")
-    );
-
-    if (tokenCookie) {
-      const token = decodeURIComponent(tokenCookie.split("=")[1]);
-      return token;
-    }
-
-    return null;
-  }
-
-  // Helper to set token in cookies
-  setToken(token: string): void {
-    if (typeof document === "undefined") {
-      console.log("⚠️ setToken: Cannot set cookie on server-side");
-      return;
-    }
-
-    // Set cookie with 30 days expiration
-    const expirationDate = new Date();
-    expirationDate.setDate(expirationDate.getDate() + 30);
-
-    const secureFlag = process.env.NODE_ENV === "production" ? "secure; " : "";
-    document.cookie = `token=${encodeURIComponent(
-      token
-    )}; expires=${expirationDate.toUTCString()}; path=/; ${secureFlag}samesite=lax`;
   }
 }
 

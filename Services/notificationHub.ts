@@ -6,17 +6,14 @@ let connection: signalR.HubConnection | null = null;
 
 /**
  * Creates or returns existing SignalR connection for notifications
- * @param token - JWT access token for authentication
  * @returns SignalR HubConnection instance
  */
-export function createNotificationConnection(
-  token: string
-): signalR.HubConnection {
+export function createNotificationConnection(): signalR.HubConnection {
   if (connection) return connection;
 
   connection = new signalR.HubConnectionBuilder()
     .withUrl(`${process.env.NEXT_PUBLIC_HUB_URL}/hubs/notification`, {
-      accessTokenFactory: () => token,
+      withCredentials: true, // Use cookies
       skipNegotiation: true,
       transport: signalR.HttpTransportType.WebSockets,
     })

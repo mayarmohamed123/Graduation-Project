@@ -68,7 +68,6 @@ export interface ProfilePictureResponse {
  */
 export interface UserSliceState {
   user: User | null;
-  token: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;

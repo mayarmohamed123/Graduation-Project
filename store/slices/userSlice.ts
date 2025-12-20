@@ -5,20 +5,19 @@ import toast from "react-hot-toast";
 
 const initialState: UserSliceState = {
   user: null,
-  token: null,
   isAuthenticated: false,
   isLoading: true, // Start true to check auth on load
   error: null,
 };
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "/api";
 
 // --- Async Thunks ---
 
 // Fetch User Data - Defined first as it's used by other thunks
 export const fetchUserData = createAsyncThunk(
   "user/fetchUserData",
-  async (token: string, { rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
       if (!API_BASE_URL) {
         throw new Error("API base URL is not configured");
@@ -28,10 +27,10 @@ export const fetchUserData = createAsyncThunk(
       const response = await fetch(`${API_BASE_URL}/User/profile`, {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
           "ngrok-skip-browser-warning": "true",
         },
+        credentials: "include", // Always include cookies
       });
 
       console.log("📡 fetchUserData: Response status:", response.status);
@@ -67,12 +66,15 @@ export const loginUser = createAsyncThunk(
   async (credentials: LoginCredentials, { dispatch, rejectWithValue }) => {
     try {
       const response = await authService.login(credentials);
-      authService.setToken(response.token);
       
-      // Fetch full user profile immediately
-      await dispatch(fetchUserData(response.token));
+      // Fetch full user profile - don't let this fail the login if it fails
+      // as we already have basic user data in the response
+      try {
+        await dispatch(fetchUserData());
+      } catch (profileError) {
+        console.error("Failed to fetch full profile during login:", profileError);
+      }
 
-      return response;
       return response;
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : "Login failed";
@@ -117,18 +119,11 @@ export const checkAuth = createAsyncThunk(
   async (_, { dispatch, rejectWithValue }) => {
     try {
       console.log("🔐 checkAuth: Starting...");
-      const token = authService.getToken();
-      console.log("🔐 checkAuth: Token retrieved:", token ? "✅ Found" : "❌ Not found");
       
-      if (!token) {
-        console.log("🔐 checkAuth: No token, returning null");
-        return null;
-      }
-      
-      console.log("🔐 checkAuth: Fetching user data with token...");
-      const user = await dispatch(fetchUserData(token)).unwrap();
+      // With HTTP-only cookies, we verify auth by trying to fetch the profile
+      const user = await dispatch(fetchUserData()).unwrap();
       console.log("🔐 checkAuth: User data fetched successfully:", user);
-      return { token, user };
+      return { user };
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : "Session expired";
       console.error("🔐 checkAuth: Error -", message);
@@ -146,7 +141,6 @@ const userSlice = createSlice({
     },
     clearUser: (state) => {
       state.user = null;
-      state.token = null;
       state.isAuthenticated = false;
       state.error = null;
     },
@@ -166,18 +160,15 @@ const userSlice = createSlice({
       .addCase(checkAuth.fulfilled, (state, action) => {
         state.isLoading = false;
         if (action.payload) {
-          state.token = action.payload.token;
           state.user = action.payload.user;
           state.isAuthenticated = true;
         } else {
-          state.token = null;
           state.user = null;
           state.isAuthenticated = false;
         }
       })
       .addCase(checkAuth.rejected, (state) => {
         state.isLoading = false;
-        state.token = null;
         state.user = null;
         state.isAuthenticated = false;
       })
@@ -190,18 +181,7 @@ const userSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isAuthenticated = true;
-        state.token = action.payload.token;
-        // User data should be updated by fetchUserData since we dispatched it
-        // But if fetchUserData fails or hasn't finished (shouldn't happen with await), 
-        // we might have partial data.
-        // However, since we await fetchUserData in the thunk, fetchUserData.fulfilled 
-        // action should have already run (or failed) before loginUser.fulfilled runs!
-        // Wait, no. Thunk execution: dispatch(fetchUserData) -> await -> done.
-        // fetchUserData.fulfilled reduces FIRST. 
-        // Then loginUser returns -> loginUser.fulfilled reduces.
-        // So state.user IS ALREADY SET by fetchUserData fulfilled reducer!
-        // We don't need to overwrite it with partial data here.
-        // Only if state.user is null (fetch failed?)
+        
         if (!state.user) {
              const authUser = action.payload.user;
              // fallback partial user
@@ -243,7 +223,6 @@ const userSlice = createSlice({
       // Logout
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;
-        state.token = null;
         state.isAuthenticated = false;
         state.error = null;
         toast.success("Logged out successfully");
@@ -255,8 +234,6 @@ const userSlice = createSlice({
       })
       .addCase(fetchUserData.fulfilled, (state, action) => {
         state.user = action.payload;
-        // If we have user data, we are authenticated (if called separatedly)
-        // But checkAuth handles the main flag
       })
       .addCase(fetchUserData.rejected, (state, action) => {
         state.error = action.payload as string;

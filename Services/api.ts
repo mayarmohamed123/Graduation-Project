@@ -15,6 +15,7 @@ interface ApiRequestOptions extends Omit<RequestInit, "method" | "body"> {
   data?: unknown;
   requiresAuth?: boolean;
   returnType?: "json" | "text" | "blob";
+  credentials?: RequestCredentials;
 }
 
 export const apiRequest = async <T = unknown>(
@@ -27,6 +28,7 @@ export const apiRequest = async <T = unknown>(
     requiresAuth = true,
     returnType = "json",
     headers: customHeaders = {},
+    credentials = "include", // Default to include for cookies
     ...restOptions
   } = options;
 
@@ -35,21 +37,11 @@ export const apiRequest = async <T = unknown>(
     "ngrok-skip-browser-warning": "true",
   };
 
-  // Handle Authentication
-  if (requiresAuth) {
-    const token = authService.getToken();
-    if (!token) {
-      throw new Error("No authentication token found. Please log in again.");
-    }
-    headers["Authorization"] = `Bearer ${token}`;
-  }
-
   // Handle Body and Content-Type
   let body: BodyInit | null = null;
   if (data) {
     if (data instanceof FormData) {
       body = data;
-      // Content-Type header should not be set for FormData, browser sets it with boundary
       delete headers["Content-Type"];
     } else {
       body = JSON.stringify(data);
@@ -59,17 +51,32 @@ export const apiRequest = async <T = unknown>(
     }
   }
 
-  try {
-    const response = await fetch(url, {
+  const makeRequest = async () => {
+    return fetch(url, {
       method,
       headers,
       body,
+      credentials, // Use the passed or default credentials
       ...restOptions,
     });
+  };
 
+  try {
+    let response = await makeRequest();
+
+    // Handle 401 Unauthorized - attempt to refresh token
     if (response.status === 401 && requiresAuth) {
-      authService.logout();
-      throw new Error("Session expired. Please log in again.");
+      try {
+        // Attempt to refresh the token
+        await authService.refreshToken();
+        
+        // If refresh succeeded, retry the original request
+        response = await makeRequest();
+      } catch (refreshError) {
+        console.error("Token refresh failed:", refreshError);
+        authService.logout();
+        throw new Error("Session expired. Please log in again.");
+      }
     }
 
     if (!response.ok) {
@@ -102,6 +109,6 @@ export const apiRequest = async <T = unknown>(
         return (await response.json()) as T;
     }
   } catch (error) {
-    throw error; // Re-throw to be handled by caller
+    throw error;
   }
 };
