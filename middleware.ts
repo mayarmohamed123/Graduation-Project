@@ -7,13 +7,14 @@ export function middleware(request: NextRequest) {
   // Check for tokens in cookies
   const authToken = request.cookies.get("auth_token")?.value;
   const refreshToken = request.cookies.get("refresh_token")?.value;
-  const genericToken = request.cookies.get("token")?.value;
 
-  const isAuth = authToken || refreshToken || genericToken;
+  const isAuth = authToken || refreshToken;
 
   console.log(`[Middleware] Path: ${path}, isAuth: ${!!isAuth}`);
   if (isAuth) {
-    console.log(`[Middleware] Tokens found: auth_token: ${!!authToken}, refresh_token: ${!!refreshToken}, token: ${!!genericToken}`);
+    console.log(
+      `[Middleware] Tokens found: auth_token: ${!!authToken}, refresh_token: ${!!refreshToken}`
+    );
   }
 
   // Protected routes
