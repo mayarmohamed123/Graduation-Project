@@ -14,6 +14,7 @@ import { appointmentService } from "@/Services/appointmentServices";
 import { AppointmentInfo, AppointmentStats } from "@/types/appointments";
 import toast from "react-hot-toast";
 import LoadingSpinner from "@/Components/common/LoadingSpinner";
+import { useAppointmentActions } from "@/hooks/useAppointmentActions";
 
 export default function AppointmentsPage() {
     // States
@@ -72,45 +73,8 @@ export default function AppointmentsPage() {
         return matchesSearch && matchesStatus && matchesDate;
     });
 
-    // Handle Accept Appointment
-    const handleAccept = async (appointmentId: string) => {
-        try {
-            await appointmentService.acceptAppointment(appointmentId);
-            toast.success('Appointment accepted successfully!');
-            fetchData(); // Refresh data
-        } catch (error: unknown) {
-            const errorMessage =
-                error instanceof Error ? error.message : "Failed to accept appointment";
-            toast.error(errorMessage);
-        }
-    };
-
-    // Handle Reject Appointment
-    const handleReject = async (appointmentId: string) => {
-        try {
-            await appointmentService.rejectAppointment(appointmentId);
-            toast.success('Appointment rejected');
-            fetchData(); // Refresh data
-        } catch (error: unknown) {
-            const errorMessage =
-                error instanceof Error ? error.message : "Failed to reject appointment";
-            toast.error(errorMessage);
-        }
-    };
-
-
-    // Handle Complete Appointment
-    const handleComplete = async (appointmentId: string) => {
-        try {
-            await appointmentService.completeAppointment(appointmentId);
-            toast.success('Appointment marked as completed');
-            fetchData(); // Refresh data
-        } catch (error: unknown) {
-            const errorMessage =
-                error instanceof Error ? error.message : "Failed to complete appointment";
-            toast.error(errorMessage);
-        }
-    };
+    // Use the custom hook for actions
+    const { handleAccept, handleReject, handleComplete } = useAppointmentActions(fetchData);
 
     return (
         <div className="min-h-screen bg-gray-50 p-8">

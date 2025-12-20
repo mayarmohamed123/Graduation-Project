@@ -1,55 +1,152 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { AppointmentCard, StatisticsCard } from "@/Components/features/doctor";
+import NotificationCard from "@/Components/common/NotificationCard";
+import { AppointmentInfo, AppointmentStats } from "@/types/appointments";
+import { Notification } from "@/types";
+import { Calendar, DollarSign, MessageSquare } from "lucide-react";
+import { appointmentService } from "@/Services/appointmentServices";
+import { doctorService } from "@/Services/doctorService";
+import LoadingSpinner from "@/Components/common/LoadingSpinner";
+import toast from "react-hot-toast";
 import { useUser } from "@/hooks/useUser";
-import { useEffect } from "react";
+import { useAppointmentActions } from "@/hooks/useAppointmentActions";
 
 export default function DoctorDashboardPage() {
-  const { user, isLoading } = useUser();
+  const { user } = useUser();
+  const [appointments, setAppointments] = useState<AppointmentInfo[]>([]);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [stats, setStats] = useState<AppointmentStats | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchData = async () => {
+    try {
+      setIsLoading(true);
+      const [statsData, appointmentsData, notificationsData] = await Promise.all([
+        appointmentService.getAppointmentStats(),
+        appointmentService.getDoctorAppointments(),
+        doctorService.getDoctorNotifications(),
+      ]);
+
+      setStats(statsData);
+      setAppointments(appointmentsData);
+      // Assuming notificationsData.appointmentRequests contains the notifications
+      setNotifications(notificationsData.appointmentRequests);
+    } catch (error) {
+      console.error("Error fetching dashboard data:", error);
+      toast.error("Failed to load dashboard data");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    console.log("user", user);
-  }, [user]);
+    fetchData();
+  }, []);
+
+  const { handleAccept, handleReject, handleComplete } = useAppointmentActions(fetchData);
 
   if (isLoading) {
     return (
       <div className="flex h-96 items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#2BBBC5] border-t-transparent"></div>
+        <LoadingSpinner />
       </div>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">Dashboard</h1>
-      
-      {/* Dashboard content will go here */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* Sample stat cards */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-gray-600 text-sm font-medium">Total Patients</h3>
-          <p className="text-3xl font-bold text-[#2BBBC5] mt-2">150</p>
-        </div>
-        
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-gray-600 text-sm font-medium">Today&apos;s Appointments</h3>
-          <p className="text-3xl font-bold text-[#2BBBC5] mt-2">8</p>
-        </div>
-        
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-gray-600 text-sm font-medium">New Messages</h3>
-          <p className="text-3xl font-bold text-[#2BBBC5] mt-2">12</p>
-        </div>
+    <div className="max-w-7xl mx-auto space-y-8 pb-8">
+      {/* Search Header - Optional based on image */}
+      <div className="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm md:hidden">
+        <h1 className="text-xl font-bold text-gray-800">Sehha</h1>
       </div>
 
-      {/* Welcome message */}
-      <div className="mt-8 bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-xl font-semibold text-gray-800 mb-2">
-          Welcome to Your Dashboard, Dr. {user?.userName}
-        </h2>
-        <p className="text-gray-600">
-          Manage your patients, appointments, and messages all in one place.
-        </p>
+      <div className="mt-4 mb-4">
+        <h1 className="text-2xl font-bold text-gray-800">Welcome, Dr. {user?.userName}</h1>
+        <p className="text-gray-500">Here is your daily activity overview</p>
       </div>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Today's Appointments */}
+        <StatisticsCard
+          title="Today's Appointments"
+          value={stats?.todayAppointmentsCount || 0}
+          icon={<Calendar className="w-6 h-6 text-[#2BBBC5]" />}
+          iconBgColor="bg-teal-50"
+          trend="+12%"
+          trendDirection="up"
+        />
+
+        {/* Revenue */}
+        <StatisticsCard
+          title="Today's Revenue"
+          value={`$${stats?.todayRevenue || 0}`}
+          icon={<DollarSign className="w-6 h-6 text-green-600" />}
+          iconBgColor="bg-green-50"
+          trend="+23%"
+          trendDirection="up"
+        />
+
+        {/* Unread Messages/Notifications (Using total patients for now or any other avail stat) */}
+        <StatisticsCard
+          title="Total Patients"
+          value={stats?.totalPatientsCount || 0}
+          icon={<MessageSquare className="w-6 h-6 text-purple-600" />}
+          iconBgColor="bg-purple-50"
+        />
+      </div>
+
+      {/* Today's Appointments Section */}
+      <section>
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-bold text-gray-900">Latest Appointments</h2>
+          <Link href="/doctor/appointments" className="text-[#2BBBC5] hover:text-[#25a0a9] font-medium">
+            See All
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {appointments.length > 0 ? (
+            appointments.slice(0, 2).map((appointment) => (
+              <AppointmentCard
+                key={appointment.id}
+                appointment={appointment}
+                onAccept={handleAccept}
+                onReject={handleReject}
+                onComplete={handleComplete}
+              />
+            ))
+          ) : (
+            <p className="text-gray-500 col-span-2 text-center py-8">No appointments found.</p>
+          )}
+        </div>
+      </section>
+
+      {/* Recent Activity Timeline Section */}
+      <section>
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-bold text-gray-900">Recent Activity Timeline</h2>
+          <Link href="/doctor/notifications" className="text-[#2BBBC5] hover:text-[#25a0a9] font-medium">
+            See All
+          </Link>
+        </div>
+
+        <div className="flex flex-col gap-4 bg-white/50 rounded-2xl">
+          {notifications.length > 0 ? (
+            notifications.slice(0, 4).map((notification) => (
+              <NotificationCard
+                key={notification.id}
+                notification={notification}
+              />
+            ))
+          ) : (
+            <p className="text-gray-500 text-center py-8">No recent notifications.</p>
+          )}
+        </div>
+      </section>
     </div>
   );
 }

@@ -9,16 +9,16 @@ export default function DoctorLayout({
 }) {
   return (
     <ProtectedRoute>
-    <div className="flex h-screen bg-gray-50 overflow-hidden">
-      {/* Sidebar */}
-      <DoctorSidebar />
+      <div className="flex h-screen bg-gray-50 overflow-hidden">
+        {/* Sidebar */}
+        <DoctorSidebar />
 
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col h-full overflow-hidden">
-        <DoctorNavbar />
-        <main className="flex-1 overflow-y-auto p-6">{children}</main>
+        {/* Main Content Area */}
+        <div className="flex-1 flex flex-col h-full overflow-hidden">
+          <DoctorNavbar />
+          <main className="flex-1 overflow-y-auto p-6">{children}</main>
+        </div>
       </div>
-    </div>
     </ProtectedRoute>
   );
 }
