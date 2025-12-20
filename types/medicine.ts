@@ -24,6 +24,7 @@ export interface Medicine {
 }
 
 export interface MedicineFilterParams {
+  name?: string;
   dosageForm?: string;
   strengthUnit?: string;
   brandName?: string;

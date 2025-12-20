@@ -14,15 +14,15 @@ import { LoadingSpinner } from "@/Components";
 import { CheckCheck } from "lucide-react";
 
 export default function DoctorNotificationsPage() {
-    const { token } = useAuth();
+    const { isAuthenticated } = useAuth();
     const [notifications, setNotifications] = useState<Notification[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (!token) return;
+        if (!isAuthenticated) return;
 
         // 1- Create SignalR connection
-        const connection = createNotificationConnection(token);
+        const connection = createNotificationConnection();
 
         // 2- Define notification handler
         const handleNotification = (data: Notification) => {
@@ -66,7 +66,7 @@ export default function DoctorNotificationsPage() {
         return () => {
             connection.off("ReceiveNotification", handleNotification);
         };
-    }, [token]);
+    }, [isAuthenticated]);
 
     const fetchNotifications = async () => {
         try {

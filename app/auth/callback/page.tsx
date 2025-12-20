@@ -2,7 +2,6 @@
 
 import { useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { authService } from "@/Services/authService";
 import toast from "react-hot-toast";
 
 function CallbackContent() {
@@ -37,10 +36,7 @@ function CallbackContent() {
           return;
         }
 
-        if (token && userDataStr) {
-          // Store token
-          authService.setToken(token);
-
+        if (userDataStr) {
           // Parse user data
           const user = typeof userDataStr === "string" ? JSON.parse(userDataStr) : userDataStr;
 
@@ -59,9 +55,6 @@ function CallbackContent() {
             // Default to user dashboard
             router.push("/user");
           }
-        } else {
-          toast.error("Incomplete authentication data");
-          router.push("/login");
         }
       } catch (error) {
         console.error("OAuth callback error:", error);

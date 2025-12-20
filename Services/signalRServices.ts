@@ -3,7 +3,6 @@
 
 import * as signalR from "@microsoft/signalr";
 import { messageReceived, setConnectionStatus } from "@/store/slices/chatSlice";
-import { authService } from "@/Services/authService";
 
 // dynamic import to avoid circular imports
 const getStore = async () => {
@@ -46,9 +45,6 @@ class SignalRService {
     this.isConnecting = true;
 
     try {
-        const token = authService.getToken();
-        console.log(`[SignalR] Token available:`, !!token);
-
         const hubUrl = `${process.env.NEXT_PUBLIC_HUB_URL}/hubs/chat?threadId=${threadId}`;
         console.log(`[SignalR] Connecting to URL: ${hubUrl}`);
 
@@ -56,8 +52,7 @@ class SignalRService {
         .withUrl(
             hubUrl,
             { 
-                withCredentials: false,
-                accessTokenFactory: () => token || "", // Inject the token here
+                withCredentials: true, // Use cookies
                 skipNegotiation: true,
                 transport: signalR.HttpTransportType.WebSockets
             }

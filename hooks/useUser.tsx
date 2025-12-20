@@ -8,13 +8,13 @@ import { useAuth } from "@/hooks/useAuth";
 export const useUser = () => {
   const dispatch = useAppDispatch();
   const { user, isLoading, error } = useAppSelector((state) => state.user);
-  const { token, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     const loadUserData = async () => {
-      if (token && !user) {
+      if (isAuthenticated && !user) {
         try {
-          await dispatch(fetchUserData(token)).unwrap();
+          await dispatch(fetchUserData()).unwrap();
         } catch (error) {
           console.error("Failed to load user data:", error);
         }
@@ -22,17 +22,17 @@ export const useUser = () => {
     };
 
     loadUserData();
-  }, [dispatch, token, user]);
+  }, [dispatch, isAuthenticated, user]);
 
   const refetchUser = useCallback(async () => {
-    if (token) {
+    if (isAuthenticated) {
       try {
-        await dispatch(fetchUserData(token)).unwrap();
+        await dispatch(fetchUserData()).unwrap();
       } catch (error) {
         console.error("Failed to refetch user data:", error);
       }
     }
-  }, [dispatch, token]);
+  }, [dispatch, isAuthenticated]);
 
   return {
     user,

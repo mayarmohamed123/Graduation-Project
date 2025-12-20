@@ -1,7 +1,6 @@
 import "../globals.css";
 import Navbar from "@/Components/layout/navbar";
 import Footer from "@/Components/layout/footer";
-import { ProtectedRoute } from "@/Components";
 
 export default function UserLayout({
   children,
@@ -10,11 +9,11 @@ export default function UserLayout({
 }) {
   return (
     <>
-    <ProtectedRoute>
+    <>
       <Navbar />
       {children}
       <Footer />
-    </ProtectedRoute>
+    </>
     </>
   );
   

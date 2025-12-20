@@ -205,4 +205,15 @@ export const doctorService = {
       }
     );
   },
+  // Get top rated doctors
+  getTopRatedDoctors: async (): Promise<Doctor[]> => {
+    return await apiRequest<Doctor[]>(
+      `${baseUrl}/doctors/top-doctors`,
+      { 
+        next: { revalidate: 1800 },
+        credentials: "omit", // Don't send tokens
+        requiresAuth: false
+      }
+    );
+  },
 };

@@ -12,21 +12,22 @@ import PageHeaderWithBack from "@/Components/common/PageHeaderWithBack";
 import Switch from "@/Components/common/Switch";
 import NotificationCard from "@/Components/common/NotificationCard";
 import { HubConnectionState } from "@microsoft/signalr";
+import { doctorService } from "@/Services/doctorService";
 
 type TabType = "appointments" | "orders";
 
 export default function NotificationsPage() {
-  const { token } = useAuth();
+  const { isAuthenticated } = useAuth();
   const [activeTab, setActiveTab] = useState<TabType>("appointments");
   const [appointments, setAppointments] = useState<Notification[]>([]);
   const [orders, setOrders] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!token) return;
+    if (!isAuthenticated) return;
 
     // 1- Create SignalR connection
-    const connection = createNotificationConnection(token);
+    const connection = createNotificationConnection();
 
     // 2- Define notification handler
     const handleNotification = (data: Notification) => {
@@ -76,7 +77,7 @@ export default function NotificationsPage() {
     return () => {
       connection.off("ReceiveNotification", handleNotification);
     };
-  }, [token]);
+  }, [isAuthenticated]);
 
   const fetchNotifications = async () => {
     try {
@@ -88,6 +89,42 @@ export default function NotificationsPage() {
       console.error("Failed to fetch notifications:", error);
     } finally {
       setLoading(false);
+    }
+  };
+  const handleMarkAsRead = async (id: number) => {
+    // Check both lists for the notification
+    const appointmentNotif = appointments.find((n) => n.id === id);
+    const orderNotif = orders.find((n) => n.id === id);
+
+    const notification = appointmentNotif || orderNotif;
+    if (!notification || notification.isRead) return;
+
+    // Optimistic update
+    if (appointmentNotif) {
+      setAppointments((prev) =>
+        prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
+      );
+    } else if (orderNotif) {
+      setOrders((prev) =>
+        prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
+      );
+    }
+
+    try {
+      await doctorService.markNotificationAsRead(id);
+    } catch (error) {
+      console.error("Failed to mark notification as read:", error);
+      // Revert on error
+      if (appointmentNotif) {
+        setAppointments((prev) =>
+          prev.map((n) => (n.id === id ? { ...n, isRead: false } : n))
+        );
+      } else if (orderNotif) {
+        setOrders((prev) =>
+          prev.map((n) => (n.id === id ? { ...n, isRead: false } : n))
+        );
+      }
+      toast.error("Failed to update notification status");
     }
   };
 
@@ -144,6 +181,7 @@ export default function NotificationsPage() {
               <NotificationCard
                 key={notification.id}
                 notification={notification}
+                onClick={handleMarkAsRead}
               />
             ))}
           </div>

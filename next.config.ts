@@ -12,6 +12,14 @@ const nextConfig = {
       },
     ],
   },
+  async rewrites() {
+    return [
+      {
+        source: "/api/:path*",
+        destination: "https://unendingly-unfoul-emmy.ngrok-free.dev/api/:path*",
+      },
+    ];
+  },
 };
 
 export default nextConfig;

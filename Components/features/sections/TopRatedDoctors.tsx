@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Doctor } from "@/types";
 import Link from "next/link";
 import LoadingSpinner from "@/Components/common/LoadingSpinner";
+import { doctorService } from "@/Services/doctorService";
 import DoctorCard from "../doctor/DoctorCard";
 
 export default function TopRatedDoctors() {
@@ -14,14 +15,8 @@ export default function TopRatedDoctors() {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const res = await fetch("/api/doctors/top-rated");
-
-        if (!res.ok) {
-          throw new Error(`API error: ${res.status}`);
-        }
-
-        const json = await res.json();
-        setDoctors(Array.isArray(json) ? json : []);
+        const data = await doctorService.getTopRatedDoctors();
+        setDoctors(data);
       } catch (err) {
         console.error("Error fetching top rated doctors:", err);
         setError("Failed to load doctors");
