@@ -1,4 +1,4 @@
-export { default as ClinicCard } from "./ClinicCard";
+
 export { default as EmailInput } from "./EmailInput";
 export { default as FavoriteCard } from "./FavoriteCard";
 export { default as LoadingSpinner } from "./LoadingSpinner";

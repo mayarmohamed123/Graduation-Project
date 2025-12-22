@@ -18,6 +18,10 @@ const nextConfig = {
         source: "/api/:path*",
         destination: "https://unendingly-unfoul-emmy.ngrok-free.dev/api/:path*",
       },
+      {
+        source: "/hubs/:path*",
+        destination: "https://unendingly-unfoul-emmy.ngrok-free.dev/hubs/:path*",
+      },
     ];
   },
 };

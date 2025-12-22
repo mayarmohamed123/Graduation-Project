@@ -5,6 +5,7 @@ import { Provider } from "react-redux";
 import { ReactNode, useEffect } from "react";
 import { useAppDispatch } from "@/store/hooks";
 import { checkAuth } from "@/store/slices/userSlice";
+import { AuthProvider } from "@/hooks/useAuth";
 
 function AuthInitializer({ children }: { children: ReactNode }) {
   const dispatch = useAppDispatch();
@@ -20,7 +21,9 @@ function AuthInitializer({ children }: { children: ReactNode }) {
 export default function ReduxProvider({ children }: { children: ReactNode }) {
   return (
     <Provider store={store}>
-      <AuthInitializer>{children}</AuthInitializer>
+      <AuthInitializer>
+        <AuthProvider>{children}</AuthProvider>
+      </AuthInitializer>
     </Provider>
   );
 }

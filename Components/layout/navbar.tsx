@@ -225,19 +225,19 @@ export default function Navbar() {
                   Dashboard
                 </Link>
                 <Link
-                  href="/favorites"
+                  href="/user/favorites"
                   className="block text-primary/900 hover:text-primary transition py-2"
                   onClick={() => setIsOpen(false)}>
                   Favorites
                 </Link>
                 <Link
-                  href="/cart"
+                  href="/user/cart"
                   className="block text-primary/900 hover:text-primary transition py-2"
                   onClick={() => setIsOpen(false)}>
                   Cart
                 </Link>
                 <Link
-                  href="/notifications"
+                  href="/user/notifications"
                   className="block text-primary/900 hover:text-primary transition py-2"
                   onClick={() => setIsOpen(false)}>
                   Notifications

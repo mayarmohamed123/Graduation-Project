@@ -54,7 +54,10 @@ class SignalRService {
             { 
                 withCredentials: true, // Use cookies
                 skipNegotiation: true,
-                transport: signalR.HttpTransportType.WebSockets
+                transport: signalR.HttpTransportType.WebSockets,
+                headers: {
+                    "ngrok-skip-browser-warning": "true",
+                },
             }
         )
         .withAutomaticReconnect()

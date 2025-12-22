@@ -36,6 +36,12 @@ export const fetchUserData = createAsyncThunk(
       console.log("📡 fetchUserData: Response status:", response.status);
 
       if (!response.ok) {
+        // If it's a 401, it's often just someone who hasn't logged in yet
+        if (response.status === 401) {
+          console.log("🔐 fetchUserData: User is not authenticated (401)");
+          return rejectWithValue("Unauthorized");
+        }
+
         const errorData = await response.json().catch(() => null);
         console.error("❌ fetchUserData error:", {
           status: response.status,
@@ -51,6 +57,9 @@ export const fetchUserData = createAsyncThunk(
       console.log("✅ fetchUserData success:", userData);
       return userData;
     } catch (error: unknown) {
+      if (error instanceof Error && error.message === "Unauthorized") {
+        return rejectWithValue("Unauthorized");
+      }
       console.error("❌ fetchUserData catch block:", error);
       const message =
         error instanceof Error
@@ -125,6 +134,12 @@ export const checkAuth = createAsyncThunk(
       console.log("🔐 checkAuth: User data fetched successfully:", user);
       return { user };
     } catch (error: unknown) {
+      // If it's a simple 401 Unauthorized, we don't need to log it as a big error
+      if (error === "Unauthorized" || (error as { message?: string })?.message === "Unauthorized") {
+        console.log("🔐 checkAuth: No active session found.");
+        return rejectWithValue("No session");
+      }
+      
       const message = error instanceof Error ? error.message : "Session expired";
       console.error("🔐 checkAuth: Error -", message);
       return rejectWithValue(message);
