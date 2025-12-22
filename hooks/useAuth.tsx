@@ -1,44 +1,90 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect, useCallback, createContext, useContext } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { loginUser, logoutUser, registerUser } from "@/store/slices/userSlice";
 import type { RegisterCredentials } from "@/Services/authService";
 
-// Deprecated: Auth state is now managed by Redux. 
-// This component is kept temporarily to avoid breaking layout imports during migration,
-// but it just renders children.
+// Auth context to share auth state across components
+interface AuthContextType {
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  recheckAuth: () => Promise<void>;
+}
+
+const AuthContext = createContext<AuthContextType>({
+  isAuthenticated: false,
+  isLoading: true,
+  recheckAuth: async () => {},
+});
+
+// Provider component that checks auth via API
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const checkAuth = useCallback(async () => {
+    try {
+      const response = await fetch("/api/auth/check", {
+        method: "GET",
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setIsAuthenticated(data.authenticated);
+      } else {
+        setIsAuthenticated(false);
+      }
+    } catch (error) {
+      console.error("Auth check failed:", error);
+      setIsAuthenticated(false);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
+  return (
+    <AuthContext.Provider value={{ isAuthenticated, isLoading, recheckAuth: checkAuth }}>
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
 export function useAuth() {
   const dispatch = useAppDispatch();
-  const { user, isAuthenticated, isLoading, error } = useAppSelector((state) => state.user);
+  const { user, error } = useAppSelector((state) => state.user);
+  
+  // Get auth state from context (API-based) instead of Redux
+  const { isAuthenticated, isLoading, recheckAuth } = useContext(AuthContext);
 
   const handleRedirect = (user: { roles: string | string[] }) => {
-      console.log("🚀 handleRedirect: User roles:", user.roles);
-      const roles = user.roles;
-      const role = Array.isArray(roles) ? roles[0] : roles;
-      const normalizedRole = role?.toLowerCase();
-      
-      console.log("🚀 handleRedirect: Normalized role:", normalizedRole);
+    console.log("🚀 handleRedirect: User roles:", user.roles);
+    const roles = user.roles;
+    const role = Array.isArray(roles) ? roles[0] : roles;
+    const normalizedRole = role?.toLowerCase();
 
-      let targetPath = "/user";
-      if (normalizedRole === "doctor") {
-        targetPath = "/doctor";
-      } else if (normalizedRole === "pharmacy") {
-        targetPath = "/pharmacy";
-      } else if (normalizedRole === "admin") {
-        targetPath = "/admin";
-      }
+    console.log("🚀 handleRedirect: Normalized role:", normalizedRole);
 
-      console.log("🚀 handleRedirect: Redirecting to:", targetPath);
-      
-      // Use window.location.href for a full reload to ensure cookies are picked up by middleware
-      if (typeof window !== "undefined") {
-        window.location.href = targetPath;
-      }
+    let targetPath = "/user";
+    if (normalizedRole === "doctor") {
+      targetPath = "/doctor";
+    } else if (normalizedRole === "pharmacy") {
+      targetPath = "/pharmacy";
+    } else if (normalizedRole === "admin") {
+      targetPath = "/admin";
+    }
+
+    console.log("🚀 handleRedirect: Redirecting to:", targetPath);
+
+    // Use window.location.href for a full reload to ensure cookies are picked up
+    if (typeof window !== "undefined") {
+      window.location.href = targetPath;
+    }
   };
 
   const login = async (email: string, password: string) => {
@@ -46,9 +92,11 @@ export function useAuth() {
       console.log("🚀 login: Attempting login for:", email);
       const result = await dispatch(loginUser({ email, password })).unwrap();
       console.log("🚀 login: Success! Result:", result);
+      // Recheck auth after login to update context
+      await recheckAuth();
       handleRedirect(result.user);
     } catch (error) {
-      console.error("🚀 login: Redirect error:", error);
+      console.error("🚀 login: Error:", error);
       throw error;
     }
   };
@@ -56,15 +104,17 @@ export function useAuth() {
   const register = async (data: RegisterCredentials) => {
     try {
       const result = await dispatch(registerUser(data)).unwrap();
+      // Recheck auth after register to update context
+      await recheckAuth();
       handleRedirect(result.user);
     } catch (error) {
-       console.error("Register redirect error:", error);
-       throw error;
+      console.error("Register error:", error);
+      throw error;
     }
   };
 
-  const logout = () => {
-    dispatch(logoutUser());
+  const logout = async () => {
+    await dispatch(logoutUser());
   };
 
   return {
@@ -75,5 +125,6 @@ export function useAuth() {
     login,
     register,
     logout,
+    recheckAuth,
   };
 }

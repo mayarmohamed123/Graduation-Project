@@ -11,11 +11,11 @@ let connection: signalR.HubConnection | null = null;
 export function createNotificationConnection(): signalR.HubConnection {
   if (connection) return connection;
 
+  // Use local path to go through Next.js proxy (same-origin = cookies work)
+  // SignalR will negotiate via HTTP, then fall back to Long Polling
   connection = new signalR.HubConnectionBuilder()
-    .withUrl(`${process.env.NEXT_PUBLIC_HUB_URL}/hubs/notification`, {
-      withCredentials: true, // Use cookies
-      skipNegotiation: true,
-      transport: signalR.HttpTransportType.WebSockets,
+    .withUrl("/hubs/notification", {
+      withCredentials: true,
     })
     .withAutomaticReconnect()
     .build();

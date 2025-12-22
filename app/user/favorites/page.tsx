@@ -5,7 +5,6 @@ import Image from "next/image";
 import Switch from "@/Components/common/Switch";
 import DoctorCard from "@/Components/features/doctor/DoctorCard";
 import MedicineCard from "@/Components/common/MedicineCard";
-import ClinicCard from "@/Components/common/ClinicCard";
 import PageHeaderWithBack from "@/Components/common/PageHeaderWithBack";
 import noFavorites from "@/assets/noFavorites.png";
 import {
@@ -28,7 +27,6 @@ export default function Favorites() {
     const tabs = [
         { id: "doctors", label: "Doctors" },
         { id: "medicine", label: "Medicine" },
-        { id: "clinics", label: "Clinics" },
     ];
 
     // Fetch favorites data on component mount
@@ -161,34 +159,6 @@ export default function Favorites() {
                                         />
                                         <p className="text-gray-500 text-xl">
                                             Your favorite medicines list is empty
-                                        </p>
-                                    </div>
-                                )}
-                            </div>
-                        )}
-
-                        {/* Clinics Tab */}
-                        {activeTab === "clinics" && (
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {favoriteClinics.length > 0 ? (
-                                    favoriteClinics.map((clinic) => (
-                                        <ClinicCard
-                                            key={clinic.id}
-                                            clinic={clinic}
-                                            variant="favorite"
-                                            initialFavoriteState={true}
-                                            onRemoveFavorite={handleRemoveClinic}
-                                        />
-                                    ))
-                                ) : (
-                                    <div className="text-center py-12 col-span-full">
-                                        <Image
-                                            src={noFavorites}
-                                            alt="No favorites"
-                                            className="mx-auto"
-                                        />
-                                        <p className="text-gray-500 text-xl">
-                                            Your favorite clinics list is empty
                                         </p>
                                     </div>
                                 )}
