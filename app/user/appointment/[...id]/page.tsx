@@ -104,7 +104,7 @@ export default function AppointmentPage({
     try {
       setChatLoading(true);
       if (!doctor) return;
-      
+
       const thread = await startConversationWithDoctor(doctor.id.toString());
       router.push(`/user/chat?threadId=${thread.id}`);
       toast.success("Opening chat with doctor...");

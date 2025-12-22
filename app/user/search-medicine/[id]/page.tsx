@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {useParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import Image from "next/image";
 import { Medicine } from "@/types";
 import { medicineService } from "@/Services/medicineServices";
@@ -11,6 +11,7 @@ import PrvButton from "@/Components/common/prvButton";
 import { Heart, Check, X } from "lucide-react";
 import { useAppDispatch } from "@/store/hooks";
 import { fetchUserCart } from "@/store/slices/cartSlice";
+
 
 export default function MedicineDetailsPage() {
   const params = useParams();
@@ -47,7 +48,7 @@ export default function MedicineDetailsPage() {
 
   const handleAddToCart = async () => {
     if (!medicine) return;
-    
+
     setIsAddingToCart(true);
     try {
       await cartService.addToCart({
@@ -98,18 +99,17 @@ export default function MedicineDetailsPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
           {/* Left Column: Image */}
           <div className="relative bg-white rounded-3xl border border-gray-100 p-8 flex items-center justify-center shadow-sm h-[500px]">
-             {/* Favorite Button */}
-             <button
+            {/* Favorite Button */}
+            <button
               onClick={toggleFavorite}
               className="absolute top-6 right-6 bg-white rounded-full p-3 shadow-md hover:scale-110 transition-transform z-10"
             >
               <Heart
-                className={`w-6 h-6 ${
-                  isFavorite ? "fill-red-500 text-red-500" : "text-gray-400"
-                }`}
+                className={`w-6 h-6 ${isFavorite ? "fill-red-500 text-red-500" : "text-gray-400"
+                  }`}
               />
             </button>
-            
+
             <div className="relative w-full h-full">
               {medicine.imagePath ? (
                 <Image
@@ -141,11 +141,11 @@ export default function MedicineDetailsPage() {
                 <span className="font-medium">Pack Size:</span>
                 <span>{medicine.quantity} {medicine.dosageFormType}s</span>
               </div>
-              
+
               <div className="flex items-center gap-2 text-gray-700">
                 <span className="font-medium">Availability:</span>
                 {isOutOfStock ? (
-                   <span className="text-red-600 font-medium">Out of Stock</span>
+                  <span className="text-red-600 font-medium">Out of Stock</span>
                 ) : (
                   <span className="text-green-600 font-medium">
                     In Stock (Available at {medicine.pharmacy.name})
@@ -154,20 +154,20 @@ export default function MedicineDetailsPage() {
               </div>
 
               <div className="flex items-center gap-2 text-gray-700">
-                 <span className="font-medium">Delivery:</span>
-                 <span>Within 24 hours</span>
+                <span className="font-medium">Delivery:</span>
+                <span>Within 24 hours</span>
               </div>
             </div>
 
             {/* Price and Actions */}
             <div className="flex flex-col sm:flex-row gap-4 mt-4">
-              <button 
+              <button
                 className="flex-1 bg-primary text-white py-3 px-6 rounded-full font-semibold hover:bg-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={isOutOfStock}
               >
                 Buy Now
               </button>
-              <button 
+              <button
                 onClick={handleAddToCart}
                 disabled={isOutOfStock || isAddingToCart}
                 className="flex-1 border-2 border-primary text-primary py-3 px-6 rounded-full font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
@@ -196,8 +196,8 @@ export default function MedicineDetailsPage() {
             </p>
           </section>
 
-           {/* Directions */}
-           <section>
+          {/* Directions */}
+          <section>
             <h2 className="text-xl font-bold text-gray-900 mb-3">Directions for Use</h2>
             <p className="text-gray-700 leading-relaxed">
               {medicine.directionsForUse}
