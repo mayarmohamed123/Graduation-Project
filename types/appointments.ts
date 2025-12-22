@@ -22,4 +22,6 @@ export interface AppointmentStats {
   todayRevenue: number;
   totalRevenue: number;
   reviewsCount: number;
+  yesterdayAppointmentsCount: number;
+  yesterdayRevenue: number;
 }

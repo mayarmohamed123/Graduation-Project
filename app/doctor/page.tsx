@@ -56,6 +56,20 @@ export default function DoctorDashboardPage() {
     );
   }
 
+  // Calculate trend percentage
+  const calculateTrend = (current: number, previous: number) => {
+    if (previous === 0) return current > 0 ? 100 : 0;
+    return Math.round(((current - previous) / previous) * 100);
+  };
+
+  const appointmentsTrend = stats
+    ? calculateTrend(stats.todayAppointmentsCount, stats.yesterdayAppointmentsCount)
+    : 0;
+
+  const revenueTrend = stats
+    ? calculateTrend(stats.todayRevenue, stats.yesterdayRevenue)
+    : 0;
+
   return (
     <div className="max-w-7xl mx-auto space-y-8 pb-8">
       {/* Search Header - Optional based on image */}
@@ -76,8 +90,8 @@ export default function DoctorDashboardPage() {
           value={stats?.todayAppointmentsCount || 0}
           icon={<Calendar className="w-6 h-6 text-[#2BBBC5]" />}
           iconBgColor="bg-teal-50"
-          trend="+12%"
-          trendDirection="up"
+          trend={`${Math.abs(appointmentsTrend)}%`}
+          trendDirection={appointmentsTrend >= 0 ? "up" : "down"}
         />
 
         {/* Revenue */}
@@ -86,8 +100,8 @@ export default function DoctorDashboardPage() {
           value={`$${stats?.todayRevenue || 0}`}
           icon={<DollarSign className="w-6 h-6 text-green-600" />}
           iconBgColor="bg-green-50"
-          trend="+23%"
-          trendDirection="up"
+          trend={`${Math.abs(revenueTrend)}%`}
+          trendDirection={revenueTrend >= 0 ? "up" : "down"}
         />
 
         {/* Unread Messages/Notifications (Using total patients for now or any other avail stat) */}
