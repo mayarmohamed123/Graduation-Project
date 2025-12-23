@@ -207,12 +207,51 @@ export const doctorService = {
   },
   // Get top rated doctors
   getTopRatedDoctors: async (): Promise<Doctor[]> => {
-    return await apiRequest<Doctor[]>(
-      `${baseUrl}/doctors/top-doctors`,
-      { 
-        next: { revalidate: 1800 },
-        credentials: "omit", // Don't send tokens
-        requiresAuth: false
+    return await apiRequest<Doctor[]>(`${baseUrl}/doctors/top-doctors`, {
+      next: { revalidate: 1800 },
+      credentials: "omit", // Don't send tokens
+      requiresAuth: false,
+    });
+  },
+  // Analytics: Appointments
+  getAnalyticsAppointments: async (): Promise<AnalyticsAppointments[]> => {
+    return await apiRequest<AnalyticsAppointments[]>(
+      `${baseUrl}/doctors/weekly-appointments`,
+      { requiresAuth: true }
+    );
+  },
+
+  // Analytics: Revenue
+  getAnalyticsRevenue: async (): Promise<AnalyticsRevenue[]> => {
+    return await apiRequest<AnalyticsRevenue[]>(
+      `${baseUrl}/doctors/weekly-revenue`,
+      { requiresAuth: true }
+    );
+  },
+
+  // Analytics: Gender
+  getAnalyticsGender: async (): Promise<AnalyticsGender> => {
+    return await apiRequest<AnalyticsGender>(
+      `${baseUrl}/doctors/gender-stats`,
+      {
+        requiresAuth: true,
+      }
+    );
+  },
+
+  // Analytics: Age
+  getAnalyticsAge: async (): Promise<AnalyticsAge[]> => {
+    return await apiRequest<AnalyticsAge[]>(`${baseUrl}/doctors/age-ranges`, {
+      requiresAuth: true,
+    });
+  },
+
+  // Analytics: Status
+  getAnalyticsStatus: async (): Promise<AnalyticsStatus[]> => {
+    return await apiRequest<AnalyticsStatus[]>(
+      `${baseUrl}/doctors/weekly-status`,
+      {
+        requiresAuth: true,
       }
     );
   },
