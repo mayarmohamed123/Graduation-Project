@@ -97,11 +97,36 @@ export interface PatientAppointment {
   patientName: string;
   patientPhone: string;
   patientAge: number;
-  patientId : string;
+  patientId: string;
   patientGender: string;
   startAt: string;
   endAt: string;
   status: string;
   isPaid: boolean;
   clinicName: string;
+}
+export interface AnalyticsAppointments {
+  date: string;
+  appointmentsCount: number;
+}
+
+export interface AnalyticsRevenue {
+  date: string;
+  totalRevenue: number;
+}
+
+export interface AnalyticsGender {
+  male: number;
+  female: number;
+}
+
+export interface AnalyticsAge {
+  range: string;
+  count: number;
+}
+
+export interface AnalyticsStatus {
+  date: string;
+  confirmed: number;
+  cancelled: number;
 }

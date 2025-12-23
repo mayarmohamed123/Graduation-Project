@@ -7,6 +7,11 @@ import {
   PatientAppointment,
   Review,
   VerifySessionResponse,
+  AnalyticsAppointments,
+  AnalyticsRevenue,
+  AnalyticsGender,
+  AnalyticsAge,
+  AnalyticsStatus,
 } from "@/types/doctors";
 import { Notification } from "@/types";
 import { FilterParams, apiRequest } from "./api";
