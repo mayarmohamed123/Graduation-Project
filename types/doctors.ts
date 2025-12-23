@@ -130,3 +130,9 @@ export interface AnalyticsStatus {
   confirmed: number;
   cancelled: number;
 }
+
+export interface AnalyticsPatientRetention {
+  weekStart: string;
+  newPatients: number;
+  returningPatients: number;
+}

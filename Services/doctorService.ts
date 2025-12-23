@@ -12,6 +12,7 @@ import {
   AnalyticsGender,
   AnalyticsAge,
   AnalyticsStatus,
+  AnalyticsPatientRetention,
 } from "@/types/doctors";
 import { Notification } from "@/types";
 import { FilterParams, apiRequest } from "./api";
@@ -255,6 +256,17 @@ export const doctorService = {
   getAnalyticsStatus: async (): Promise<AnalyticsStatus[]> => {
     return await apiRequest<AnalyticsStatus[]>(
       `${baseUrl}/doctors/weekly-status`,
+      {
+        requiresAuth: true,
+      }
+    );
+  },
+  // Analytics: Patient Retention
+  getAnalyticsPatientRetention: async (): Promise<
+    AnalyticsPatientRetention[]
+  > => {
+    return await apiRequest<AnalyticsPatientRetention[]>(
+      `${baseUrl}/doctors/weekly-patients`,
       {
         requiresAuth: true,
       }

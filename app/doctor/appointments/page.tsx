@@ -86,19 +86,19 @@ export default function AppointmentsPage() {
                         title="Total Appointments"
                         value={stats.totalAppointmentCount}
                         icon={<Calendar className="w-6 h-6 text-teal-600" />}
-                        iconBgColor="bg-teal-50"
+                        bgColor="bg-teal-50"
                     />
                     <StatisticsCard
                         title="Total Revenue"
                         value={stats.totalRevenue}
                         icon={<DollarSign className="w-6 h-6 text-orange-600" />}
-                        iconBgColor="bg-orange-50"
+                        bgColor="bg-orange-50"
                     />
                     <StatisticsCard
                         title="Total Patients"
                         value={stats.totalPatientsCount}
                         icon={<Users className="w-6 h-6 text-green-600" />}
-                        iconBgColor="bg-green-50"
+                        bgColor="bg-green-50"
                     />
                 </div>
             ) : null}

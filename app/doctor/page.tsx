@@ -89,7 +89,7 @@ export default function DoctorDashboardPage() {
           title="Today's Appointments"
           value={stats?.todayAppointmentsCount || 0}
           icon={<Calendar className="w-6 h-6 text-[#2BBBC5]" />}
-          iconBgColor="bg-teal-50"
+          bgColor="bg-teal-50"
           trend={`${Math.abs(appointmentsTrend)}%`}
           trendDirection={appointmentsTrend >= 0 ? "up" : "down"}
         />
@@ -99,7 +99,7 @@ export default function DoctorDashboardPage() {
           title="Today's Revenue"
           value={`$${stats?.todayRevenue || 0}`}
           icon={<DollarSign className="w-6 h-6 text-green-600" />}
-          iconBgColor="bg-green-50"
+          bgColor="bg-green-50"
           trend={`${Math.abs(revenueTrend)}%`}
           trendDirection={revenueTrend >= 0 ? "up" : "down"}
         />
@@ -109,7 +109,7 @@ export default function DoctorDashboardPage() {
           title="Total Patients"
           value={stats?.totalPatientsCount || 0}
           icon={<MessageSquare className="w-6 h-6 text-purple-600" />}
-          iconBgColor="bg-purple-50"
+          bgColor="bg-purple-50"
         />
       </div>
 
