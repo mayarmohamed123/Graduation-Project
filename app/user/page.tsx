@@ -1,7 +1,5 @@
 "use client";
-import { useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { userService } from "@/Services/userService";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import {
@@ -18,33 +16,13 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
 import TopRatedDoctors from "@/Components/features/sections/TopRatedDoctors";
 import PrimaryButton from "@/Components/common/PrimaryButton";
+import { useLocation } from "@/hooks/useLocation";
 
 export default function Page() {
   const { user } = useAuth();
   const router = useRouter();
-  
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          try {
-            await userService.updateUserLocation(
-              position.coords.latitude,
-              position.coords.longitude
-            );
-            console.log("Location updated successfully");
-          } catch (error) {
-            console.error("Error updating location:", error);
-          }
-        },
-        (error) => {
-          console.error("Error getting location:", error);
-        }
-      );
-    } else {
-      console.error("Geolocation is not supported by this browser.");
-    }
-  }, []);
+  useLocation();
+
   const userName = user?.userName || "User";
 
   const actionCards = [

@@ -6,9 +6,8 @@ export function middleware(request: NextRequest) {
 
   // Check for tokens in cookies
   const authToken = request.cookies.get("auth_token")?.value;
-  const refreshToken = request.cookies.get("refresh_token")?.value;
 
-  const isAuth = authToken || refreshToken;
+  const isAuth = authToken;
 
   // If already authenticated and trying to access login/register, redirect to dashboard
   const authPaths = ["/login", "/register"];

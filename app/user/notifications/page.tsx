@@ -1,137 +1,23 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useAuth } from "@/hooks/useAuth";
-import { userService } from "@/Services/userService";
-import { createNotificationConnection } from "@/Services/notificationHub";
-import { Notification } from "@/types";
+import { useState } from "react";
 import Image from "next/image";
 import { notificationEmptyImage } from "@/assets";
-import toast from "react-hot-toast";
 import PageHeaderWithBack from "@/Components/common/PageHeaderWithBack";
 import Switch from "@/Components/common/Switch";
 import NotificationCard from "@/Components/common/NotificationCard";
-import { HubConnectionState } from "@microsoft/signalr";
-import { doctorService } from "@/Services/doctorService";
+import { useNotifications } from "@/hooks/useNotifications";
 
 type TabType = "appointments" | "orders";
 
 export default function NotificationsPage() {
-  const { isAuthenticated } = useAuth();
   const [activeTab, setActiveTab] = useState<TabType>("appointments");
-  const [appointments, setAppointments] = useState<Notification[]>([]);
-  const [orders, setOrders] = useState<Notification[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (!isAuthenticated) return;
-
-    // 1- Create SignalR connection
-    const connection = createNotificationConnection();
-
-    // 2- Define notification handler
-    const handleNotification = (data: Notification) => {
-      console.log("🔔 New Notification:", data);
-
-      // Show toast notification
-      toast.success(
-        <div>
-          <p className="font-semibold">{data.title}</p>
-          <p className="text-sm">{data.message}</p>
-        </div>,
-        {
-          duration: 5000,
-          position: "top-right",
-        }
-      );
-
-      // Add to state based on category
-      if (data.category === "appointment") {
-        setAppointments((prev) => [data, ...prev]);
-      } else if (data.category === "order") {
-        setOrders((prev) => [data, ...prev]);
-      }
-    };
-
-    // 3- Listen for notifications
-    connection.on("ReceiveNotification", handleNotification);
-
-    // 4- Start connection safely
-    const startConnection = async () => {
-      if (connection.state === HubConnectionState.Disconnected) {
-        try {
-          await connection.start();
-          console.log("SignalR Connected.");
-        } catch (err) {
-          console.error("SignalR Connection Error: ", err);
-        }
-      }
-    };
-
-    startConnection();
-
-    // 5- Fetch notifications once
-    fetchNotifications();
-
-    // Cleanup: Remove listener but keep connection open (singleton)
-    return () => {
-      connection.off("ReceiveNotification", handleNotification);
-    };
-  }, [isAuthenticated]);
-
-  const fetchNotifications = async () => {
-    try {
-      setLoading(true);
-      const data = await userService.getUserNotifications();
-      setAppointments(data.appointments);
-      setOrders(data.orders);
-    } catch (error) {
-      console.error("Failed to fetch notifications:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-  const handleMarkAsRead = async (id: number) => {
-    // Check both lists for the notification
-    const appointmentNotif = appointments.find((n) => n.id === id);
-    const orderNotif = orders.find((n) => n.id === id);
-
-    const notification = appointmentNotif || orderNotif;
-    if (!notification || notification.isRead) return;
-
-    // Optimistic update
-    if (appointmentNotif) {
-      setAppointments((prev) =>
-        prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
-      );
-    } else if (orderNotif) {
-      setOrders((prev) =>
-        prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
-      );
-    }
-
-    try {
-      await doctorService.markNotificationAsRead(id);
-    } catch (error) {
-      console.error("Failed to mark notification as read:", error);
-      // Revert on error
-      if (appointmentNotif) {
-        setAppointments((prev) =>
-          prev.map((n) => (n.id === id ? { ...n, isRead: false } : n))
-        );
-      } else if (orderNotif) {
-        setOrders((prev) =>
-          prev.map((n) => (n.id === id ? { ...n, isRead: false } : n))
-        );
-      }
-      toast.error("Failed to update notification status");
-    }
-  };
+  const { appointments, orders, isLoading, handleMarkAsRead } = useNotifications();
 
   const currentNotifications = activeTab === "appointments" ? appointments : orders;
   const hasNotifications = currentNotifications.length > 0;
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>

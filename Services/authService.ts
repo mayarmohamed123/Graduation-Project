@@ -1,4 +1,4 @@
-// Services/authService.ts
+import { User } from "@/types";
 import { apiRequest } from "./api";
 
 export interface LoginCredentials {
@@ -44,6 +44,13 @@ export interface ForgotPasswordResponse {
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "/api";
 
 class AuthService {
+  async getProfile(): Promise<User> {
+    return apiRequest<User>(`${API_BASE_URL}/User/profile`, {
+      method: "GET",
+      requiresAuth: true,
+    });
+  }
+
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
     return apiRequest<AuthResponse>(`${API_BASE_URL}/User/login`, {
       method: "POST",

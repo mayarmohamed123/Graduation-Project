@@ -10,7 +10,7 @@ const initialState: UserSliceState = {
   error: null,
 };
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "/api";
+
 
 // --- Async Thunks ---
 
@@ -19,52 +19,13 @@ export const fetchUserData = createAsyncThunk(
   "user/fetchUserData",
   async (_, { rejectWithValue }) => {
     try {
-      if (!API_BASE_URL) {
-        throw new Error("API base URL is not configured");
-      }
-
-      console.log("📡 fetchUserData: Making request to /User/profile");
-      const response = await fetch(`${API_BASE_URL}/User/profile`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "ngrok-skip-browser-warning": "true",
-        },
-        credentials: "include", // Always include cookies
-      });
-
-      console.log("📡 fetchUserData: Response status:", response.status);
-
-      if (!response.ok) {
-        // If it's a 401, it's often just someone who hasn't logged in yet
-        if (response.status === 401) {
-          console.log("🔐 fetchUserData: User is not authenticated (401)");
-          return rejectWithValue("Unauthorized");
-        }
-
-        const errorData = await response.json().catch(() => null);
-        console.error("❌ fetchUserData error:", {
-          status: response.status,
-          statusText: response.statusText,
-          errorData
-        });
-        throw new Error(
-          errorData?.message || `Failed to fetch user profile (${response.status})`
-        );
-      }
-
-      const userData: User = await response.json();
-      console.log("✅ fetchUserData success:", userData);
+      const userData = await authService.getProfile();
       return userData;
     } catch (error: unknown) {
       if (error instanceof Error && error.message === "Unauthorized") {
         return rejectWithValue("Unauthorized");
       }
-      console.error("❌ fetchUserData catch block:", error);
-      const message =
-        error instanceof Error
-          ? error.message
-          : "Unable to fetch user profile information";
+      const message = error instanceof Error ? error.message : "Failed to fetch profile";
       return rejectWithValue(message);
     }
   }
@@ -127,21 +88,16 @@ export const checkAuth = createAsyncThunk(
   "user/checkAuth",
   async (_, { dispatch, rejectWithValue }) => {
     try {
-      console.log("🔐 checkAuth: Starting...");
-      
       // With HTTP-only cookies, we verify auth by trying to fetch the profile
       const user = await dispatch(fetchUserData()).unwrap();
-      console.log("🔐 checkAuth: User data fetched successfully:", user);
       return { user };
     } catch (error: unknown) {
       // If it's a simple 401 Unauthorized, we don't need to log it as a big error
       if (error === "Unauthorized" || (error as { message?: string })?.message === "Unauthorized") {
-        console.log("🔐 checkAuth: No active session found.");
         return rejectWithValue("No session");
       }
       
       const message = error instanceof Error ? error.message : "Session expired";
-      console.error("🔐 checkAuth: Error -", message);
       return rejectWithValue(message);
     }
   }
