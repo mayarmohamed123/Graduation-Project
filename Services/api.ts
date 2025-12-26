@@ -57,6 +57,7 @@ export const apiRequest = async <T = unknown>(
       headers,
       body,
       credentials, // Use the passed or default credentials
+      cache: "no-store",
       ...restOptions,
     });
   };
@@ -66,17 +67,10 @@ export const apiRequest = async <T = unknown>(
 
     // Handle 401 Unauthorized - attempt to refresh token
     if (response.status === 401 && requiresAuth) {
-      try {
         // Attempt to refresh the token
         await authService.refreshToken();
-        
         // If refresh succeeded, retry the original request
         response = await makeRequest();
-      } catch (refreshError) {
-        console.error("Token refresh failed:", refreshError);
-        authService.logout();
-        throw new Error("Session expired. Please log in again.");
-      }
     }
 
     if (!response.ok) {

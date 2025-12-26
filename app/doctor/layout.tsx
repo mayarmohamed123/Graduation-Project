@@ -1,4 +1,5 @@
 import DoctorNavbar from "@/Components/layout/DoctorNavbar";
+export const dynamic = "force-dynamic";
 import { DoctorSidebar } from "@/Components/features/doctor";
 import { ProtectedRoute } from "@/Components/auth";
 

@@ -22,7 +22,7 @@ class MedicineService {
     }`;
 
     return await apiRequest<Medicine[]>(url, {
-      next: { revalidate: 60 }, // ✅ ISR enabled
+      cache: "no-store", // ✅ Caching disabled
     });
   }
 
@@ -33,7 +33,7 @@ class MedicineService {
         process.env.NEXT_PUBLIC_API_BASE_URL
       }/medicine/search/${encodeURIComponent(name)}`,
       {
-        next: { revalidate: 60 }, // ✅ ISR enabled
+        cache: "no-store", // ✅ Caching disabled
       }
     );
   }
@@ -43,7 +43,7 @@ class MedicineService {
     return await apiRequest<Medicine>(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/medicine/${id}`,
       {
-        next: { revalidate: 60 }, // ✅ ISR enabled
+        cache: "no-store", // ✅ Caching disabled
       }
     );
   }
@@ -55,7 +55,7 @@ class MedicineService {
         name
       )}/alternatives`,
       {
-        next: { revalidate: 60 }, // ✅ ISR enabled
+        cache: "no-store", // ✅ Caching disabled
       }
     );
   }

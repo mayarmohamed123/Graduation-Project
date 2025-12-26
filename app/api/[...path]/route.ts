@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+
 // The real backend URL from your logs
 const REAL_BACKEND_URL = "https://unendingly-unfoul-emmy.ngrok-free.dev/api";
 

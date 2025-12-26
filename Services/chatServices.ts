@@ -32,7 +32,7 @@ export interface Message {
 
 export async function fetchMyThreads(): Promise<Thread[]> {
   return apiRequest<Thread[]>(`${API_BASE}/chat/my-threads`, {
-    next: { revalidate: 30 },
+    cache: "no-store",
   });
 }
 
@@ -40,7 +40,7 @@ export async function fetchMessagesOfThread(
   threadId: number
 ): Promise<Message[]> {
   return apiRequest<Message[]>(`${API_BASE}/chat/${threadId}/messages`, {
-    next: { revalidate: 30 },
+    cache: "no-store",
   });
 }
 

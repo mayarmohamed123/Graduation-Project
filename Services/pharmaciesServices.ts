@@ -7,7 +7,7 @@ class PharmacyService {
     const res = await apiRequest<{ data: Pharmacy[] } | Pharmacy[]>(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/Pharmacy`,
       {
-        next: { revalidate: 60 }, // ✅ ISR enabled
+        cache: "no-store", // ✅ Caching disabled
         requiresAuth: false,
       }
     );
@@ -20,7 +20,7 @@ class PharmacyService {
     const res = await apiRequest<{ data: Pharmacy[] } | Pharmacy[]>(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/pharmacy/top-pharmacies`,
       {
-        next: { revalidate: 60 },
+        cache: "no-store",
         requiresAuth: false,
       }
     );

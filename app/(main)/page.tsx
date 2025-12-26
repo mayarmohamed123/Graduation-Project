@@ -5,7 +5,7 @@ import JoinSection from "@/Components/features/sections/JoinSection";
 import ServicesSection from "@/Components/features/sections/ServicesSection";
 import WorkSection from "@/Components/features/sections/WorkSection";
 
-export const revalidate = 3600; // Revalidate static home every hour
+export const revalidate = 0; // Disable cache
 
 
 

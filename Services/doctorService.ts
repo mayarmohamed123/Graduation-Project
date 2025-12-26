@@ -25,7 +25,7 @@ export const doctorService = {
   getAllDoctors: async (): Promise<Doctor[]> => {
     return await apiRequest<Doctor[]>(
       `${baseUrl}/doctors/allDoctorsShowToRegularUser`,
-      { next: { revalidate: 60 } }
+      { cache: "no-store" }
     );
   },
 
@@ -40,13 +40,13 @@ export const doctorService = {
     });
 
     const url = `${baseUrl}/doctors/filterDoctors?${queryParams.toString()}`;
-    return await apiRequest<Doctor[]>(url, { next: { revalidate: 60 } });
+    return await apiRequest<Doctor[]>(url, { cache: "no-store" });
   },
 
   // Get doctor by ID
   getDoctorById: async (id: number): Promise<Doctor> => {
     return await apiRequest<Doctor>(`${baseUrl}/doctors/${id}`, {
-      next: { revalidate: 60 },
+        cache: "no-store",
     });
   },
 
@@ -66,7 +66,7 @@ export const doctorService = {
   // Get Doctor Reviews
   GetDoctorReviews: async (id: number): Promise<Review> => {
     return await apiRequest<Review>(`${baseUrl}/Review/doctor/${id}`, {
-      next: { revalidate: 60 },
+        cache: "no-store",
     });
   },
 
@@ -171,7 +171,7 @@ export const doctorService = {
     return await apiRequest<{ appointmentRequests: Notification[] }>(
       `${baseUrl}/notifications/user`,
       {
-        next: { revalidate: 30 },
+        cache: "no-store",
       }
     );
   },
@@ -215,7 +215,7 @@ export const doctorService = {
   // Get top rated doctors
   getTopRatedDoctors: async (): Promise<Doctor[]> => {
     return await apiRequest<Doctor[]>(`${baseUrl}/doctors/top-doctors`, {
-      next: { revalidate: 1800 },
+      cache: "no-store",
       credentials: "omit", // Don't send tokens
       requiresAuth: false,
     });

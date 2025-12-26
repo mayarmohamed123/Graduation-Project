@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+
 const BACKEND_BASE_URL =
   process.env.BACKEND_BASE_URL ||
   "https://unendingly-unfoul-emmy.ngrok-free.dev";
