@@ -17,16 +17,26 @@ export async function GET(request: NextRequest) {
   // If we have an auth token, validate it by calling the backend
   if (authToken) {
     try {
+      // Forward both cookies to the backend
+      const cookieHeader = [
+        authToken ? `auth_token=${authToken}` : "",
+        refreshToken ? `refresh_token=${refreshToken}` : "",
+      ]
+        .filter(Boolean)
+        .join("; ");
+
       const validateResponse = await fetch(
         `${BACKEND_BASE_URL}/api/User/profile`,
         {
           method: "GET",
           headers: {
-            Cookie: `auth_token=${authToken}`,
+            Cookie: cookieHeader,
             "ngrok-skip-browser-warning": "true",
           },
         }
       );
+
+      console.log("Auth check - Profile validation status:", validateResponse.status);
 
       if (validateResponse.ok) {
         // Token is valid
@@ -39,6 +49,7 @@ export async function GET(request: NextRequest) {
 
   // Auth token is expired or missing, try to refresh
   if (refreshToken) {
+    console.log("Auth check - Attempting token refresh...");
     try {
       const refreshResponse = await fetch(
         `${BACKEND_BASE_URL}/api/User/refresh`,
@@ -51,6 +62,8 @@ export async function GET(request: NextRequest) {
         }
       );
 
+      console.log("Auth check - Refresh response status:", refreshResponse.status);
+
       if (refreshResponse.ok) {
         // Token refreshed successfully
         // Forward the Set-Cookie headers from the refresh response to the client
@@ -58,6 +71,7 @@ export async function GET(request: NextRequest) {
 
         // Get all Set-Cookie headers from the refresh response
         const setCookieHeaders = refreshResponse.headers.getSetCookie();
+        console.log("Auth check - Set-Cookie headers from refresh:", setCookieHeaders.length);
         setCookieHeaders.forEach((cookie) => {
           response.headers.append("Set-Cookie", cookie);
         });
@@ -70,5 +84,6 @@ export async function GET(request: NextRequest) {
   }
 
   // Both validation and refresh failed
+  console.log("Auth check - Both validation and refresh failed, returning unauthenticated");
   return NextResponse.json({ authenticated: false });
 }
