@@ -56,6 +56,12 @@ export interface AppointmentResponse {
     endAt: string; // ISO date string
   };
 }
+
+export interface AppointmentSlot {
+  startAt: string; // ISO date string e.g. "2025-12-21T10:00:00"
+  endAt: string; // ISO date string e.g. "2025-12-21T10:30:00"
+  isActive: boolean;
+}
 export interface BookAppointmentData {
   doctorId: number;
   clinicId: number;

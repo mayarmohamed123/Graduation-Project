@@ -1,6 +1,7 @@
 // services/doctorService.ts
 import {
   AppointmentResponse,
+  AppointmentSlot,
   BookAppointmentData,
   CreateSessionResponse,
   Doctor,
@@ -272,4 +273,18 @@ export const doctorService = {
       }
     );
   },
+
+  // Get available appointment slots for a doctor on a specific date
+  getDoctorAvailableSlots: async (
+    doctorId: number,
+    date: string // Format: YYYY-MM-DD
+  ): Promise<AppointmentSlot[]> => {
+    return await apiRequest<AppointmentSlot[]>(
+      `${baseUrl}/doctors/${doctorId}/slots?date=${date}`,
+      {
+        requiresAuth: true,
+      }
+    );
+  },
 };
+

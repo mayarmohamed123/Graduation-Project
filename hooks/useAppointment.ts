@@ -1,20 +1,18 @@
 import { useState, useEffect, useCallback } from "react";
 import { doctorService } from "@/Services/doctorService";
 import { startConversationWithDoctor } from "@/Services/chatServices";
-import { Doctor, Review } from "@/types/doctors";
+import { Doctor, Review, AppointmentSlot } from "@/types/doctors";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
-export const TIME_SLOTS = [
-  "09:00",
-  "09:30",
-  "10:00",
-  "10:30",
-  "11:00",
-  "11:30",
-  "14:00",
-  "14:30",
-];
+// Helper to format date for API (YYYY-MM-DD)
+const formatDateForApi = (dateString: string): string => {
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
 
 export const useAppointment = (id: string) => {
   const router = useRouter();
@@ -23,8 +21,17 @@ export const useAppointment = (id: string) => {
   const [isLoading, setIsLoading] = useState(true);
   const [bookLoading, setBookLoading] = useState(false);
   const [chatLoading, setChatLoading] = useState(false);
-  const [selectedDate, setSelectedDate] = useState<string>("May 9, 2025");
-  const [selectedTime, setSelectedTime] = useState<string>("10:00");
+  const [slotsLoading, setSlotsLoading] = useState(false);
+  
+  // Initialize with today's date
+  const today = new Date().toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+  const [selectedDate, setSelectedDate] = useState<string>(today);
+  const [selectedSlot, setSelectedSlot] = useState<AppointmentSlot | null>(null);
+  const [availableSlots, setAvailableSlots] = useState<AppointmentSlot[]>([]);
 
   const fetchDoctorData = useCallback(async () => {
     try {
@@ -49,11 +56,41 @@ export const useAppointment = (id: string) => {
     }
   }, [id]);
 
+  // Fetch available slots when date changes
+  const fetchAvailableSlots = useCallback(async () => {
+    if (!id || !selectedDate) return;
+
+    try {
+      setSlotsLoading(true);
+      const doctorId = parseInt(id, 10);
+      if (isNaN(doctorId)) return;
+
+      const formattedDate = formatDateForApi(selectedDate);
+      const slots = await doctorService.getDoctorAvailableSlots(doctorId, formattedDate);
+      setAvailableSlots(slots);
+      
+      // Clear selected slot when date changes
+      setSelectedSlot(null);
+    } catch (error) {
+      console.error("Failed to fetch available slots:", error);
+      setAvailableSlots([]);
+    } finally {
+      setSlotsLoading(false);
+    }
+  }, [id, selectedDate]);
+
   useEffect(() => {
     if (id) {
       fetchDoctorData();
     }
   }, [id, fetchDoctorData]);
+
+  // Fetch slots when date changes (after doctor is loaded)
+  useEffect(() => {
+    if (doctor && selectedDate) {
+      fetchAvailableSlots();
+    }
+  }, [doctor, selectedDate, fetchAvailableSlots]);
 
   const bookAppointment = async (patientInfo: {
     PatientName: string;
@@ -61,25 +98,16 @@ export const useAppointment = (id: string) => {
     patientAge: number;
     patientGender: string;
   }) => {
-    if (!doctor) return;
+    if (!doctor || !selectedSlot) return;
 
     try {
       setBookLoading(true);
 
-      const date = new Date(selectedDate);
-      const [hours, minutes] = selectedTime.split(":");
-      date.setHours(Number(hours));
-      date.setMinutes(Number(minutes));
-
-      const startAt = date.toISOString();
-      const endDate = new Date(date.getTime() + 30 * 60000);
-      const endAt = endDate.toISOString();
-
       const payload = {
         doctorId: doctor.id,
         clinicId: doctor.clinicId,
-        startAt,
-        endAt,
+        startAt: selectedSlot.startAt,
+        endAt: selectedSlot.endAt,
         PatientName: patientInfo.PatientName,
         PatientPhone: patientInfo.PatientPhone,
         patientAge: patientInfo.patientAge,
@@ -129,10 +157,12 @@ export const useAppointment = (id: string) => {
     isLoading,
     bookLoading,
     chatLoading,
+    slotsLoading,
     selectedDate,
     setSelectedDate,
-    selectedTime,
-    setSelectedTime,
+    selectedSlot,
+    setSelectedSlot,
+    availableSlots,
     bookAppointment,
     startDoctorChat,
     refetch: fetchDoctorData,
