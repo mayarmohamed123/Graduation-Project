@@ -1,5 +1,5 @@
 "use client";
-import { useAuth } from "@/hooks/useAuth";
+import { useUser } from "@/hooks/useUser";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import {
@@ -19,11 +19,11 @@ import PrimaryButton from "@/Components/common/PrimaryButton";
 import { useLocation } from "@/hooks/useLocation";
 
 export default function Page() {
-  const { user } = useAuth();
+  const { user, isLoading } = useUser();
   const router = useRouter();
   useLocation();
 
-  const userName = user?.userName || "User";
+  const userName = user?.userName;
 
   const actionCards = [
     {
@@ -65,7 +65,9 @@ export default function Page() {
         <div className="max-w-4xl w-full">
           {/* Header with Logout */}
       
-            <h1 className="heading text-center">Welcome back, {userName}!👋</h1>
+            <h1 className="heading text-center">
+              Welcome back, {isLoading ? "..." : (userName || "User")}!👋
+            </h1>
 
           <p className="text-[#8E8E8E] text-lg mb-10 text-center">
             Take care of your health today ,explore trusted doctors, order

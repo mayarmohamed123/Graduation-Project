@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 const initialState: UserSliceState = {
   user: null,
   isAuthenticated: false,
-  isLoading: true, // Start true to check auth on load
+  isLoading: false, // No auto-check on load, ProtectedRoute handles auth
   error: null,
 };
 
@@ -84,24 +84,6 @@ export const logoutUser = createAsyncThunk(
   }
 );
 
-export const checkAuth = createAsyncThunk(
-  "user/checkAuth",
-  async (_, { dispatch, rejectWithValue }) => {
-    try {
-      // With HTTP-only cookies, we verify auth by trying to fetch the profile
-      const user = await dispatch(fetchUserData()).unwrap();
-      return { user };
-    } catch (error: unknown) {
-      // If it's a simple 401 Unauthorized, we don't need to log it as a big error
-      if (error === "Unauthorized" || (error as { message?: string })?.message === "Unauthorized") {
-        return rejectWithValue("No session");
-      }
-      
-      const message = error instanceof Error ? error.message : "Session expired";
-      return rejectWithValue(message);
-    }
-  }
-);
 
 const userSlice = createSlice({
   name: "user",
@@ -124,26 +106,6 @@ const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Check Auth
-      .addCase(checkAuth.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(checkAuth.fulfilled, (state, action) => {
-        state.isLoading = false;
-        if (action.payload) {
-          state.user = action.payload.user;
-          state.isAuthenticated = true;
-        } else {
-          state.user = null;
-          state.isAuthenticated = false;
-        }
-      })
-      .addCase(checkAuth.rejected, (state) => {
-        state.isLoading = false;
-        state.user = null;
-        state.isAuthenticated = false;
-      })
-
       // Login
       .addCase(loginUser.pending, (state) => {
         state.isLoading = true;
