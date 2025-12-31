@@ -1,24 +1,24 @@
 import { DashboardNavbar, DashboardSidebar } from "@/Components/layout";
 export const dynamic = "force-dynamic";
-import { ProtectedRoute } from "@/Components/auth";
+// import { ProtectedRoute } from "@/Components/auth";
 
-export default function DoctorLayout({
+export default function PharmacyLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <ProtectedRoute>
+    // <ProtectedRoute>
       <div className="flex h-screen bg-gray-50 overflow-hidden">
         {/* Sidebar */}
-        <DashboardSidebar role="doctor" />
+        <DashboardSidebar role="pharmacy" />
 
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col h-full overflow-hidden">
-          <DashboardNavbar role="doctor" />
+          <DashboardNavbar role="pharmacy" />
           <main className="flex-1 overflow-y-auto p-6">{children}</main>
         </div>
       </div>
-    </ProtectedRoute>
+    // </ProtectedRoute>
   );
 }

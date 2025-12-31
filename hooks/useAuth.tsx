@@ -73,7 +73,7 @@ export function useAuth() {
     let targetPath = "/user";
     if (normalizedRole === "doctor") {
       targetPath = "/doctor";
-    } else if (normalizedRole === "pharmacy") {
+    } else if (normalizedRole === "pharmacist") {
       targetPath = "/pharmacy";
     } else if (normalizedRole === "admin") {
       targetPath = "/admin";

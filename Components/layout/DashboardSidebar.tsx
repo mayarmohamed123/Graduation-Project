@@ -13,36 +13,53 @@ import {
   BarChart3,
   Settings,
   LogOut,
+  Package,
+  ShoppingCart,
 } from "lucide-react";
 import { sehhaLogo } from "@/assets";
 import { useAuth } from "@/hooks/useAuth";
 
-const menuItems = [
-  { name: "Dashboard", icon: LayoutDashboard, href: "/doctor" },
-  { name: "Patients", icon: Users, href: "/doctor/patients" },
-  { name: "Appointments", icon: Calendar, href: "/doctor/appointments" },
-  { name: "Messages", icon: MessageSquare, href: "/doctor/messages" },
-  { name: "Notifications", icon: Bell, href: "/doctor/notifications" },
-  { name: "Analytics", icon: BarChart3, href: "/doctor/analytics" },
-  { name: "Settings", icon: Settings, href: "/doctor/settings" },
-];
+type Role = "doctor" | "pharmacy";
 
-export default function DoctorSidebar() {
+interface DashboardSidebarProps {
+  role: Role;
+}
+
+export default function DashboardSidebar({ role }: DashboardSidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const { logout } = useAuth();
 
   const handleLogout = () => {
     logout();
-    router.push("/login");
+    router.push("/");
   };
 
   const isActive = (href: string) => {
-    if (href === "/doctor") {
-      return pathname === href;
-    }
-    return pathname?.startsWith(href);
+    return pathname === href || (href !== `/${role}` && pathname?.startsWith(href));
   };
+
+  const doctorMenuItems = [
+    { name: "Dashboard", icon: LayoutDashboard, href: "/doctor" },
+    { name: "Patients", icon: Users, href: "/doctor/patients" },
+    { name: "Appointments", icon: Calendar, href: "/doctor/appointments" },
+    { name: "Messages", icon: MessageSquare, href: "/doctor/messages" },
+    { name: "Notifications", icon: Bell, href: "/doctor/notifications" },
+    { name: "Analytics", icon: BarChart3, href: "/doctor/analytics" },
+    { name: "Settings", icon: Settings, href: "/doctor/settings" },
+  ];
+
+  const pharmacyMenuItems = [
+    { name: "Dashboard", icon: LayoutDashboard, href: "/pharmacy" },
+    { name: "Inventory", icon: Package, href: "/pharmacy/inventory" },
+    { name: "Orders", icon: ShoppingCart, href: "/pharmacy/orders" },
+    { name: "Messages", icon: MessageSquare, href: "/pharmacy/messages" },
+    { name: "Notifications", icon: Bell, href: "/pharmacy/notifications" },
+    { name: "Analytics", icon: BarChart3, href: "/pharmacy/analytics" },
+    { name: "Settings", icon: Settings, href: "/pharmacy/settings" },
+  ];
+
+  const menuItems = role === "doctor" ? doctorMenuItems : pharmacyMenuItems;
 
   return (
     <aside className="w-64 bg-[#2BBBC5] text-white min-h-screen flex flex-col">
