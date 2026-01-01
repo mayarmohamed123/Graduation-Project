@@ -37,12 +37,12 @@ export default function RootLayout({
       <body
         suppressHydrationWarning
         className={`${geistSans.variable} ${geistMono.variable} antialiased `}>
-        
+
         <ReduxProvider>
           {children}
           <Toaster />
         </ReduxProvider>
-        
+
       </body>
     </html>
   );

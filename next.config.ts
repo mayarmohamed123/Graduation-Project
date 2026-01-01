@@ -15,7 +15,6 @@ const nextConfig = {
   experimental: {
     // other flags here
   },
-  cacheComponents: true,
   async rewrites() {
     return [
       {
