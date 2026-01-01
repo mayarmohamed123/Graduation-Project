@@ -23,7 +23,7 @@ export default function InventoryPage() {
         setIsLoading(true);
         // Using hardcoded ID 3 as per user request
         const [medicinesData, analysisData, categDashboard] = await Promise.all([
-          pharmacyService.getPharmacyMedicines(3),
+          pharmacyService.getPharmacyMedicines(),
           pharmacyService.getInventoryAnalysis(),
           pharmacyService.getCategoriesDashboard()
         ]);

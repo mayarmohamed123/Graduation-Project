@@ -45,9 +45,9 @@ class PharmacyService {
   }
 
   // Get all medicines for a specific pharmacy
-  async getPharmacyMedicines(pharmacyId: number): Promise<Medicine[]> {
+  async getPharmacyMedicines(): Promise<Medicine[]> {
     return await apiRequest<Medicine[]>(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/medicine/pharmacy/${pharmacyId}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/medicine/pharmacy`,
       {
         cache: "no-store",
         requiresAuth: true,

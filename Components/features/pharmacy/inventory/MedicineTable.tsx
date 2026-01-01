@@ -105,7 +105,7 @@ export const MedicineTable = ({
                       <Badge variant="destructive" className="bg-red-50 text-red-500 border-none px-3 py-1 font-bold text-[9px] uppercase tracking-tighter">
                         Out of Stock
                       </Badge>
-                    ) : medicine.quantity < 20 ? (
+                    ) : medicine.quantity < 5 ? (
                       <Badge className="bg-amber-50 text-amber-600 hover:bg-amber-50 border-none px-3 py-1 font-bold text-[9px] uppercase tracking-tighter">
                         Low Stock
                       </Badge>
