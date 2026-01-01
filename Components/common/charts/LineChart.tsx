@@ -28,6 +28,7 @@ interface LineChartProps {
     height?: string;
     showGrid?: boolean;
     showLegend?: boolean;
+    headerAction?: React.ReactNode;
 }
 
 export default function LineChart({
@@ -38,11 +39,15 @@ export default function LineChart({
     height = "h-[400px]",
     showGrid = true,
     showLegend = true,
+    headerAction,
 }: LineChartProps) {
     return (
         <Card className="shadow-sm border-none">
             <CardHeader>
-                <CardTitle>{title}</CardTitle>
+                <div className="flex items-center justify-between">
+                    <CardTitle>{title}</CardTitle>
+                    {headerAction}
+                </div>
             </CardHeader>
             <CardContent className={height}>
                 <ResponsiveContainer width="100%" height="100%">

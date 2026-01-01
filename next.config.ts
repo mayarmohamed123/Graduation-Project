@@ -12,6 +12,10 @@ const nextConfig = {
       },
     ],
   },
+  experimental: {
+    // other flags here
+  },
+  cacheComponents: true,
   async rewrites() {
     return [
       {
@@ -20,7 +24,8 @@ const nextConfig = {
       },
       {
         source: "/hubs/:path*",
-        destination: "https://unendingly-unfoul-emmy.ngrok-free.dev/hubs/:path*",
+        destination:
+          "https://unendingly-unfoul-emmy.ngrok-free.dev/hubs/:path*",
       },
     ];
   },

@@ -20,6 +20,7 @@ interface BarChartProps {
     height?: string;
     showGrid?: boolean;
     barRadius?: [number, number, number, number];
+    headerAction?: React.ReactNode;
 }
 
 export default function BarChart({
@@ -31,11 +32,15 @@ export default function BarChart({
     height = "h-[300px]",
     showGrid = true,
     barRadius = [4, 4, 0, 0],
+    headerAction,
 }: BarChartProps) {
     return (
         <Card className="shadow-sm border-none">
             <CardHeader>
-                <CardTitle>{title}</CardTitle>
+                <div className="flex items-center justify-between">
+                    <CardTitle>{title}</CardTitle>
+                    {headerAction}
+                </div>
             </CardHeader>
             <CardContent className={height}>
                 <ResponsiveContainer width="100%" height="100%">

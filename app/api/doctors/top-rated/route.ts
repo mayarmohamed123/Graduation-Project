@@ -3,8 +3,6 @@ import { NextResponse } from "next/server";
 const API_BASE_URL =
   process.env.API_BASE_URL || process.env.NEXT_PUBLIC_API_BASE_URL;
 
-export const revalidate = 1800; // cache for 30 minutes
-
 export async function GET() {
   if (!API_BASE_URL) {
     return NextResponse.json(
@@ -15,7 +13,7 @@ export async function GET() {
 
   try {
     const response = await fetch(`${API_BASE_URL}/doctors/top-doctors`, {
-      next: { revalidate },
+      // next: { revalidate },
     });
 
     if (!response.ok) {
@@ -38,4 +36,3 @@ export async function GET() {
     );
   }
 }
-

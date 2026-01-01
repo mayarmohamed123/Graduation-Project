@@ -2,44 +2,38 @@
 
 import {
     AnalyticsAge,
-    AnalyticsAppointments,
     AnalyticsGender,
-    AnalyticsRevenue,
     AnalyticsStatus,
     AnalyticsPatientRetention,
 } from "@/types/doctors";
-import { Calendar, CheckCircle, Clock, XCircle } from "lucide-react";
+import { AppointmentStats } from "@/types/appointments";
+import { Calendar, DollarSign, Users } from "lucide-react";
 import { AreaChart, BarChart, PieChart, LineChart } from "@/Components/common/charts";
 import StatisticsCard from "@/Components/features/doctor/StatisticsCard";
+import SmartChartWrapper from "./SmartChartWrapper";
+import { doctorService } from "@/Services/doctorService";
 
 interface AnalyticsDashboardProps {
-    appointmentsData: AnalyticsAppointments[];
-    revenueData: AnalyticsRevenue[];
     genderData: AnalyticsGender;
     ageData: AnalyticsAge[];
     statusData: AnalyticsStatus[];
     retentionData: AnalyticsPatientRetention[];
+    stats: AppointmentStats;
 }
 
 export default function AnalyticsDashboard({
-    appointmentsData,
-    revenueData,
     genderData,
     ageData,
     statusData,
     retentionData,
+    stats,
 }: AnalyticsDashboardProps) {
-    // Calculate specific stats for cards
-    const today = new Date().toISOString().split("T")[0];
-    const todayStats = appointmentsData.find((d) => d.date === today);
-    const todayAppointments = todayStats?.appointmentsCount || 0;
+    // Calculate specific stats for cards using stats API
+    const totalAppointments = stats.totalPenddingAppointmentCount + stats.totalConfirmedAppointmentCount + stats.totalCompletedAppointmentCount;
+    const totalRevenue = stats.totalRevenue;
+    const totalPatients = stats.totalPatientsCount;
 
-    // Calculate totals from status data
-    const totalCompleted = statusData.reduce((acc, curr) => acc + curr.confirmed, 0);
-    const totalCancelled = statusData.reduce((acc, curr) => acc + curr.cancelled, 0);
-
-    // Placeholder for "Upcoming"
-    const upcomingAppointments = 0;
+    // Prepare gender data for PieChart
 
     // Prepare gender data for PieChart
     const genderChartData = [
@@ -50,54 +44,60 @@ export default function AnalyticsDashboard({
     return (
         <div className="space-y-6">
             {/* Top Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <StatisticsCard
-                    title="Today's Appointments"
-                    value={todayAppointments}
+                    title="Total Appointments"
+                    value={totalAppointments}
                     icon={<Calendar className="h-6 w-6 text-primary" />}
                     bgColor="bg-teal-50"
                 />
                 <StatisticsCard
-                    title="Upcoming"
-                    value={upcomingAppointments}
-                    icon={<Clock className="h-6 w-6 text-yellow-500" />}
-                    bgColor="bg-yellow-50"
-                />
-                <StatisticsCard
-                    title="Completed"
-                    value={totalCompleted}
-                    icon={<CheckCircle className="h-6 w-6 text-green-500" />}
+                    title="Total Revenue"
+                    value={`$${totalRevenue.toLocaleString()}`}
+                    icon={<DollarSign className="h-6 w-6 text-green-500" />}
                     bgColor="bg-green-50"
                 />
                 <StatisticsCard
-                    title="Cancelled"
-                    value={totalCancelled}
-                    icon={<XCircle className="h-6 w-6 text-red-500" />}
-                    bgColor="bg-red-50"
+                    title="Total Patients"
+                    value={totalPatients}
+                    icon={<Users className="h-6 w-6 text-blue-500" />}
+                    bgColor="bg-blue-50"
                 />
             </div>
 
             {/* Row 1: Appointment Trends & Revenue Trends */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <AreaChart
-                    data={appointmentsData}
-                    title="Appointments Trends"
-                    subtitle="Spend this week"
-                    dataKey="appointmentsCount"
-                    xAxisKey="date"
-                    color="#2bbbc5"
-                    gradientId="appointmentsGradient"
-                />
-                <AreaChart
-                    data={revenueData}
-                    title="Revenue Trends"
-                    subtitle="Spend this week"
-                    dataKey="totalRevenue"
-                    xAxisKey="date"
-                    color="#82ca9d"
-                    gradientId="revenueGradient"
-                    tooltipFormatter={(value) => [`$${value ?? 0}`, "Revenue"]}
-                />
+                <SmartChartWrapper fetchData={(y, m) => doctorService.getDailyAppointments(y, m)}>
+                    {(data, loading, filters) => (
+                        <AreaChart
+                            data={data}
+                            title="Appointments Trends"
+                            subtitle="Daily appointments"
+                            dataKey="appointmentsCount"
+                            xAxisKey="date"
+                            color="#2bbbc5"
+                            gradientId="appointmentsGradient"
+                            tooltipFormatter={(value) => [`${value ?? 0}`, "Appointments"]}
+                            headerAction={filters}
+                        />
+                    )}
+                </SmartChartWrapper>
+
+                <SmartChartWrapper fetchData={(y, m) => doctorService.getDailyRevenue(y, m)}>
+                    {(data, loading, filters) => (
+                        <AreaChart
+                            data={data}
+                            title="Revenue Trends"
+                            subtitle="Daily revenue"
+                            dataKey="totalRevenue"
+                            xAxisKey="date"
+                            color="#82ca9d"
+                            gradientId="revenueGradient"
+                            tooltipFormatter={(value) => [`$${value ?? 0}`, "Revenue"]}
+                            headerAction={filters}
+                        />
+                    )}
+                </SmartChartWrapper>
             </div>
 
             {/* Row 2: Patient Insights & Demographics */}

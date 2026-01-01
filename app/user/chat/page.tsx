@@ -3,8 +3,6 @@
 import Chat from "@/Components/features/chat/Chat";
 import { Suspense } from "react";
 
-export const dynamic = "force-dynamic";
-
 export default function ChatPage() {
   return (
     <Suspense fallback={null}>

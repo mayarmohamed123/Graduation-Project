@@ -272,4 +272,29 @@ export const doctorService = {
       }
     );
   },
+  // Analytics: Daily Revenue & Appointments
+  getDailyRevenue: async (
+    year: number,
+    month: number
+  ): Promise<
+    { date: string; appointmentsCount: number; totalRevenue: number }[]
+  > => {
+    return await apiRequest<
+      { date: string; appointmentsCount: number; totalRevenue: number }[]
+    >(`${baseUrl}/doctors/daily-revenue?year=${year}&month=${month}`, {
+      requiresAuth: true,
+    });
+  },
+  getDailyAppointments: async (
+    year: number,
+    month: number
+  ): Promise<
+    { date: string; appointmentsCount: number; totalRevenue: number }[]
+  > => {
+    return await apiRequest<
+      { date: string; appointmentsCount: number; totalRevenue: number }[]
+    >(`${baseUrl}/doctors/daily-appointments?year=${year}&month=${month}`, {
+      requiresAuth: true,
+    });
+  },
 };

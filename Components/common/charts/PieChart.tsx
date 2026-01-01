@@ -25,6 +25,7 @@ interface PieChartProps {
     outerRadius?: number;
     paddingAngle?: number;
     showLegend?: boolean;
+    headerAction?: React.ReactNode;
 }
 
 export default function PieChart({
@@ -35,11 +36,15 @@ export default function PieChart({
     outerRadius = 80,
     paddingAngle = 5,
     showLegend = true,
+    headerAction,
 }: PieChartProps) {
     return (
         <Card className="shadow-sm border-none">
             <CardHeader>
-                <CardTitle>{title}</CardTitle>
+                <div className="flex items-center justify-between">
+                    <CardTitle>{title}</CardTitle>
+                    {headerAction}
+                </div>
             </CardHeader>
             <CardContent className={height}>
                 <ResponsiveContainer width="100%" height="100%">

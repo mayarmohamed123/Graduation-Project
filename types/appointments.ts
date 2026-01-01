@@ -24,4 +24,8 @@ export interface AppointmentStats {
   reviewsCount: number;
   yesterdayAppointmentsCount: number;
   yesterdayRevenue: number;
+  totalPenddingAppointmentCount: number;
+  totalConfirmedAppointmentCount: number;
+  totalCancelledAppointmentCount: number;
+  totalCompletedAppointmentCount: number;
 }
