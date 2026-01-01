@@ -1,77 +1,30 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import Switch from "@/Components/common/Switch";
 import DoctorCard from "@/Components/features/doctor/DoctorCard";
 import MedicineCard from "@/Components/common/MedicineCard";
 import PageHeaderWithBack from "@/Components/common/PageHeaderWithBack";
 import noFavorites from "@/assets/noFavorites.png";
-import {
-    FavoriteDoctor,
-    FavoriteMedicine,
-    FavoriteClinic,
-} from "@/types/favorites";
-import { favoritesService } from "@/Services/favoritesService";
-import { toast } from "react-hot-toast";
-
+import { useFavorites } from "@/hooks/useFavorites";
 
 export default function Favorites() {
     const [activeTab, setActiveTab] = useState("doctors");
-    const [favoriteDoctors, setFavoriteDoctors] = useState<FavoriteDoctor[]>([]);
-    const [favoriteMedicines, setFavoriteMedicines] = useState<FavoriteMedicine[]>([]);
-    const [favoriteClinics, setFavoriteClinics] = useState<FavoriteClinic[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const {
+        favoriteDoctors,
+        favoriteMedicines,
+        isLoading,
+        error,
+        refetch,
+        removeDoctor,
+        removeMedicine
+    } = useFavorites();
 
     const tabs = [
         { id: "doctors", label: "Doctors" },
         { id: "medicine", label: "Medicine" },
     ];
-
-    // Fetch favorites data on component mount
-    useEffect(() => {
-        fetchAllFavorites();
-    }, []);
-
-    const fetchAllFavorites = async () => {
-        setIsLoading(true);
-        setError(null);
-        try {
-            const [doctors, medicines, clinics] = await Promise.all([
-                favoritesService.getFavoriteDoctors(),
-                favoritesService.getFavoriteMedicines(),
-                favoritesService.getFavoriteClinics(),
-            ]);
-            setFavoriteDoctors(doctors);
-            setFavoriteMedicines(medicines);
-            setFavoriteClinics(clinics);
-        } catch (err) {
-            console.error("Failed to fetch favorites:", err);
-            setError(err instanceof Error ? err.message : "Failed to load favorites");
-            toast.error("Failed to load favorites");
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const handleRemoveDoctor = (id: number) => {
-        // Card component already handles the API call
-        // Just update local state
-        setFavoriteDoctors((prev) => prev.filter((doc) => doc.id !== id));
-    };
-
-    const handleRemoveMedicine = (id: number) => {
-        // Card component already handles the API call
-        // Just update local state
-        setFavoriteMedicines((prev) => prev.filter((med) => med.id !== id));
-    };
-
-    const handleRemoveClinic = (id: number) => {
-        // Card component already handles the API call
-        // Just update local state
-        setFavoriteClinics((prev) => prev.filter((clinic) => clinic.id !== id));
-    };
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -97,7 +50,7 @@ export default function Favorites() {
                     <div className="text-center py-12">
                         <p className="text-red-500 text-lg mb-4">{error}</p>
                         <button
-                            onClick={fetchAllFavorites}
+                            onClick={refetch}
                             className="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary/90 transition"
                         >
                             Try Again
@@ -118,8 +71,7 @@ export default function Favorites() {
                                             doctor={doctor}
                                             variant="favorite"
                                             initialFavoriteState={true}
-                                            onRemoveFavorite={handleRemoveDoctor}
-
+                                            onRemoveFavorite={removeDoctor}
                                         />
                                     ))
                                 ) : (
@@ -147,7 +99,7 @@ export default function Favorites() {
                                             medicine={medicine}
                                             variant="favorite"
                                             initialFavoriteState={true}
-                                            onRemoveFavorite={handleRemoveMedicine}
+                                            onRemoveFavorite={removeMedicine}
                                         />
                                     ))
                                 ) : (

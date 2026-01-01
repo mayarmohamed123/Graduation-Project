@@ -13,3 +13,4 @@ export { default as Switch } from "./Switch";
 export { default as WaveLines } from "./WaveLines";
 export { default as PrvButton } from "./prvButton";
 export { default as SidebarNav } from "./SidebarNav";
+export { default as PharmacyCard } from "./PharmacyCard";

@@ -38,7 +38,7 @@ class UserService {
     return apiRequest<GetUserOrdersResponse>(
       `${API_BASE_URL}/order/user-orders`,
       {
-        next: { revalidate: 30 },
+        cache: "no-store",
       }
     );
   }
@@ -47,7 +47,7 @@ class UserService {
     return apiRequest<GetUserAppointmentsResponse>(
       `${API_BASE_URL}/appointment/user`,
       {
-        next: { revalidate: 30 },
+        cache: "no-store",
       }
     );
   }
@@ -56,7 +56,7 @@ class UserService {
     return apiRequest<GetUserNotificationsResponse>(
       `${API_BASE_URL}/notifications/user`,
       {
-        next: { revalidate: 30 },
+        cache: "no-store",
       }
     );
   }

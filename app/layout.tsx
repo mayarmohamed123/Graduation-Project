@@ -5,6 +5,8 @@ import "./globals.css";
 import ReduxProvider from "@/Components/auth/ReduxProvider";
 import { Toaster } from "react-hot-toast";
 
+export const dynamic = "force-dynamic";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],

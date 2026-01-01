@@ -1,7 +1,5 @@
 "use client";
-import { useEffect } from "react";
-import { useAuth } from "@/hooks/useAuth";
-import { userService } from "@/Services/userService";
+import { useUser } from "@/hooks/useUser";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import {
@@ -18,34 +16,14 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
 import TopRatedDoctors from "@/Components/features/sections/TopRatedDoctors";
 import PrimaryButton from "@/Components/common/PrimaryButton";
+import { useLocation } from "@/hooks/useLocation";
 
 export default function Page() {
-  const { user } = useAuth();
+  const { user, isLoading } = useUser();
   const router = useRouter();
-  
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          try {
-            await userService.updateUserLocation(
-              position.coords.latitude,
-              position.coords.longitude
-            );
-            console.log("Location updated successfully");
-          } catch (error) {
-            console.error("Error updating location:", error);
-          }
-        },
-        (error) => {
-          console.error("Error getting location:", error);
-        }
-      );
-    } else {
-      console.error("Geolocation is not supported by this browser.");
-    }
-  }, []);
-  const userName = user?.userName || "User";
+  useLocation();
+
+  const userName = user?.userName;
 
   const actionCards = [
     {
@@ -87,7 +65,9 @@ export default function Page() {
         <div className="max-w-4xl w-full">
           {/* Header with Logout */}
       
-            <h1 className="heading text-center">Welcome back, {userName}!👋</h1>
+            <h1 className="heading text-center">
+              Welcome back, {isLoading ? "..." : (userName || "User")}!👋
+            </h1>
 
           <p className="text-[#8E8E8E] text-lg mb-10 text-center">
             Take care of your health today ,explore trusted doctors, order

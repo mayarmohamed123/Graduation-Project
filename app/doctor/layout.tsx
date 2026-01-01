@@ -1,5 +1,5 @@
-import DoctorNavbar from "@/Components/layout/DoctorNavbar";
-import { DoctorSidebar } from "@/Components/features/doctor";
+import { DashboardNavbar, DashboardSidebar } from "@/Components/layout";
+export const dynamic = "force-dynamic";
 import { ProtectedRoute } from "@/Components/auth";
 
 export default function DoctorLayout({
@@ -11,11 +11,11 @@ export default function DoctorLayout({
     <ProtectedRoute>
       <div className="flex h-screen bg-gray-50 overflow-hidden">
         {/* Sidebar */}
-        <DoctorSidebar />
+        <DashboardSidebar role="doctor" />
 
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col h-full overflow-hidden">
-          <DoctorNavbar />
+          <DashboardNavbar role="doctor" />
           <main className="flex-1 overflow-y-auto p-6">{children}</main>
         </div>
       </div>

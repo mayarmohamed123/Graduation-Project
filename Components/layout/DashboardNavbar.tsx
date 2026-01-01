@@ -6,16 +6,24 @@ import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import image from "@/assets/user-profile.webp";
+import { useUser } from "@/hooks/useUser";
 
-export default function DoctorNavbar() {
-  const { logout, user } = useAuth();
+type Role = "doctor" | "pharmacy";
+
+interface DashboardNavbarProps {
+  role: Role;
+}
+
+export default function DashboardNavbar({ role }: DashboardNavbarProps) {
+  const { logout } = useAuth();
+  const {user} = useUser()
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   
-  // Get doctor name from auth context
-  const doctorName = user?.userName || "Doctor";
-  const doctorImage = image
+  // Get user name from auth context
+  const userName = user?.userName;
+  const userImage = image
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,8 +35,12 @@ export default function DoctorNavbar() {
 
   const handleLogout = () => {
     logout();
-    router.push("/login");
+    router.push("/");
   };
+
+  const settingsHref = `/${role}/settings`;
+  const notificationsHref = `/${role}/notifications`;
+  const profileHref = `/${role}/profile`;
 
   return (
     <nav className="bg-white border-b shadow-sm sticky top-0 z-50">
@@ -66,14 +78,14 @@ export default function DoctorNavbar() {
           <div className="flex items-center gap-3 md:gap-5">
             {/* Settings Icon */}
             <button
-              onClick={() => router.push("/doctor/settings")}
+              onClick={() => router.push(settingsHref)}
               className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
               <Settings className="w-5 h-5 text-gray-600" />
             </button>
 
             {/* Notification Bell */}
             <button
-              onClick={() => router.push("/doctor/notifications")}
+              onClick={() => router.push(notificationsHref)}
               className="p-2 hover:bg-gray-100 rounded-lg transition-colors relative">
               <Bell className="w-5 h-5 text-gray-600" />
               {/* Notification badge - uncomment if needed */}
@@ -87,8 +99,8 @@ export default function DoctorNavbar() {
                 className="flex items-center gap-2 hover:bg-gray-50 rounded-lg p-1.5 transition-colors">
                 <div className="w-8 h-8 rounded-full bg-gray-200 overflow-hidden">
                   <Image
-                    src={doctorImage}
-                    alt={doctorName}
+                    src={userImage}
+                    alt="userImage"
                     width={32}
                     height={32}
                     className="w-full h-full object-cover"
@@ -100,7 +112,7 @@ export default function DoctorNavbar() {
                   />
                 </div>
                 <span className="hidden md:block text-sm font-medium text-gray-700">
-                  {doctorName}
+                  {userName}
                 </span>
                 <ChevronDown 
                   className={`w-4 h-4 text-gray-600 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} 
@@ -113,7 +125,7 @@ export default function DoctorNavbar() {
                   <button
                     onClick={() => {
                       setIsDropdownOpen(false);
-                      router.push("/doctor/profile");
+                      router.push(profileHref);
                     }}
                     className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
                     <User className="w-4 h-4" />

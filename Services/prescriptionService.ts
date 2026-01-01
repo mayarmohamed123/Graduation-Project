@@ -20,7 +20,7 @@ export const prescriptionService = {
       {
         method: "GET",
         requiresAuth: true,
-        next: { revalidate: 60 },
+        cache: "no-store",
       }
     );
   },

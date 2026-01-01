@@ -14,7 +14,7 @@ export const favoritesService = {
     return await apiRequest<FavoriteDoctor[]>(
       `${baseUrl}/FavouriteDoctor/user`,
       {
-        next: { revalidate: 0 }, // Don't cache favorites
+        cache: "no-store", // Don't cache favorites
       }
     );
   },
@@ -24,7 +24,7 @@ export const favoritesService = {
     return await apiRequest<FavoriteMedicine[]>(
       `${baseUrl}/FavoriteMedication/favorites`,
       {
-        next: { revalidate: 0 },
+        cache: "no-store",
       }
     );
   },
@@ -34,7 +34,7 @@ export const favoritesService = {
     return await apiRequest<FavoriteClinic[]>(
       `${baseUrl}/FavoriteClinic/favorites`,
       {
-        next: { revalidate: 0 },
+        cache: "no-store",
       }
     );
   },

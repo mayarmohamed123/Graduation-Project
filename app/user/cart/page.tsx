@@ -1,11 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
-import { useAuth } from "@/hooks/useAuth";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { fetchUserCart, clearLocalCart } from "@/store/slices/cartSlice";
-import { cartService } from "@/Services/cartService";
+import { useState } from "react";
 import PharmacyCartCard from "@/Components/features/cart/PharmacyCartCard";
 import ConfirmDialog from "@/Components/features/cart/ConfirmDialog";
 import CheckoutDialog, { CheckoutFormData } from "@/Components/features/cart/CheckoutDialog";
@@ -13,77 +8,33 @@ import PageHeaderWithBack from "@/Components/common/PageHeaderWithBack";
 import { Button } from "@/Components/ui/button";
 import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
-import { CheckoutRequest } from "@/types";
-import toast from "react-hot-toast";
+import { useCart } from "@/hooks/useCart";
 
 export default function CartPage() {
+  const {
+    cart,
+    isLoading,
+    error,
+    updatingItems,
+    isClearing,
+    checkoutLoadingId,
+    updateQuantity,
+    removeItem,
+    clearCart,
+    checkout
+  } = useCart();
 
-  const dispatch = useAppDispatch();
-
-  const { cart, loading, error } = useAppSelector((state) => state.cart);
-  const [updatingItems, setUpdatingItems] = useState<Set<number>>(new Set());
-  const [clearingCart, setClearingCart] = useState(false);
   const [showClearDialog, setShowClearDialog] = useState(false);
-  const [checkoutLoadingId, setCheckoutLoadingId] = useState<number | null>(null);
   const [showCheckoutDialog, setShowCheckoutDialog] = useState(false);
-  const [selectedPharmacy, setSelectedPharmacy] = useState<{id: number, name: string} | null>(null);
-
-  useEffect(() => {
-    dispatch(fetchUserCart());
-  }, [dispatch]);
-
-  const handleQuantityChange = async (itemId: number, newQuantity: number) => {
-    if (newQuantity < 1) return;
-
-    setUpdatingItems(prev => new Set(prev).add(itemId));
-    try {
-      await cartService.updateQuantity(itemId, newQuantity);
-      // Refresh cart data
-      await dispatch(fetchUserCart());
-    } catch (error) {
-      console.error("Failed to update quantity:", error);
-    } finally {
-      setUpdatingItems(prev => {
-        const newSet = new Set(prev);
-        newSet.delete(itemId);
-        return newSet;
-      });
-    }
-  };
-
-  const handleRemoveItem = async (itemId: number) => {
-    setUpdatingItems(prev => new Set(prev).add(itemId));
-    try {
-      await cartService.removeFromCart(itemId);
-      // Refresh cart data
-      await dispatch(fetchUserCart());
-    } catch (error) {
-      console.error("Failed to remove item:", error);
-    } finally {
-      setUpdatingItems(prev => {
-        const newSet = new Set(prev);
-        newSet.delete(itemId);
-        return newSet;
-      });
-    }
-  };
+  const [selectedPharmacy, setSelectedPharmacy] = useState<{ id: number; name: string } | null>(null);
 
   const handleClearCart = () => {
     setShowClearDialog(true);
   };
 
   const confirmClearCart = async () => {
-    setClearingCart(true);
-    try {
-      await cartService.clearCart();
-      // Immediately clear local state
-      dispatch(clearLocalCart());
-      setShowClearDialog(false);
-    } catch (error) {
-      console.error("Failed to clear cart:", error);
-    } finally {
-      setClearingCart(false);
-    }
+    await clearCart();
+    setShowClearDialog(false);
   };
 
   const handleCheckout = (pharmacyId: number, pharmacyName: string) => {
@@ -93,43 +44,15 @@ export default function CartPage() {
 
   const onConfirmCheckout = async (formData: CheckoutFormData) => {
     if (!selectedPharmacy) return;
-    
-    setCheckoutLoadingId(selectedPharmacy.id);
     try {
-      const checkoutData: CheckoutRequest = {
-        pharmacyId: selectedPharmacy.id,
-        ...formData
-      };
-
-      const checkoutResponse = await cartService.checkout(checkoutData);
-
-      if (checkoutResponse.success) {
-        toast.success(checkoutResponse.message);
-        const { orderId, totalPrice } = checkoutResponse.data;
-
-        const paymentSession = await cartService.createPaymentSession({
-          paymentFor: "Order",
-          amount: totalPrice,
-          orderid: orderId,
-        });
-
-        if (paymentSession.sessionUrl) {
-          window.location.href = paymentSession.sessionUrl;
-        } else {
-          toast.error("Failed to generate payment session");
-        }
-      }
-    } catch (error) {
-      console.error("Checkout failed:", error);
-    } finally {
-      setCheckoutLoadingId(null);
-      // Don't close dialog immediately if redirecting, but if error we might want to keep it open or close it. 
-      // If redirecting, component might unmount. 
-      // Safe to stop loading state.
+      await checkout(selectedPharmacy.id, formData);
+      setShowCheckoutDialog(false);
+    } catch {
+      // Error is handled in the hook
     }
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
@@ -149,7 +72,7 @@ export default function CartPage() {
             Error Loading Cart
           </h2>
           <p className="text-gray-600 mb-4">{error}</p>
-          <Button onClick={() => dispatch(fetchUserCart())}>
+          <Button onClick={() => window.location.reload()}>
             Try Again
           </Button>
         </div>
@@ -185,10 +108,10 @@ export default function CartPage() {
          <Button
           variant="outline"
           onClick={handleClearCart}
-          disabled={clearingCart}
+          disabled={isClearing}
           className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-300 my-5"
         >
-          {clearingCart ? "Clearing..." : "Clear Cart"}
+          {isClearing ? "Clearing..." : "Clear Cart"}
         </Button>
        
         {/* Cart Items - Each Pharmacy */}
@@ -198,10 +121,10 @@ export default function CartPage() {
               key={pharmacy.pharmacyId}
               pharmacy={pharmacy}
               updatingItems={updatingItems}
-              onQuantityChange={handleQuantityChange}
-              onRemoveItem={handleRemoveItem}
+              onQuantityChange={updateQuantity}
+              onRemoveItem={removeItem}
               onCheckout={handleCheckout}
-              isCheckoutLoading={false} // Loading is now shown in the dialog
+              isCheckoutLoading={checkoutLoadingId === pharmacy.pharmacyId}
             />
           ))}
         </div>
@@ -216,7 +139,7 @@ export default function CartPage() {
         message="Are you sure you want to remove all items from your cart? This action cannot be undone."
         confirmText="Yes, Clear Cart"
         cancelText="Cancel"
-        isLoading={clearingCart}
+        isLoading={isClearing}
       />
 
       {/* Checkout Dialog */}
