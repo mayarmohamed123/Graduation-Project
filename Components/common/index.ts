@@ -10,7 +10,7 @@ export { default as PrimaryButton } from "./PrimaryButton";
 export { default as SearchInput } from "./SearchInput";
 export { default as SpecialtyIcon } from "./SpecialtyIcon";
 export { default as Switch } from "./Switch";
-export { default as WaveLines } from "./WaveLines";
+export { default as WaveLines } from "../features/WaveLines";
 export { default as PrvButton } from "./prvButton";
 export { default as SidebarNav } from "./SidebarNav";
 export { default as PharmacyCard } from "./PharmacyCard";

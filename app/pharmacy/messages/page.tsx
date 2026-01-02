@@ -1,15 +1,23 @@
 "use client";
 
-import React from "react";
+import Chat from "@/Components/features/chat/Chat";
+import { Suspense } from "react";
 
 export default function MessagesPage() {
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-800">Messages</h1>
-      <p className="text-gray-600">Communicate with customers and doctors.</p>
-      <div className="p-12 border-2 border-dashed border-gray-200 rounded-xl flex items-center justify-center text-gray-400">
-        Messaging interface coming soon...
+    <Suspense fallback={null}>
+      <div className="flex flex-col h-[calc(100vh-4rem)] bg-gray-50">
+        <div className="flex-shrink-0 px-4 md:px-6 pt-6 pb-4">
+          <div className="max-w-7xl mx-auto">
+            <h1 className="text-3xl font-bold text-gray-900">Messages</h1>
+          </div>
+        </div>
+        <div className="flex-1 min-h-0 px-4 md:px-6 pb-6">
+          <div className="max-w-7xl mx-auto h-full">
+            <Chat basePath="/pharmacy/messages" />
+          </div>
+        </div>
       </div>
-    </div>
+    </Suspense>
   );
 }

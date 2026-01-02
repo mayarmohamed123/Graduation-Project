@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React from "react";
 import { workImage } from "@/assets";
-import WaveLines from "../../common/WaveLines";
+import WaveLines from "../WaveLines";
 
 export default function WorkSection() {
   const steps = [
