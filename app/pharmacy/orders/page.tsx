@@ -1,15 +1,18 @@
-"use client";
-
-import React from "react";
+import { Suspense } from "react";
+import OrdersContent from "@/Components/features/pharmacy/orders/OrdersContent";
+import { LoadingSpinner } from "@/Components";
 
 export default function OrdersPage() {
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-800">Orders</h1>
-      <p className="text-gray-600">Track and manage customer orders.</p>
-      <div className="p-12 border-2 border-dashed border-gray-200 rounded-xl flex items-center justify-center text-gray-400">
-        Order tracking content coming soon...
+    <div className="p-6 max-w-7xl mx-auto space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold text-gray-900">Orders Management</h1>
+        <p className="text-gray-500">Manage and track all pharmacy orders</p>
       </div>
+
+      <Suspense fallback={<LoadingSpinner />}>
+        <OrdersContent />
+      </Suspense>
     </div>
   );
 }
