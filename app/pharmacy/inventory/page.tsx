@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { pharmacyService } from "@/Services/pharmaciesServices";
 import { Medicine } from "@/types/medicine";
 import { InventoryAnalysis, CategoryDashboardResponse } from "@/types/pharmacy";
@@ -10,12 +11,21 @@ import { InventoryStats } from "@/Components/features/pharmacy/inventory/Invento
 import { CategoryGrid } from "@/Components/features/pharmacy/inventory/CategoryGrid";
 import { MedicineTable } from "@/Components/features/pharmacy/inventory/MedicineTable";
 
+import { toast } from "react-hot-toast";
+import { ConfirmDialog } from "@/Components/common/ConfirmDialog";
+
 export default function InventoryPage() {
+  const router = useRouter();
   const [medicines, setMedicines] = useState<Medicine[]>([]);
   const [analysis, setAnalysis] = useState<InventoryAnalysis | null>(null);
   const [categoriesData, setCategoriesData] = useState<CategoryDashboardResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+
+  // Delete State
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [medicineToDelete, setMedicineToDelete] = useState<Medicine | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,6 +48,30 @@ export default function InventoryPage() {
     };
     fetchData();
   }, []);
+
+  const handleDelete = (medicine: Medicine) => {
+    setMedicineToDelete(medicine);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!medicineToDelete) return;
+
+    try {
+      setIsDeleting(true);
+      const response = await pharmacyService.deleteMedicine(medicineToDelete.id);
+      toast.success(response.message || "Medicine deleted successfully.");
+      // Remove from local state
+      setMedicines(prev => prev.filter(m => m.id !== medicineToDelete.id));
+      setDeleteDialogOpen(false);
+      setMedicineToDelete(null);
+    } catch (error) {
+      console.error("Failed to delete medicine:", error);
+      toast.error("Failed to delete medicine. Please try again.");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   const filteredMedicines = medicines.filter((m: Medicine) => 
     m.brandName.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -74,7 +108,7 @@ export default function InventoryPage() {
 
   return (
     <div className="max-w-[1600px] mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-      <InventoryHeader />
+      <InventoryHeader onAddProduct={() => router.push("/pharmacy/inventory/add")} />
 
       <InventoryStats 
         totalProducts={analysis?.totalProducts ?? 0}
@@ -88,6 +122,20 @@ export default function InventoryPage() {
         medicines={filteredMedicines}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
+        onEdit={(medicine) => router.push(`/pharmacy/inventory/add?id=${medicine.id}`)}
+        onDelete={handleDelete}
+      />
+
+      <ConfirmDialog
+        isOpen={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+        onConfirm={handleConfirmDelete}
+        title="Delete Medicine"
+        description={`Are you sure you want to delete ${medicineToDelete?.brandName}? This action cannot be undone.`}
+        confirmText="Delete Product"
+        cancelText="Keep Product"
+        isLoading={isDeleting}
+        variant="destructive"
       />
     </div>
   );

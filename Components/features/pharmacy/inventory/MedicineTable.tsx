@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Search, Filter, Eye, Trash2, Edit } from "lucide-react";
+import { Search, Trash2, Edit } from "lucide-react";
 import Image from "next/image";
 import { 
   Card, 
@@ -11,7 +11,6 @@ import {
   CardDescription 
 } from "@/Components/ui/card";
 import { Input } from "@/Components/ui/input";
-import { Button } from "@/Components/ui/button";
 import { Badge } from "@/Components/ui/badge";
 import { Medicine } from "@/types/medicine";
 
@@ -19,12 +18,16 @@ interface MedicineTableProps {
   medicines: Medicine[];
   searchQuery: string;
   onSearchChange: (value: string) => void;
+  onEdit?: (medicine: Medicine) => void;
+  onDelete?: (medicine: Medicine) => void;
 }
 
 export const MedicineTable = ({ 
   medicines, 
   searchQuery, 
-  onSearchChange 
+  onSearchChange,
+  onEdit,
+  onDelete
 }: MedicineTableProps) => {
   return (
     <Card className="border-none shadow-sm rounded-[2rem] overflow-hidden">
@@ -45,9 +48,6 @@ export const MedicineTable = ({
               onChange={(e) => onSearchChange(e.target.value)}
             />
           </div>
-          <Button variant="ghost" className="rounded-2xl h-11 text-gray-500 hover:bg-gray-50">
-            <Filter className="w-4 h-4 mr-2" /> Filters
-          </Button>
         </div>
       </CardHeader>
 
@@ -117,13 +117,16 @@ export const MedicineTable = ({
                   </td>
                   <td className="pr-8 pl-4 py-5">
                     <div className="flex items-center justify-center gap-2">
-                       <button className="p-1.5 hover:bg-teal-50 rounded-lg text-gray-400 hover:text-teal-600 transition-all active:scale-90">
-                        <Eye className="w-4 h-4" />
-                      </button>
-                      <button className="p-1.5 hover:bg-amber-50 rounded-lg text-gray-400 hover:text-amber-500 transition-all active:scale-90">
+                      <button 
+                        onClick={() => onDelete?.(medicine)}
+                        className="p-1.5 hover:bg-amber-50 rounded-lg text-gray-400 hover:text-amber-500 transition-all active:scale-90"
+                      >
                         <Trash2 className="w-4 h-4" />
                       </button>
-                      <button className="p-1.5 hover:bg-gray-100 rounded-lg text-gray-400 hover:text-gray-900 transition-all active:scale-90">
+                      <button 
+                        onClick={() => onEdit?.(medicine)}
+                        className="p-1.5 hover:bg-gray-100 rounded-lg text-gray-400 hover:text-gray-900 transition-all active:scale-90"
+                      >
                         <Edit className="w-4 h-4" />
                       </button>
                     </div>

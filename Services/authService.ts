@@ -92,6 +92,7 @@ class AuthService {
     return apiRequest<void>(`${API_BASE_URL}/User/refresh`, {
       method: "POST",
       requiresAuth: false,
+      returnType: "text",
     });
   }
 
