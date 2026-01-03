@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
+    domains: ["imagetestyasmin.blob.core.windows.net"],
     remotePatterns: [
       {
         protocol: "https",
@@ -19,7 +20,8 @@ const nextConfig = {
     return [
       {
         source: "/api/:path*",
-        destination: "https://webadd-avgnfdemdqcffecu.canadacentral-01.azurewebsites.net/api/:path*",
+        destination:
+          "https://webadd-avgnfdemdqcffecu.canadacentral-01.azurewebsites.net/api/:path*",
       },
       {
         source: "/hubs/:path*",

@@ -1,4 +1,3 @@
-
 // Services/userService.ts
 
 import type {
@@ -16,9 +15,7 @@ import { apiRequest } from "./api";
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 class UserService {
-  async updateProfile(
-    data: UpdateProfileData
-  ): Promise<UpdateProfileResponse> {
+  async updateProfile(data: UpdateProfileData): Promise<UpdateProfileResponse> {
     const formData = new FormData();
     formData.append("userName", data.userName);
     formData.append("email", data.email);
@@ -85,7 +82,6 @@ class UserService {
       }
     );
   }
-
 
   async updateUserLocation(latitude: number, longitude: number): Promise<void> {
     return apiRequest<void>(`${API_BASE_URL}/User/location`, {

@@ -158,7 +158,10 @@ export type NotificationType =
   | "orderCancelled"
   | "appointmentApproved"
   | "appointmentStartingSoon"
-  | "newAppointmentForDoctor";
+  | "newAppointmentForDoctor"
+  | "inventoryLowStock"
+  | "newOrderForPharmacist"
+  | "inventoryOutOfStock";
 
 /**
  * Get user notifications API response

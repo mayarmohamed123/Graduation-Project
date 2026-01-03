@@ -54,3 +54,33 @@ export interface PharmacistOrder {
  * Get pharmacist orders API response
  */
 export type GetPharmacistOrdersResponse = PharmacistOrder[];
+
+/**
+ * Pharmacy profile data for the pharmacist
+ */
+export interface PharmacyProfile {
+  id: number;
+  name: string;
+  city: string;
+  phone: string;
+  country: string;
+  street: string;
+  postalCode: string;
+  latitude: number;
+  longitude: number;
+  deliveryFee: number;
+  imagePath: string;
+  averageRating?: number;
+  distanceFromUser?: number | null;
+  // Keep these for backward compatibility or if used in update
+  Street?: string;
+  PostalCode?: string;
+  Latitude?: number;
+  Longitude?: number;
+  DeliveryFee?: number;
+  LicenseNumber?: string;
+}
+export interface PharmacistProfile {
+  UserName: string;
+  email: string;
+}
