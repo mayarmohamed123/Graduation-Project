@@ -26,10 +26,7 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
           
           if (data.authenticated) {
             setIsAuthenticated(true);
-          } else {
-            // Not authenticated - redirect to login
-            router.replace(`/login?callbackUrl=${encodeURIComponent(pathname)}`);
-          }
+          } 
         } else {
           // If check fails, redirect to login
           router.replace(`/login?callbackUrl=${encodeURIComponent(pathname)}`);

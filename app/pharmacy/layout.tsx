@@ -1,6 +1,6 @@
+import { ProtectedRoute } from "@/Components";
 import { DashboardNavbar, DashboardSidebar } from "@/Components/layout";
 export const dynamic = "force-dynamic";
-// import { ProtectedRoute } from "@/Components/auth";
 
 export default function PharmacyLayout({
   children,
@@ -8,7 +8,7 @@ export default function PharmacyLayout({
   children: React.ReactNode;
 }) {
   return (
-    // <ProtectedRoute>
+    <ProtectedRoute>
       <div className="flex h-screen bg-gray-50 overflow-hidden">
         {/* Sidebar */}
         <DashboardSidebar role="pharmacy" />
@@ -19,6 +19,6 @@ export default function PharmacyLayout({
           <main className="flex-1 overflow-y-auto p-6">{children}</main>
         </div>
       </div>
-    // </ProtectedRoute>
+   </ProtectedRoute>
   );
 }
