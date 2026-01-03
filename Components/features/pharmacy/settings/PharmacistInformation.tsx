@@ -78,7 +78,7 @@ export default function PharmacistInformation() {
             }
 
             // 2. Update Profile Name & Email
-            const fullName = `${formData.firstName} ${formData.lastName}`.trim();
+            const fullName = `${formData.firstName}${formData.lastName}`.trim();
             await pharmacistService.updatePharmacistProfile({
                 UserName: fullName,
                 email: formData.email
