@@ -45,7 +45,7 @@ class SignalRService {
     this.isConnecting = true;
 
     try {
-        const hubUrl = `${process.env.NEXT_PUBLIC_HUB_URL}/hubs/chat?threadId=${threadId}`;
+        const hubUrl = `${process.env.NEXT_PUBLIC_HUB_URL}/chat?threadId=${threadId}`;
         console.log(`[SignalR] Connecting to URL: ${hubUrl}`);
 
         this.connection = new signalR.HubConnectionBuilder()
@@ -53,8 +53,8 @@ class SignalRService {
             hubUrl,
             { 
                 withCredentials: true, // Use cookies
-                skipNegotiation: true,
-                transport: signalR.HttpTransportType.WebSockets,
+                // skipNegotiation: true,
+                // transport: signalR.HttpTransportType.WebSockets,
                 headers: {
                     "ngrok-skip-browser-warning": "true",
                 },
