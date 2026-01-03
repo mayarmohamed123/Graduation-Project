@@ -27,13 +27,12 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
           if (data.authenticated) {
             setIsAuthenticated(true);
           } else {
-            // Redirect to login with callback URL
-            const callbackUrl = encodeURIComponent(pathname);
-            router.replace(`/login?callbackUrl=${callbackUrl}`);
+            // Not authenticated - redirect to login
+            router.replace(`/login?callbackUrl=${encodeURIComponent(pathname)}`);
           }
         } else {
           // If check fails, redirect to login
-          router.replace("/login");
+          router.replace(`/login?callbackUrl=${encodeURIComponent(pathname)}`);
         }
       } catch (error) {
         console.error("Auth check failed:", error);

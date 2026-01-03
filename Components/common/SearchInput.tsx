@@ -5,9 +5,11 @@ import { vector } from "@/assets";
 
 interface SearchInputProps {
   onSearch: (query: string) => void;
+  placeholder?: string;
+  className?: string;
 }
 
-export default function SearchInput({ onSearch }: SearchInputProps) {
+export default function SearchInput({ onSearch, placeholder = "Search for doctors, pharmacies, or blood donors", className = "" }: SearchInputProps) {
   const [query, setQuery] = useState<string>("");
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -16,13 +18,13 @@ export default function SearchInput({ onSearch }: SearchInputProps) {
   return (
     <form
       onSubmit={handleSearch}
-      className="flex items-center justify-center mb-8 w-full">
-      <div className="relative flex w-full max-w-4xl border border-[#2BBBC5] rounded-full overflow-hidden shadow-2xl my-8">
+      className={`flex items-center justify-center w-full ${className}`}>
+      <div className="relative flex w-full border border-[#2BBBC5] rounded-full overflow-hidden shadow-sm">
         <input
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search for doctors, pharmacies, or blood donors"
+          placeholder={placeholder}
           className="w-full px-4 py-2 outline-none text-gray-700"
         />
         <div className="absolute top-1/2 right-4 -translate-y-1/2">

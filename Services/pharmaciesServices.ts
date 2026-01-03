@@ -76,6 +76,63 @@ class PharmacyService {
       }
     );
   }
+
+  // Add a new medicine
+  async addMedicine(formData: FormData): Promise<{ message: string }> {
+    return await apiRequest<{ message: string }>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/medicine`,
+      {
+        method: "POST",
+        data: formData,
+        requiresAuth: true,
+      }
+    );
+  }
+
+  // Update an existing medicine
+  async updateMedicine(id: number, formData: FormData): Promise<{ message: string }> {
+    return await apiRequest<{ message: string }>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/medicine/${id}`,
+      {
+        method: "PUT",
+        data: formData,
+        requiresAuth: true,
+      }
+    );
+  }
+
+  // Delete a medicine
+  async deleteMedicine(id: number): Promise<{ message: string }> {
+    return await apiRequest<{ message: string }>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/medicine/${id}`,
+      {
+        method: "DELETE",
+        requiresAuth: true,
+      }
+    );
+  }
+
+  // Get a single pharmacy by ID
+  async getPharmacyById(id: number): Promise<Pharmacy> {
+    return await apiRequest<Pharmacy>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Pharmacy/${id}`,
+      {
+        cache: "no-store",
+        requiresAuth: false,
+      }
+    );
+  }
+
+  // Get medicines for a specific pharmacy by ID
+  async getPharmacyMedicinesById(pharmacyId: number): Promise<Medicine[]> {
+    return await apiRequest<Medicine[]>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/medicine/pharmacy/${pharmacyId}`,
+      {
+        cache: "no-store",
+        requiresAuth: false,
+      }
+    );
+  }
 }
 
 // 👉 Export a single instance
