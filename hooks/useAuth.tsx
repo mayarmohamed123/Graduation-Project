@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, createContext, useContext } from "react";
+import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { loginUser, logoutUser, registerUser } from "@/store/slices/userSlice";
 import type { RegisterCredentials } from "@/Services/authService";
@@ -56,6 +57,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 }
 
 export function useAuth() {
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const { user, error } = useAppSelector((state) => state.user);
   
@@ -81,10 +83,8 @@ export function useAuth() {
 
     console.log("🚀 handleRedirect: Redirecting to:", targetPath);
 
-    // Use window.location.href for a full reload to ensure cookies are picked up
-    if (typeof window !== "undefined") {
-      window.location.href = targetPath;
-    }
+    // Use router.push to maintain client-side state and prevent cookie timing issues
+    router.push(targetPath);
   };
 
   const login = async (email: string, password: string) => {
@@ -92,8 +92,7 @@ export function useAuth() {
       console.log("🚀 login: Attempting login for:", email);
       const result = await dispatch(loginUser({ email, password })).unwrap();
       console.log("🚀 login: Success! Result:", result);
-      // Recheck auth after login to update context
-      await recheckAuth();
+      // Redirect immediately - ProtectedRoute will handle auth check
       handleRedirect(result.user);
     } catch (error) {
       console.error("🚀 login: Error:", error);

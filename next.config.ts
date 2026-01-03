@@ -26,7 +26,7 @@ const nextConfig = {
       {
         source: "/hubs/:path*",
         destination:
-          "https://unendingly-unfoul-emmy.ngrok-free.dev/hubs/:path*",
+          "https://webadd-avgnfdemdqcffecu.canadacentral-01.azurewebsites.net/hubs/:path*",
       },
     ];
   },
