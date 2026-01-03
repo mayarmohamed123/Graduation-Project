@@ -1,4 +1,9 @@
-import { PharmacistOrder } from "@/types";
+import {
+  PharmacistOrder,
+  Notification,
+  PharmacyProfile,
+  PharmacistProfile,
+} from "@/types";
 import { apiRequest } from "./api";
 
 class PharmacistService {
@@ -47,6 +52,88 @@ class PharmacistService {
       requiresAuth: true,
       returnType: "text",
     });
+  }
+
+  // Get pharmacist notifications
+  async getNotifications(): Promise<Notification[]> {
+    const response = await apiRequest<{ notifications: Notification[] }>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/notifications/user`,
+      { cache: "no-store", requiresAuth: true }
+    );
+    return response.notifications;
+  }
+
+  // Mark notification as read
+  async markNotificationAsRead(id: number): Promise<void> {
+    await apiRequest<void>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Notifications/${id}/read`,
+      { method: "PUT", requiresAuth: true }
+    );
+  }
+
+  // Mark all notifications as read
+  async markAllNotificationsAsRead(): Promise<void> {
+    await apiRequest<void>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Notifications/read-all`,
+      { method: "PUT", requiresAuth: true }
+    );
+  }
+
+  // Update pharmacist profile
+  async updatePharmacistProfile(
+    data: PharmacistProfile
+  ): Promise<{ message: string }> {
+    const formData = new FormData();
+    formData.append("UserName", data.UserName);
+    formData.append("email", data.email);
+
+    return await apiRequest<{ message: string }>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/User/update-profile`,
+      {
+        method: "PUT",
+        data: formData,
+        requiresAuth: true,
+      }
+    );
+  }
+
+  // Upload pharmacist profile picture
+  async uploadPharmacistPicture(image: File): Promise<{ message: string }> {
+    const formData = new FormData();
+    formData.append("image", image);
+    return await apiRequest<{ message: string }>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/User/upload-picture`,
+      {
+        method: "POST",
+        data: formData,
+        requiresAuth: true,
+      }
+    );
+  }
+
+  // Update pharmacy profile
+  async updatePharmacyProfile(
+    formData: FormData
+  ): Promise<{ message: string }> {
+    return await apiRequest<{ message: string }>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Pharmacties/update-pharmacy`,
+      {
+        method: "PUT",
+        data: formData,
+        requiresAuth: true,
+      }
+    );
+  }
+
+  // Get pharmacy profile
+  async getPharmacyProfile(): Promise<PharmacyProfile> {
+    return await apiRequest<PharmacyProfile>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Pharmacy/GetPharmacyOfPharmacist`,
+      {
+        cache: "no-store",
+        requiresAuth: true,
+      }
+    );
   }
 }
 

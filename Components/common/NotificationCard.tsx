@@ -1,5 +1,5 @@
 import { Notification, NotificationType } from "@/types";
-import { Calendar, CheckCircle, XCircle, Clock, Package } from "lucide-react";
+import { Calendar, CheckCircle, XCircle, Clock, Package, AlertTriangle, PackageX } from "lucide-react";
 import { formatDistanceToNow, differenceInDays } from "date-fns";
 
 interface NotificationCardProps {
@@ -8,6 +8,15 @@ interface NotificationCardProps {
 }
 
 export default function NotificationCard({ notification, onClick }: NotificationCardProps) {
+  function normalizeNotificationType(type?: string): NotificationType {
+    if (!type) return "newOrderForPharmacist";
+
+    const normalized =
+      type.charAt(0).toLowerCase() + type.slice(1);
+
+    return normalized as NotificationType;
+  }
+
   const getNotificationIcon = (type: NotificationType) => {
     switch (type) {
       case "newAppointmentForDoctor":
@@ -22,6 +31,12 @@ export default function NotificationCard({ notification, onClick }: Notification
         return { icon: Package, bg: "bg-blue-100", color: "text-blue-600" };
       case "orderCancelled":
         return { icon: XCircle, bg: "bg-red-100", color: "text-red-600" };
+      case "newOrderForPharmacist":
+        return { icon: Package, bg: "bg-green-100", color: "text-green-600" };
+      case "inventoryLowStock":
+        return { icon: AlertTriangle, bg: "bg-orange-100", color: "text-orange-600" };
+      case "inventoryOutOfStock":
+        return { icon: PackageX, bg: "bg-red-100", color: "text-red-600" };
       default:
         return { icon: Calendar, bg: "bg-gray-100", color: "text-gray-600" };
     }
@@ -41,6 +56,12 @@ export default function NotificationCard({ notification, onClick }: Notification
         return "bg-blue-50";
       case "orderCancelled":
         return "bg-red-50";
+      case "newOrderForPharmacist":
+        return "bg-green-50/50";
+      case "inventoryLowStock":
+        return "bg-orange-50/50";
+      case "inventoryOutOfStock":
+        return "bg-red-50/50";
       default:
         return "bg-gray-50";
     }
@@ -58,9 +79,11 @@ export default function NotificationCard({ notification, onClick }: Notification
 
     return formatDistanceToNow(date, { addSuffix: true, includeSeconds: true });
   };
+  const safeType = normalizeNotificationType(notification.type);
 
-  const { icon: Icon, bg, color } = getNotificationIcon(notification.type);
-  const bgClass = getNotificationBg(notification.type);
+
+  const { icon: Icon, bg, color } = getNotificationIcon(safeType);
+  const bgClass = getNotificationBg(safeType);
 
   return (
     <div

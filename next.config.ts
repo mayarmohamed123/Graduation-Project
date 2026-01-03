@@ -1,10 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
+    domains: ["imagetestyasmin.blob.core.windows.net"],
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "epharmahubimages2025.blob.core.windows.net",
+        hostname: "imagetestyasmin.blob.core.windows.net",
       },
       {
         protocol: "https",
@@ -19,7 +20,8 @@ const nextConfig = {
     return [
       {
         source: "/api/:path*",
-        destination: "https://unendingly-unfoul-emmy.ngrok-free.dev/api/:path*",
+        destination:
+          "https://webadd-avgnfdemdqcffecu.canadacentral-01.azurewebsites.net/api/:path*",
       },
       {
         source: "/hubs/:path*",
