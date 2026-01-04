@@ -1,12 +1,24 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useState, useRef, useEffect } from "react";
-import { Camera, Building2, MapPin, DollarSign, Award, Loader2, Phone } from "lucide-react";
+import { Camera, Building2, MapPin, DollarSign, Award, Loader2, Phone, Hash, Map as MapIcon, Link as LinkIcon } from "lucide-react";
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/Components/ui/avatar";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+} from "@/Components/ui/dialog";
 import { pharmacistService } from "@/Services/pharmacistService";
 import toast from "react-hot-toast";
+
+const LocationMap = dynamic(() => import("@/Components/common/LocationMap"), {
+    ssr: false,
+    loading: () => <div className="h-[400px] w-full flex items-center justify-center bg-gray-100 rounded-lg">Loading Map...</div>
+});
 
 export default function PharmacyInformation() {
     const [isLoading, setIsLoading] = useState(false);
@@ -14,6 +26,10 @@ export default function PharmacyInformation() {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [imageFile, setImageFile] = useState<File | null>(null);
+
+    // Map state
+    const [isMapOpen, setIsMapOpen] = useState(false);
+    const [mapPosition, setMapPosition] = useState<{ lat: number; lng: number } | null>(null);
 
     const [formData, setFormData] = useState({
         name: "",
@@ -45,6 +61,14 @@ export default function PharmacyInformation() {
                     DeliveryFee: (data.deliveryFee ?? data.DeliveryFee)?.toString() || "0",
                     LicenseNumber: data.LicenseNumber || "",
                 });
+
+                if (data.latitude && data.longitude) {
+                    setMapPosition({
+                        lat: parseFloat(data.latitude.toString()),
+                        lng: parseFloat(data.longitude.toString())
+                    });
+                }
+
                 if (data.imagePath) {
                     setSelectedImage(data.imagePath);
                 }
@@ -58,6 +82,26 @@ export default function PharmacyInformation() {
 
         fetchPharmacyData();
     }, []);
+
+    // Auto-detect location on mount if not already set
+    useEffect(() => {
+        if ("geolocation" in navigator && !formData.Latitude && !formData.Longitude && !isFetching) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const { latitude, longitude } = position.coords;
+                    setFormData(prev => ({
+                        ...prev,
+                        Latitude: latitude.toString(),
+                        Longitude: longitude.toString()
+                    }));
+                    setMapPosition({ lat: latitude, lng: longitude });
+                },
+                (error) => {
+                    console.error("Error getting geolocation:", error);
+                }
+            );
+        }
+    }, [isFetching, formData.Latitude, formData.Longitude]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -74,6 +118,26 @@ export default function PharmacyInformation() {
             const imageUrl = URL.createObjectURL(file);
             setSelectedImage(imageUrl);
         }
+    };
+
+    const handleMapLocationSelect = (lat: number, lng: number) => {
+        setMapPosition({ lat, lng });
+        setFormData(prev => ({
+            ...prev,
+            Latitude: lat.toString(),
+            Longitude: lng.toString()
+        }));
+    };
+
+    const handleOpenMap = () => {
+        if (formData.Latitude && formData.Longitude) {
+            const lat = parseFloat(formData.Latitude);
+            const lng = parseFloat(formData.Longitude);
+            if (!isNaN(lat) && !isNaN(lng)) {
+                setMapPosition({ lat, lng });
+            }
+        }
+        setIsMapOpen(true);
     };
 
     const handleSubmit = async () => {
@@ -93,7 +157,6 @@ export default function PharmacyInformation() {
             data.append("LicenseNumber", formData.LicenseNumber);
 
             if (imageFile) {
-                // The user said "image: string; form data", usually image is a file in FormData
                 data.append("image", imageFile);
             }
 
@@ -158,6 +221,7 @@ export default function PharmacyInformation() {
                             />
                         </div>
                         <div className="relative">
+                            <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-primary" />
                             <Input
                                 name="phone"
                                 placeholder="Phone Number"
@@ -165,7 +229,6 @@ export default function PharmacyInformation() {
                                 onChange={handleChange}
                                 className="pl-11 rounded-3xl border border-primary placeholder-primary focus-visible:ring-0 focus-visible:border-primary h-12"
                             />
-                            <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-primary" />
                         </div>
                     </div>
 
@@ -213,8 +276,9 @@ export default function PharmacyInformation() {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="relative">
+                            <Hash className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-primary" />
                             <Input
                                 name="PostalCode"
                                 placeholder="Postal Code"
@@ -224,6 +288,21 @@ export default function PharmacyInformation() {
                             />
                         </div>
                         <div className="relative">
+                            <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-primary" />
+                            <Input
+                                name="DeliveryFee"
+                                type="number"
+                                placeholder="Delivery fees"
+                                value={formData.DeliveryFee}
+                                onChange={handleChange}
+                                className="pl-11 rounded-3xl border border-primary placeholder-primary focus-visible:ring-0 focus-visible:border-primary h-12"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_auto] gap-4 items-center">
+                        <div className="relative">
+                            <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-primary" />
                             <Input
                                 name="Latitude"
                                 type="number"
@@ -234,6 +313,7 @@ export default function PharmacyInformation() {
                             />
                         </div>
                         <div className="relative">
+                            <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-primary" />
                             <Input
                                 name="Longitude"
                                 type="number"
@@ -243,18 +323,15 @@ export default function PharmacyInformation() {
                                 className="pl-11 rounded-3xl border border-primary placeholder-primary focus-visible:ring-0 focus-visible:border-primary h-12"
                             />
                         </div>
-                    </div>
-
-                    <div className="relative">
-                        <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-primary" />
-                        <Input
-                            name="DeliveryFee"
-                            type="number"
-                            placeholder="Delivery fees"
-                            value={formData.DeliveryFee}
-                            onChange={handleChange}
-                            className="pl-11 rounded-3xl border border-primary placeholder-primary focus-visible:ring-0 focus-visible:border-primary h-12"
-                        />
+                        <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={handleOpenMap}
+                            className="h-12 w-12 rounded-xl border border-primary text-primary hover:bg-teal-50"
+                            type="button"
+                        >
+                            <LinkIcon className="h-5 w-5" />
+                        </Button>
                     </div>
                 </div>
 
@@ -274,6 +351,31 @@ export default function PharmacyInformation() {
                     </Button>
                 </div>
             </div>
+
+            {/* Map Dialog */}
+            <Dialog open={isMapOpen} onOpenChange={setIsMapOpen}>
+                <DialogContent className="sm:max-w-[600px]">
+                    <DialogHeader>
+                        <DialogTitle className="flex items-center gap-2 text-primary">
+                            <MapIcon className="h-5 w-5" />
+                            Select Pharmacy Location
+                        </DialogTitle>
+                    </DialogHeader>
+                    <div className="mt-4">
+                        <LocationMap
+                            position={mapPosition}
+                            onPositionChange={handleMapLocationSelect}
+                        />
+                        <p className="text-sm text-gray-500 mt-2 text-center">
+                            Click on the map to set your pharmacy location.
+                        </p>
+                        <div className="flex justify-end gap-2 mt-4">
+                            <Button variant="outline" onClick={() => setIsMapOpen(false)}>Cancel</Button>
+                            <Button className="bg-primary hover:opacity-90 text-white" onClick={() => setIsMapOpen(false)}>Confirm Location</Button>
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }
