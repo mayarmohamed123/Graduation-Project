@@ -14,6 +14,7 @@ import {
   AnalyticsAge,
   AnalyticsStatus,
   AnalyticsPatientRetention,
+  Clinic,
 } from "@/types/doctors";
 import { Notification } from "@/types";
 import { FilterParams, apiRequest } from "./api";
@@ -295,6 +296,14 @@ export const doctorService = {
     return await apiRequest<
       { date: string; appointmentsCount: number; totalRevenue: number }[]
     >(`${baseUrl}/doctors/daily-appointments?year=${year}&month=${month}`, {
+      requiresAuth: true,
+    });
+  },
+
+  // Get clinic info of the logged-in doctor
+  getClinicOfDoctor: async (): Promise<Clinic> => {
+    return await apiRequest<Clinic>(`${baseUrl}/doctors/GetClinicOfDoctor`, {
+      cache: "no-store",
       requiresAuth: true,
     });
   },

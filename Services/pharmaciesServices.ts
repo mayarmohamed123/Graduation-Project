@@ -1,4 +1,4 @@
-import { Pharmacy, PharmacyRegistrationResponse, InventoryAnalysis, CategoryDashboardResponse } from "@/types";
+import { Pharmacy, PharmacyRegistrationResponse, InventoryAnalysis, CategoryDashboardResponse, OrdersDashboardResponse, PharmacyStatsResponse } from "@/types";
 import { Medicine } from "@/types/medicine";
 import { apiRequest } from "./api";
 
@@ -70,6 +70,28 @@ class PharmacyService {
   async getCategoriesDashboard(): Promise<CategoryDashboardResponse> {
     return await apiRequest<CategoryDashboardResponse>(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/Pharmacties/categories-dashboard`,
+      {
+        cache: "no-store",
+        requiresAuth: true,
+      }
+    );
+  }
+
+  // Get orders dashboard (weekly comparison)
+  async getOrdersDashboard(): Promise<OrdersDashboardResponse> {
+    return await apiRequest<OrdersDashboardResponse>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Pharmacties/orders-dashboard`,
+      {
+        cache: "no-store",
+        requiresAuth: true,
+      }
+    );
+  }
+
+  // Get pharmacy stats (today vs yesterday)
+  async getMyStats(): Promise<PharmacyStatsResponse> {
+    return await apiRequest<PharmacyStatsResponse>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Pharmacties/my-stats`,
       {
         cache: "no-store",
         requiresAuth: true,

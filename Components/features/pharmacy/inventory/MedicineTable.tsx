@@ -34,7 +34,7 @@ export const MedicineTable = ({
       <CardHeader className="p-8 border-b border-gray-50 flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white">
         <div className="space-y-1">
           <CardTitle className="text-xl font-bold font-outfit">Product Catalog</CardTitle>
-          <CardDescription className="text-muted-foreground text-xs font-medium uppercase tracking-widest">
+          <CardDescription className="text-muted-foreground text-xs font-medium tracking-widest">
             Complete management of your pharmaceutical inventory
           </CardDescription>
         </div>
@@ -54,7 +54,7 @@ export const MedicineTable = ({
       <CardContent className="p-0 bg-white">
         <div className="overflow-x-auto">
           <table className="w-full text-left">
-            <thead className="bg-[#E5E7EB]/50 text-[10px] uppercase tracking-[0.2em] font-black text-gray-500">
+            <thead className="bg-[#E5E7EB]/50 text-[10px] tracking-[0.2em] font-black text-gray-500">
               <tr>
                 <th className="pl-8 pr-4 py-5 font-bold">Product ID</th>
                 <th className="px-4 py-5 font-bold">Product Name</th>

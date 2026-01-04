@@ -1,64 +1,199 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StatisticsCard } from "@/Components/features/doctor";
-import { Package, ShoppingCart, TrendingUp } from "lucide-react";
+import { 
+  ShoppingCart, 
+  DollarSign, 
+  Store, 
+  X, 
+  Timer,
+  Loader2,
+  ArrowRight
+} from "lucide-react";
+import { pharmacyService } from "@/Services/pharmaciesServices";
+import { pharmacistService } from "@/Services/pharmacistService";
+import { PharmacyStatsResponse, PharmacistOrder } from "@/types";
+import BarChart from "@/Components/common/charts/BarChart";
+import LineChart from "@/Components/common/charts/LineChart";
+import OrdersTable from "@/Components/features/pharmacy/orders/OrdersTable";
+import { useOrderActions } from "@/Components/features/pharmacy/orders/useOrderActions";
+import Link from "next/link";
+import { Button } from "@/Components/ui/button";
+
+// Mock data for charts
+const bestSellersData = [
+  { name: "Paracetamol", sales: 850 },
+  { name: "Amoxicillin", sales: 720 },
+  { name: "Ibuprofen", sales: 640 },
+  { name: "Vitamin C", sales: 590 },
+  { name: "Panadol", sales: 510 },
+  { name: "Aspirin", sales: 480 },
+  { name: "Cetirizine", sales: 420 },
+  { name: "Omeprazole", sales: 380 },
+  { name: "Metformin", sales: 310 },
+  { name: "Loratadine", sales: 290 },
+];
+
+const weeklySalesData = [
+  { day: "Mon", revenue: 1200 },
+  { day: "Tue", revenue: 900 },
+  { day: "Wed", revenue: 1500 },
+  { day: "Thu", revenue: 1100 },
+  { day: "Fri", revenue: 1800 },
+  { day: "Sat", revenue: 2200 },
+  { day: "Sun", revenue: 1400 },
+];
 
 export default function PharmacyDashboardPage() {
+  const [loading, setLoading] = useState(true);
+  const [statsData, setStatsData] = useState<PharmacyStatsResponse | null>(null);
+  const [recentOrders, setRecentOrders] = useState<PharmacistOrder[]>([]);
+
+  const fetchDashboardData = async () => {
+    try {
+      setLoading(true);
+      const [statsRes, ordersRes] = await Promise.all([
+        pharmacyService.getMyStats(),
+        pharmacistService.getOrders()
+      ]);
+      setStatsData(statsRes);
+      // Take the first 5 orders as "recent"
+      setRecentOrders(ordersRes.slice(0, 5));
+    } catch (error) {
+      console.error("Error fetching dashboard data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
+
+  const { actionLoading, handleAcceptOrder, handleCancelOrder, handleMarkAsDelivered } =
+    useOrderActions(fetchDashboardData);
+
+  const calculateTrend = (current: number, previous: number) => {
+    if (previous === 0) return current > 0 ? "+100%" : "0%";
+    const change = ((current - previous) / previous) * 100;
+    return `${change >= 0 ? "+" : ""}${change.toFixed(0)}%`;
+  };
+
+  if (loading) {
+    return (
+      <div className="flex h-[60vh] items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-[#2BBBC5]" />
+      </div>
+    );
+  }
+
+  const stats = [
+    {
+      title: "Today's Orders",
+      value: statsData?.todayOrders || 0,
+      trend: calculateTrend(statsData?.todayOrders || 0, statsData?.yesterdayOrders || 0),
+      trendDirection: (statsData?.todayOrders || 0) >= (statsData?.yesterdayOrders || 0) ? "up" : "down" as "up" | "down",
+      icon: <ShoppingCart className="w-6 h-6 text-orange-500" />,
+      bgColor: "bg-orange-50",
+    },
+    {
+      title: "Today's Revenue",
+      value: `$${statsData?.todayRevenue.toLocaleString() || 0}`,
+      trend: calculateTrend(statsData?.todayRevenue || 0, statsData?.yesterdayRevenue || 0),
+      trendDirection: (statsData?.todayRevenue || 0) >= (statsData?.yesterdayRevenue || 0) ? "up" : "down" as "up" | "down",
+      icon: <DollarSign className="w-6 h-6 text-green-600" />,
+      bgColor: "bg-green-50",
+    },
+    {
+      title: "Available Stock",
+      value: statsData?.availableStock || 0,
+      icon: <Store className="w-6 h-6 text-teal-600" />,
+      bgColor: "bg-teal-50",
+    },
+    {
+      title: "Out of Stock",
+      value: statsData?.outOfStock || 0,
+      icon: <X className="w-6 h-6 text-red-600" />,
+      bgColor: "bg-red-50",
+    },
+    {
+      title: "Pending Orders",
+      value: statsData?.pendingOrders || 0,
+      icon: <Timer className="w-6 h-6 text-yellow-600" />,
+      bgColor: "bg-yellow-50",
+    },
+  ];
+
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 p-6 max-w-7xl mx-auto">
       <div>
         <h1 className="text-3xl font-bold text-gray-900">Pharmacy Dashboard</h1>
         <p className="mt-2 text-gray-600">
-          Welcome back! Here&apos;s an overview of your pharmacy&apos;s performance today.
+          Welcome back! Here&apos;s an overview of your pharmacy&apos;s performance.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <StatisticsCard
-          title="Total Medicines"
-          value="1,248"
-          trend="+5%"
-          trendDirection="up"
-          icon={<Package className="w-6 h-6 text-[#2BBBC5]" />}
-          bgColor="bg-teal-50"
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        {stats.map((stat, index) => (
+          <StatisticsCard
+            key={index}
+            title={stat.title}
+            value={stat.value}
+            trend={stat.trend}
+            trendDirection={stat.trendDirection}
+            icon={stat.icon}
+            bgColor={stat.bgColor}
+          />
+        ))}
+      </div>
+
+      {/* Charts Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <BarChart
+          data={bestSellersData}
+          title="Best Selling Medicines in this week"
+          dataKey="sales"
+          xAxisKey="name"
+          color="#2BBBC5"
+          height="h-[350px]"
         />
-        <StatisticsCard
-          title="Active Orders"
-          value="42"
-          trend="+12%"
-          trendDirection="up"
-          icon={<ShoppingCart className="w-6 h-6 text-blue-600" />}
-          bgColor="bg-blue-50"
-        />
-        <StatisticsCard
-          title="Daily Revenue"
-          value="$2,450"
-          trend="+8%"
-          trendDirection="up"
-          icon={<TrendingUp className="w-6 h-6 text-green-600" />}
-          bgColor="bg-green-50"
+        <LineChart
+          data={weeklySalesData}
+          title="Weekly Revenue Flow"
+          xAxisKey="day"
+          height="h-[350px]"
+          lines={[
+            {
+              dataKey: "revenue",
+              name: "Revenue",
+              color: "#3B82F6",
+              strokeWidth: 3,
+            },
+          ]}
         />
       </div>
 
-      <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-        <h2 className="text-xl font-semibold mb-4 text-gray-800">Recent Pharmacy Activity</h2>
-        <div className="space-y-4">
-          <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-            <div>
-              <p className="font-medium text-gray-900">Order #12345 received</p>
-              <p className="text-sm text-gray-500">2 minutes ago</p>
-            </div>
-            <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">New</span>
-          </div>
-          <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-            <div>
-              <p className="font-medium text-gray-900">Low stock alert: Paracetamol</p>
-              <p className="text-sm text-gray-500">1 hour ago</p>
-            </div>
-            <span className="px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-medium">Warning</span>
-          </div>
+      {/* Recent Orders Section */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold text-gray-900 font-outfit">Recent Orders</h2>
+          <Button variant="ghost" className="text-primary hover:text-primary/80 group" asChild>
+            <Link href="/pharmacy/orders" className="flex items-center gap-2">
+              View All Orders 
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+            </Link>
+          </Button>
         </div>
+        
+        <OrdersTable
+          orders={recentOrders}
+          onAccept={handleAcceptOrder}
+          onCancel={handleCancelOrder}
+          onMarkDelivered={handleMarkAsDelivered}
+          actionLoading={actionLoading}
+        />
       </div>
     </div>
   );
