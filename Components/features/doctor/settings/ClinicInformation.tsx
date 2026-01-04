@@ -352,8 +352,8 @@ export default function ClinicInformation() {
                 )}
               >
                 <option value="" disabled>Consultation type</option>
-                <option value="home-visit" className="text-gray-900">Home Visit</option>
-                <option value="in-clinic" className="text-gray-900">In Clinic</option>
+                <option value="HomeVisit" className="text-gray-900">Home Visit</option>
+                <option value="InClinic" className="text-gray-900">In Clinic</option>
               </select>
               <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-[#2BBBC5]">
                 <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
