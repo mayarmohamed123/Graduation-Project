@@ -50,6 +50,19 @@ export const doctorService = {
       cache: "no-store",
     });
   },
+  // Get available slots for a doctor on a specific date
+  getDoctorAvailableSlots: async (
+    doctorId: number,
+    date: string
+  ): Promise<AppointmentSlot[]> => {
+    return await apiRequest<AppointmentSlot[]>(
+      `${baseUrl}/Appointment/available-slots?doctorId=${doctorId}&date=${date}`,
+      {
+        method: "GET",
+        requiresAuth: true,
+      }
+    );
+  },
 
   // Book appointment in doctor clinic
   bookAppointmentInClinic: async (

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { useState, useRef, useEffect } from "react";
-import { Building, Phone, MapPin, DollarSign, Link as LinkIcon, Loader2, Map as MapIcon, Camera as CameraIcon } from "lucide-react";
+import { Building, Phone, MapPin, DollarSign, Link as LinkIcon, Loader2, Map as MapIcon } from "lucide-react";
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/Components/ui/avatar";
