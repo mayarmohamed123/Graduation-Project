@@ -61,3 +61,13 @@ export interface PharmacyStatsResponse {
     outOfStock: number;
     pendingOrders: number;
 }
+
+export interface BestSellingMedicine {
+    name: string;
+    sales: number;
+}
+
+export interface TodaySalesByTime {
+    timeSlot: string;
+    salesCount: number;
+}

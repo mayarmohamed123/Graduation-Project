@@ -11,55 +11,37 @@ import {
   Loader2,
   ArrowRight
 } from "lucide-react";
-import { pharmacyService } from "@/Services/pharmaciesServices";
-import { pharmacistService } from "@/Services/pharmacistService";
-import { PharmacyStatsResponse, PharmacistOrder } from "@/types";
+import { PharmacyStatsResponse, PharmacistOrder, BestSellingMedicine, TodaySalesByTime } from "@/types";
 import BarChart from "@/Components/common/charts/BarChart";
 import LineChart from "@/Components/common/charts/LineChart";
 import OrdersTable from "@/Components/features/pharmacy/orders/OrdersTable";
 import { useOrderActions } from "@/Components/features/pharmacy/orders/useOrderActions";
 import Link from "next/link";
 import { Button } from "@/Components/ui/button";
-
-// Mock data for charts
-const bestSellersData = [
-  { name: "Paracetamol", sales: 850 },
-  { name: "Amoxicillin", sales: 720 },
-  { name: "Ibuprofen", sales: 640 },
-  { name: "Vitamin C", sales: 590 },
-  { name: "Panadol", sales: 510 },
-  { name: "Aspirin", sales: 480 },
-  { name: "Cetirizine", sales: 420 },
-  { name: "Omeprazole", sales: 380 },
-  { name: "Metformin", sales: 310 },
-  { name: "Loratadine", sales: 290 },
-];
-
-const weeklySalesData = [
-  { day: "Mon", revenue: 1200 },
-  { day: "Tue", revenue: 900 },
-  { day: "Wed", revenue: 1500 },
-  { day: "Thu", revenue: 1100 },
-  { day: "Fri", revenue: 1800 },
-  { day: "Sat", revenue: 2200 },
-  { day: "Sun", revenue: 1400 },
-];
+import { pharmacyService } from "@/Services/pharmaciesServices";
+import { pharmacistService } from "@/Services/pharmacistService";
 
 export default function PharmacyDashboardPage() {
   const [loading, setLoading] = useState(true);
   const [statsData, setStatsData] = useState<PharmacyStatsResponse | null>(null);
   const [recentOrders, setRecentOrders] = useState<PharmacistOrder[]>([]);
+  const [bestSellers, setBestSellers] = useState<BestSellingMedicine[]>([]);
+  const [todaySales, setTodaySales] = useState<TodaySalesByTime[]>([]);
 
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
-      const [statsRes, ordersRes] = await Promise.all([
+      const [statsRes, ordersRes, bestSellersRes, todaySalesRes] = await Promise.all([
         pharmacyService.getMyStats(),
-        pharmacistService.getOrders()
+        pharmacistService.getOrders(),
+        pharmacyService.getBestSellingMedicine(),
+        pharmacyService.getTodaySalesByTime()
       ]);
       setStatsData(statsRes);
       // Take the first 5 orders as "recent"
       setRecentOrders(ordersRes.slice(0, 5));
+      setBestSellers(bestSellersRes);
+      setTodaySales(todaySalesRes);
     } catch (error) {
       console.error("Error fetching dashboard data:", error);
     } finally {
@@ -152,22 +134,22 @@ export default function PharmacyDashboardPage() {
       {/* Charts Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <BarChart
-          data={bestSellersData}
-          title="Best Selling Medicines in this week"
+          data={bestSellers}
+          title="Best Selling Medicines"
           dataKey="sales"
           xAxisKey="name"
           color="#2BBBC5"
           height="h-[350px]"
         />
         <LineChart
-          data={weeklySalesData}
-          title="Weekly Revenue Flow"
-          xAxisKey="day"
+          data={todaySales}
+          title="Today's Sales Flow"
+          xAxisKey="timeSlot"
           height="h-[350px]"
           lines={[
             {
-              dataKey: "revenue",
-              name: "Revenue",
+              dataKey: "salesCount",
+              name: "Sales",
               color: "#3B82F6",
               strokeWidth: 3,
             },

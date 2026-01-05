@@ -1,4 +1,4 @@
-import { Pharmacy, PharmacyRegistrationResponse, InventoryAnalysis, CategoryDashboardResponse, OrdersDashboardResponse, PharmacyStatsResponse } from "@/types";
+import { Pharmacy, PharmacyRegistrationResponse, InventoryAnalysis, CategoryDashboardResponse, OrdersDashboardResponse, PharmacyStatsResponse, BestSellingMedicine, TodaySalesByTime } from "@/types";
 import { Medicine } from "@/types/medicine";
 import { apiRequest } from "./api";
 
@@ -92,6 +92,28 @@ class PharmacyService {
   async getMyStats(): Promise<PharmacyStatsResponse> {
     return await apiRequest<PharmacyStatsResponse>(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/Pharmacties/my-stats`,
+      {
+        cache: "no-store",
+        requiresAuth: true,
+      }
+    );
+  }
+
+  // Get best selling medicine
+  async getBestSellingMedicine(): Promise<BestSellingMedicine[]> {
+    return await apiRequest<BestSellingMedicine[]>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Pharmacties/best-selling`,
+      {
+        cache: "no-store",
+        requiresAuth: true,
+      }
+    );
+  }
+
+  // Get today's sales by time
+  async getTodaySalesByTime(): Promise<TodaySalesByTime[]> {
+    return await apiRequest<TodaySalesByTime[]>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Pharmacties/today-sales-by-time`,
       {
         cache: "no-store",
         requiresAuth: true,
