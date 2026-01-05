@@ -84,3 +84,68 @@ export interface PharmacistProfile {
   UserName: string;
   email: string;
 }
+
+/**
+ * Daily revenue data for pharmacy analytics
+ */
+export interface PharmacyDailyRevenue {
+  date: string;
+  totalRevenue: number;
+  [key: string]: unknown;
+}
+
+/**
+ * sales by category
+ */
+export interface SalesByCategory {
+  category: string;
+  totalSales: number;
+  percentage: number;
+  [key: string]: unknown;
+}
+
+/**
+ * Dashboard week statistics
+ */
+export interface DashboardWeekStats {
+  totalOrders: number;
+  pendingOrders: number;
+  confirmedOrders: number;
+  cancelledOrders: number;
+  delieveredOrders: number;
+  totalRevenue: number;
+}
+
+/**
+ * Orders dashboard API response
+ */
+export interface OrdersDashboardResponse {
+  thisWeek: DashboardWeekStats;
+  lastWeek: DashboardWeekStats;
+}
+
+/**
+ * Out of stock data for analytics
+ */
+export interface OutOfStockData {
+  date: string;
+  count: number;
+}
+
+/**
+ * Inventory report data for analytics
+ */
+export interface InventoryReportData {
+  date: string;
+  quantity: number;
+}
+
+/**
+ * Pharmacy analytics statistics
+ */
+export interface PharmacyAnalyticsStats {
+  totalOrders: number;
+  totalRevenue: number;
+  totalProducts: number;
+  totalCustomers: number;
+}

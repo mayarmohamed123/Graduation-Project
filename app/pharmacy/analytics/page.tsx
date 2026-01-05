@@ -1,15 +1,18 @@
-"use client";
+import { Suspense } from "react";
+import PharmacyAnalyticsDashboard from "@/Components/features/pharmacy/analytics/PharmacyAnalyticsDashboard";
+import { LoadingSpinner } from "@/Components/common";
 
-import React from "react";
-
-export default function AnalyticsPage() {
+export default function PharmacyAnalyticsPage() {
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-800">Analytics</h1>
-      <p className="text-gray-600">View your pharmacy performance insights.</p>
-      <div className="p-12 border-2 border-dashed border-gray-200 rounded-xl flex items-center justify-center text-gray-400">
-        Analytics charts coming soon...
+    <div className="p-6 max-w-7xl mx-auto space-y-8">
+      <div>
+        <h1 className="text-3xl font-bold text-gray-900">Analytics</h1>
+        <p className="text-gray-500">Overview of your pharmacy&apos;s financial performance.</p>
       </div>
+
+      <Suspense fallback={<LoadingSpinner />}>
+        <PharmacyAnalyticsDashboard />
+      </Suspense>
     </div>
   );
 }

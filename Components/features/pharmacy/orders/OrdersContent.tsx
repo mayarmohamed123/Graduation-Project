@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { PharmacistOrder, PharmacistOrderStatus } from "@/types";
+import { PharmacistOrder, PharmacistOrderStatus, OrdersDashboardResponse } from "@/types";
 import { pharmacistService } from "@/Services/pharmacistService";
 import OrdersStats from "./OrdersStats";
 import OrdersTabs from "./OrdersTabs";
@@ -13,30 +13,44 @@ type OrderStatusFilter = "All" | PharmacistOrderStatus;
 
 export default function OrdersContent() {
     const [orders, setOrders] = useState<PharmacistOrder[]>([]);
+    const [stats, setStats] = useState<OrdersDashboardResponse | null>(null);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState<OrderStatusFilter>("All");
 
-    const fetchOrders = async () => {
+    const fetchData = async () => {
         try {
             setLoading(true);
-            const data = await pharmacistService.getOrders();
-            setOrders(data);
+            const [ordersData, statsData] = await Promise.all([
+                pharmacistService.getOrders(),
+                pharmacistService.getOrdersDashboardStats()
+            ]);
+            setOrders(ordersData);
+            setStats(statsData);
         } catch (error) {
-            console.error("Error fetching orders:", error);
+            console.error("Error fetching data:", error);
         } finally {
             setLoading(false);
         }
     };
 
+    const fetchOrders = async () => {
+        try {
+            const data = await pharmacistService.getOrders();
+            setOrders(data);
+        } catch (error) {
+            console.error("Error fetching orders:", error);
+        }
+    };
+
     useEffect(() => {
-        fetchOrders();
+        fetchData();
     }, []);
 
-    const { filteredOrders, counts } = useOrderFilters(orders, activeTab);
+    const { filteredOrders } = useOrderFilters(orders, activeTab);
     const { actionLoading, handleAcceptOrder, handleCancelOrder, handleMarkAsDelivered } =
         useOrderActions(fetchOrders);
 
-    if (loading) {
+    if (loading || !stats) {
         return (
             <div className="flex items-center justify-center h-64">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
@@ -46,13 +60,7 @@ export default function OrdersContent() {
 
     return (
         <div className="space-y-6">
-            <OrdersStats
-                totalOrders={counts.total}
-                confirmedOrders={counts.confirmed}
-                pendingOrders={counts.pending}
-                cancelledOrders={counts.cancelled}
-                deliveredOrders={counts.delivered}
-            />
+            <OrdersStats stats={stats} />
 
             <OrdersTabs activeTab={activeTab} onTabChange={setActiveTab} />
 

@@ -10,7 +10,7 @@ import { AppointmentStats } from "@/types/appointments";
 import { Calendar, DollarSign, Users } from "lucide-react";
 import { AreaChart, BarChart, PieChart, LineChart } from "@/Components/common/charts";
 import StatisticsCard from "@/Components/features/doctor/StatisticsCard";
-import SmartChartWrapper from "./SmartChartWrapper";
+import SmartChartWrapper from "@/Components/common/analytics/SmartChartWrapper";
 import { doctorService } from "@/Services/doctorService";
 
 interface AnalyticsDashboardProps {
@@ -67,8 +67,8 @@ export default function AnalyticsDashboard({
 
             {/* Row 1: Appointment Trends & Revenue Trends */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <SmartChartWrapper fetchData={(y, m) => doctorService.getDailyAppointments(y, m)}>
-                    {(data, loading, filters) => (
+                <SmartChartWrapper fetchData={(y: number, m: number) => doctorService.getDailyAppointments(y, m)}>
+                    {(data: object[], loading: boolean, filters: React.ReactNode) => (
                         <AreaChart
                             data={data}
                             title="Appointments Trends"
@@ -83,8 +83,8 @@ export default function AnalyticsDashboard({
                     )}
                 </SmartChartWrapper>
 
-                <SmartChartWrapper fetchData={(y, m) => doctorService.getDailyRevenue(y, m)}>
-                    {(data, loading, filters) => (
+                <SmartChartWrapper fetchData={(y: number, m: number) => doctorService.getDailyRevenue(y, m)}>
+                    {(data: object[], loading: boolean, filters: React.ReactNode) => (
                         <AreaChart
                             data={data}
                             title="Revenue Trends"

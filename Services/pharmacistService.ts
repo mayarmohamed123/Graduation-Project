@@ -3,6 +3,12 @@ import {
   Notification,
   PharmacyProfile,
   PharmacistProfile,
+  PharmacyDailyRevenue,
+  SalesByCategory,
+  OrdersDashboardResponse,
+  OutOfStockData,
+  InventoryReportData,
+  PharmacyAnalyticsStats,
 } from "@/types";
 import { apiRequest } from "./api";
 
@@ -133,6 +139,60 @@ class PharmacistService {
         cache: "no-store",
         requiresAuth: true,
       }
+    );
+  }
+
+  // Analytics: Daily Revenue
+  async getDailyRevenue(
+    year: number,
+    month: number
+  ): Promise<PharmacyDailyRevenue[]> {
+    return await apiRequest<PharmacyDailyRevenue[]>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Pharmacties/daily-revenue?year=${year}&month=${month}`,
+      { requiresAuth: true }
+    );
+  }
+
+  // Analytics: Sales by Category
+  async getSalesByCategory(
+    year: number,
+    month: number
+  ): Promise<SalesByCategory[]> {
+    return await apiRequest<SalesByCategory[]>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Pharmacties/sales-by-category?year=${year}&month=${month}`,
+      { requiresAuth: true }
+    );
+  }
+
+  // Orders Dashboard Stats
+  async getOrdersDashboardStats(): Promise<OrdersDashboardResponse> {
+    return await apiRequest<OrdersDashboardResponse>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Pharmacties/orders-dashboard`,
+      { requiresAuth: true, cache: "no-store" }
+    );
+  }
+
+  // Analytics: Out of Stock (Last 30 Days)
+  async getOutOfStockLast30Days(): Promise<OutOfStockData[]> {
+    return await apiRequest<OutOfStockData[]>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Pharmacties/out-of-stock/last-30-days`,
+      { requiresAuth: true }
+    );
+  }
+
+  // Analytics: Inventory Report (Last 30 Days)
+  async getInventoryReportLast30Days(): Promise<InventoryReportData[]> {
+    return await apiRequest<InventoryReportData[]>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Pharmacties/inventoryreport-last-30-days`,
+      { requiresAuth: true }
+    );
+  }
+
+  // Analytics: Get Overview Stats
+  async getAnalyticsStats(): Promise<PharmacyAnalyticsStats> {
+    return await apiRequest<PharmacyAnalyticsStats>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Pharmacties/GetAnalyticsStats`,
+      { requiresAuth: true }
     );
   }
 }
