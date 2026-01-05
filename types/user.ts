@@ -11,6 +11,8 @@ export interface User {
   phoneNumber?: string;
   profileImage?: string;
   address?: string;
+  specialty?: string;
+  gender?: string;
 }
 
 /**

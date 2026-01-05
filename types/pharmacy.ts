@@ -37,3 +37,37 @@ export interface CategoryDashboardResponse {
     thisWeek: CategoryWeeklyStats[];
     lastWeek: CategoryWeeklyStats[];
 }
+
+export interface OrdersDashboardData {
+    totalOrders: number;
+    pendingOrders: number;
+    confirmedOrders: number;
+    cancelledOrders: number;
+    delieveredOrders: number;
+    totalRevenue: number;
+}
+
+export interface OrdersDashboardResponse {
+    thisWeek: OrdersDashboardData;
+    lastWeek: OrdersDashboardData;
+}
+
+export interface PharmacyStatsResponse {
+    todayOrders: number;
+    yesterdayOrders: number;
+    todayRevenue: number;
+    yesterdayRevenue: number;
+    availableStock: number;
+    outOfStock: number;
+    pendingOrders: number;
+}
+
+export interface BestSellingMedicine {
+    name: string;
+    sales: number;
+}
+
+export interface TodaySalesByTime {
+    timeSlot: string;
+    salesCount: number;
+}

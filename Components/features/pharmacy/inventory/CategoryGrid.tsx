@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { TrendingUp, CalendarDays } from "lucide-react";
+import { TrendingUp } from "lucide-react";
 import { Card } from "@/Components/ui/card";
 
 interface CategoryStat {
@@ -15,12 +15,9 @@ interface CategoryGridProps {
 }
 
 const CategoryCard = ({ title, value, trend }: CategoryStat) => (
-  <Card className="p-5 flex flex-col justify-between hover:shadow-md transition-shadow cursor-default border border-gray-100 shadow-sm rounded-[1.75rem] bg-white">
+  <Card className="p-5 flex flex-col justify-between hover:shadow-md transition-shadow cursor-default border border-gray-100 shadow-sm rounded-2xl bg-white">
     <div className="flex justify-between items-start">
       <p className="text-sm font-semibold text-gray-500 font-outfit tracking-tight">{title}</p>
-      <div className="p-2.5 bg-teal-50/50 rounded-xl">
-        <CalendarDays className="w-5 h-5 text-[#2BBBC5]" />
-      </div>
     </div>
     
     <div className="mt-2 space-y-1.5">

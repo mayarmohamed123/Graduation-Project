@@ -24,6 +24,7 @@ const LocationMap = dynamic(() => import("@/Components/common/LocationMap"), {
 
 export default function ClinicInformation() {
   const [isLoading, setIsLoading] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -45,10 +46,48 @@ export default function ClinicInformation() {
     price: "",
   });
 
-  // Auto-detect location on mount
   useEffect(() => {
-    if ("geolocation" in navigator && !formData.latitude && !formData.longitude) {
-      navigator.geolocation.getCurrentPosition(
+    const fetchClinic = async () => {
+      try {
+        setIsInitialLoading(true);
+        const clinic = await doctorService.getClinicOfDoctor();
+        
+        if (clinic) {
+          setFormData({
+            clinicName: clinic.name || "",
+            phone: clinic.phone || "",
+            country: clinic.country || "",
+            city: clinic.city || "",
+            postalCode: clinic.postalCode || "",
+            street: clinic.street || "",
+            longitude: clinic.longitude?.toString() || "",
+            latitude: clinic.latitude?.toString() || "",
+            consultationType: "", 
+            price: "", 
+          });
+
+          if (clinic.imagePath) {
+            setSelectedImage(clinic.imagePath);
+          }
+
+          if (clinic.latitude && clinic.longitude) {
+            setMapPosition({ lat: clinic.latitude, lng: clinic.longitude });
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch clinic data:", error);
+      } finally {
+        setIsInitialLoading(false);
+      }
+    };
+
+    fetchClinic();
+  }, []);
+
+  // Auto-detect location on mount if not provided by clinic
+  useEffect(() => {
+    if ("geolocation" in navigator && !formData.latitude && !formData.longitude && !isInitialLoading) {
+       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
           setFormData(prev => ({
@@ -60,12 +99,11 @@ export default function ClinicInformation() {
         },
         (error) => {
           console.error("Error getting location:", error);
-          // Optional: toast.error("Could not automatically detect location.");
         }
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isInitialLoading]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -94,7 +132,6 @@ export default function ClinicInformation() {
   };
 
   const handleOpenMap = () => {
-    // If we have coordinates in inputs, use them as initial map center
     if (formData.latitude && formData.longitude) {
       const lat = parseFloat(formData.latitude);
       const lng = parseFloat(formData.longitude);
@@ -135,6 +172,14 @@ export default function ClinicInformation() {
     }
   };
 
+  if (isInitialLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="h-8 w-8 animate-spin text-[#2BBBC5]" />
+      </div>
+    );
+  }
+
   return (
     <div>
       <h2 className="text-xl font-semibold text-gray-900 mb-8">
@@ -173,7 +218,6 @@ export default function ClinicInformation() {
         </div>
 
         <div className="space-y-4">
-          {/* Clinic Name */}
           <div className="space-y-2">
             <div className="relative">
               <Building className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-[#2BBBC5]" />
@@ -187,7 +231,6 @@ export default function ClinicInformation() {
             </div>
           </div>
 
-          {/* Phone */}
           <div className="flex gap-4">
             <div className="relative w-32 shrink-0">
               <div className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center">
@@ -266,7 +309,6 @@ export default function ClinicInformation() {
             </div>
           </div>
 
-          {/* Location Coordinates */}
           <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_auto] gap-4 items-center">
             <div className="relative">
               <Input
@@ -297,7 +339,6 @@ export default function ClinicInformation() {
             </Button>
           </div>
 
-
           {/* Consultation Type and Price */}
           <div className="grid grid-cols-2 gap-4">
             <div className="relative">
@@ -311,8 +352,8 @@ export default function ClinicInformation() {
                 )}
               >
                 <option value="" disabled>Consultation type</option>
-                <option value="online" className="text-gray-900">Online</option>
-                <option value="physical" className="text-gray-900">Physical</option>
+                <option value="HomeVisit" className="text-gray-900">Home Visit</option>
+                <option value="InClinic" className="text-gray-900">In Clinic</option>
               </select>
               <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-[#2BBBC5]">
                 <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -334,7 +375,6 @@ export default function ClinicInformation() {
           </div>
         </div>
 
-        {/* Save Button */}
         <div className="mt-8">
           <Button
             onClick={handleSubmit}

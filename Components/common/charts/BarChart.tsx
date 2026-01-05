@@ -46,7 +46,32 @@ export default function BarChart({
                 <ResponsiveContainer width="100%" height="100%">
                     <RechartsBarChart data={data}>
                         {showGrid && <CartesianGrid strokeDasharray="3 3" vertical={false} />}
-                        <XAxis dataKey={xAxisKey} />
+                        <XAxis 
+                            dataKey={xAxisKey} 
+                            interval={0} 
+                            tickLine={false} 
+                            axisLine={false}
+                            height={80}
+                            tick={(props: { x: number; y: number; payload: { value: string } }) => {
+                                const { x, y, payload } = props;
+                                return (
+                                    <g transform={`translate(${x},${y})`}>
+                                        <text
+                                            x={0}
+                                            y={0}
+                                            dy={16}
+                                            textAnchor="end"
+                                            fill="#6b7280"
+                                            transform="rotate(-45)"
+                                            fontSize={10}
+                                            className="font-medium"
+                                        >
+                                          {payload.value}
+                                        </text>
+                                    </g>
+                                );
+                            }}
+                        />
                         <YAxis />
                         <Tooltip />
                         <Bar dataKey={dataKey} fill={color} radius={barRadius} />

@@ -1,16 +1,18 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Camera, Building, User, Mail, Loader2 } from "lucide-react";
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/Components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { doctorService } from "@/Services/doctorService";
+import { authService } from "@/Services/authService";
 import toast from "react-hot-toast";
 
 export default function PersonalInformation() {
   const [isLoading, setIsLoading] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -22,6 +24,39 @@ export default function PersonalInformation() {
     gender: "",
     email: "",
   });
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        setIsInitialLoading(true);
+        const profile = await authService.getProfile();
+        
+        // Split userName into first and last name if possible
+        const nameParts = profile.userName?.split(" ") || ["", ""];
+        const firstName = nameParts[0] || "";
+        const lastName = nameParts.slice(1).join(" ") || "";
+
+        setFormData({
+          firstName,
+          lastName,
+          specialty: profile.specialty || "",
+          gender: profile.gender?.toLowerCase() || "",
+          email: profile.email || "",
+        });
+
+        if (profile.profileImage) {
+          setSelectedImage(profile.profileImage);
+        }
+      } catch (error) {
+        console.error("Failed to fetch profile:", error);
+        toast.error("Failed to load profile data");
+      } finally {
+        setIsInitialLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -45,10 +80,6 @@ export default function PersonalInformation() {
       setIsLoading(true);
       const data = new FormData();
 
-      // Append only if value exists to allow partial updates (or send all if API expects replacement)
-      // Assuming API handles empty strings as "no change" or we only send changed values?
-      // For now, sending what's in the form. Ideally we should populate form with existing data first.
-      // Combine firstName and lastName into userName
       const fullName = `${formData.firstName} ${formData.lastName}`.trim();
       if (fullName) data.append("userName", fullName);
       
@@ -69,6 +100,14 @@ export default function PersonalInformation() {
       setIsLoading(false);
     }
   };
+
+  if (isInitialLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="h-8 w-8 animate-spin text-[#2BBBC5]" />
+      </div>
+    );
+  }
 
   return (
     <div>

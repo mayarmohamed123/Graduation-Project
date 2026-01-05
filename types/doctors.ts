@@ -142,3 +142,17 @@ export interface AnalyticsPatientRetention {
   newPatients: number;
   returningPatients: number;
 }
+
+export interface Clinic {
+  id: number;
+  name: string;
+  phone: string;
+  imagePath: string;
+  addressId: number;
+  city: string;
+  street: string;
+  country: string;
+  postalCode: string;
+  latitude: number;
+  longitude: number;
+}

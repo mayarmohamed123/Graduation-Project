@@ -14,6 +14,7 @@ import {
   AnalyticsAge,
   AnalyticsStatus,
   AnalyticsPatientRetention,
+  Clinic,
 } from "@/types/doctors";
 import { Notification } from "@/types";
 import { FilterParams, apiRequest } from "./api";
@@ -48,6 +49,19 @@ export const doctorService = {
     return await apiRequest<Doctor>(`${baseUrl}/doctors/${id}`, {
       cache: "no-store",
     });
+  },
+  // Get available slots for a doctor on a specific date
+  getDoctorAvailableSlots: async (
+    doctorId: number,
+    date: string
+  ): Promise<AppointmentSlot[]> => {
+    return await apiRequest<AppointmentSlot[]>(
+      `${baseUrl}/Appointment/available-slots?doctorId=${doctorId}&date=${date}`,
+      {
+        method: "GET",
+        requiresAuth: true,
+      }
+    );
   },
 
   // Book appointment in doctor clinic
@@ -295,6 +309,14 @@ export const doctorService = {
     return await apiRequest<
       { date: string; appointmentsCount: number; totalRevenue: number }[]
     >(`${baseUrl}/doctors/daily-appointments?year=${year}&month=${month}`, {
+      requiresAuth: true,
+    });
+  },
+
+  // Get clinic info of the logged-in doctor
+  getClinicOfDoctor: async (): Promise<Clinic> => {
+    return await apiRequest<Clinic>(`${baseUrl}/doctors/GetClinicOfDoctor`, {
+      cache: "no-store",
       requiresAuth: true,
     });
   },
