@@ -1,4 +1,4 @@
-import { apiRequest } from "./api";
+import { apiRequest } from "../api";
 import { AdminDoctor } from "@/types/admin";
 
 class AdminService {
@@ -48,7 +48,7 @@ class AdminService {
   async updateDoctor(id: number, data: Partial<AdminDoctor>): Promise<void> {
     return await apiRequest(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/Admin/update-doctorprofile/${id}`,
-      { method: "PUT", requiresAuth: true }
+      { method: "PUT", data, requiresAuth: true }
     );
   }
 }

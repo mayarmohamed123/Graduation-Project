@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { DoctorsFilters } from "@/Components/features/admin/doctors/DoctorsFilters";
 import { DoctorsTable } from "@/Components/features/admin/doctors/DoctorsTable";
 import { DoctorDetailsDialog } from "@/Components/features/admin/doctors/DoctorDetailsDialog";
-import { adminService } from "@/Services/adminService";
 import { AdminDoctor } from "@/types/admin";
+import { adminService } from "@/Services/admin/adminService";
 
 export default function DoctorsManagement() {
     const [doctors, setDoctors] = useState<AdminDoctor[]>([]);

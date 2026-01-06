@@ -1,17 +1,24 @@
-"use client";
+import { ProtectedRoute } from "@/Components";
+import { DashboardNavbar, DashboardSidebar } from "@/Components/layout";
+export const dynamic = "force-dynamic";
 
-import React from "react";
-import DashboardSidebar from "@/Components/layout/DashboardSidebar";
+export default function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <ProtectedRoute>
+      <div className="flex h-screen bg-gray-50 overflow-hidden">
+        {/* Sidebar */}
+        <DashboardSidebar role="admin" />
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
-    return (
-        <div className="flex bg-gray-50">
-            <DashboardSidebar role="admin" />
-            <div className="flex-1 flex flex-col min-h-screen">
-                <main className="flex-1 overflow-y-auto p-6">
-                    {children}
-                </main>
-            </div>
+        {/* Main Content Area */}
+        <div className="flex-1 flex flex-col h-full overflow-hidden">
+          <DashboardNavbar role="admin" />
+          <main className="flex-1 overflow-y-auto p-6">{children}</main>
         </div>
-    );
+      </div>
+    </ProtectedRoute>
+  );
 }

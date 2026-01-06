@@ -23,3 +23,17 @@ export interface AdminDoctor {
   countReviews: number;
   countFavourite: number;
 }
+
+export interface AdminPharmacist {
+  id: number;
+  email: string;
+  userId: string;
+  pharmacistImage: string | null;
+  licenseNumber: string;
+  isApproved: boolean;
+  pharmacyId: number;
+  pharmacyName: string;
+  pharmacyPhone: string;
+  pharmacyImagePath: string;
+  city: string;
+}

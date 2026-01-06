@@ -8,7 +8,7 @@ import Image from "next/image";
 import image from "@/assets/user-profile.webp";
 import { useUser } from "@/hooks/useUser";
 
-type Role = "doctor" | "pharmacy";
+type Role = "doctor" | "pharmacy" | "admin";
 
 interface DashboardNavbarProps {
   role: Role;
