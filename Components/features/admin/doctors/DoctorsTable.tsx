@@ -49,6 +49,7 @@ export function DoctorsTable({ doctors, loading, onApprove, onReject, onDelete, 
                                                         src={doctor.doctorImage}
                                                         alt={doctor.email}
                                                         fill
+                                                        sizes="40px"
                                                         className="object-cover"
                                                     />
                                                 ) : (

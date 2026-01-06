@@ -65,6 +65,7 @@ export function DoctorDetailsDialog({
                                         src={doctor.doctorImage}
                                         alt={doctor.email}
                                         fill
+                                        sizes="(max-width: 768px) 100vw, 100px"
                                         className="object-cover"
                                     />
                                 ) : (
@@ -195,6 +196,7 @@ export function DoctorDetailsDialog({
                                         src={doctor.clinicImagePath}
                                         alt={doctor.clinicName}
                                         fill
+                                        sizes="(max-width: 768px) 100vw, 150px"
                                         className="object-cover"
                                     />
                                 ) : (
