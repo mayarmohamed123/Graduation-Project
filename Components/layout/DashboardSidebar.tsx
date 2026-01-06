@@ -15,11 +15,16 @@ import {
   LogOut,
   Package,
   ShoppingCart,
+  Stethoscope,
+  Building2,
+  DollarSign,
+  ClipboardList,
+  Archive,
 } from "lucide-react";
 import { sehhaLogo } from "@/assets";
 import { useAuth } from "@/hooks/useAuth";
 
-type Role = "doctor" | "pharmacy";
+type Role = "doctor" | "pharmacy" | "admin";
 
 interface DashboardSidebarProps {
   role: Role;
@@ -59,10 +64,25 @@ export default function DashboardSidebar({ role }: DashboardSidebarProps) {
     { name: "Settings", icon: Settings, href: "/pharmacy/settings" },
   ];
 
-  const menuItems = role === "doctor" ? doctorMenuItems : pharmacyMenuItems;
+  const adminMenuItems = [
+    { name: "Dashboard", icon: LayoutDashboard, href: "/admin" },
+    { name: "Patients Management", icon: Users, href: "/admin/patients" },
+    { name: "Doctors Management", icon: Stethoscope, href: "/admin/doctors" },
+    { name: "Pharmacies Management", icon: Building2, href: "/admin/pharmacies" },
+    { name: "Appointments Control", icon: Calendar, href: "/admin/appointments" },
+    { name: "Orders", icon: ClipboardList, href: "/admin/orders" },
+    { name: "Inventory Insights", icon: Archive, href: "/admin/inventory" },
+    { name: "Revenue & Payments", icon: DollarSign, href: "/admin/revenue" },
+    { name: "Analytics", icon: BarChart3, href: "/admin/analytics" },
+    { name: "Messages", icon: MessageSquare, href: "/admin/messages" },
+    { name: "Notifications", icon: Bell, href: "/admin/notifications" },
+    { name: "Settings", icon: Settings, href: "/admin/settings" },
+  ];
+
+  const menuItems = role === "doctor" ? doctorMenuItems : role === "pharmacy" ? pharmacyMenuItems : adminMenuItems;
 
   return (
-    <aside className="w-64 bg-[#2BBBC5] text-white min-h-screen flex flex-col">
+    <aside className={`${role === "admin" ? "w-70" : "w-64"} bg-[#2BBBC5] text-white min-h-screen flex flex-col`}>
       {/* Logo Section */}
       <div className="p-6 flex items-center gap-3">
         <Image
@@ -86,11 +106,10 @@ export default function DashboardSidebar({ role }: DashboardSidebarProps) {
               <li key={item.name}>
                 <Link
                   href={item.href}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                    active
-                      ? "bg-white/20 text-white"
-                      : "text-white/80 hover:bg-white/10 hover:text-white"
-                  }`}>
+                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${active
+                    ? "bg-white/20 text-white"
+                    : "text-white/80 hover:bg-white/10 hover:text-white"
+                    }`}>
                   <Icon className="w-5 h-5" />
                   <span className="font-medium">{item.name}</span>
                 </Link>
