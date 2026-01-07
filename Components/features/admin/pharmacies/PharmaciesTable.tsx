@@ -99,50 +99,62 @@ export function PharmaciesTable({ pharmacists, loading, onApprove, onReject, onD
                                         </code>
                                     </td>
                                     <td className="px-6 py-4">
-                                        <Badge variant="outline" className={`px-2.5 py-0.5 font-medium ${
-                                            pharmacist.isApproved 
-                                            ? "bg-green-50 text-green-700 border-green-200" 
-                                            : "bg-yellow-50 text-yellow-700 border-yellow-200"
-                                        }`}>
-                                            {pharmacist.isApproved ? "Approved" : "Pending"}
-                                        </Badge>
+                                        {pharmacist.isApproved ? (
+                                            <Badge variant="outline" className="px-2.5 py-0.5 font-medium bg-green-50 text-green-700 border-green-200">
+                                                Approved
+                                            </Badge>
+                                        ) : pharmacist.isReject ? (
+                                            <Badge variant="outline" className="px-2.5 py-0.5 font-medium bg-red-50 text-red-700 border-red-200">
+                                                Rejected
+                                            </Badge>
+                                        ) : (
+                                            <Badge variant="outline" className="px-2.5 py-0.5 font-medium bg-yellow-50 text-yellow-700 border-yellow-200">
+                                                Pending
+                                            </Badge>
+                                        )}
                                     </td>
                                     <td className="px-6 py-4 text-right">
                                         <div className="flex items-center justify-end gap-1.5">
-                                            <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                onClick={() => onViewDetails(pharmacist)}
-                                                className="h-8 w-8 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
-                                            >
-                                                <Eye className="w-4 h-4" />
-                                            </Button>
+                                            {!pharmacist.isReject && (
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    onClick={() => onViewDetails(pharmacist)}
+                                                    className="h-8 w-8 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                                                >
+                                                    <Eye className="w-4 h-4" />
+                                                </Button>
+                                            )}
                                             
-                                            {!pharmacist.isApproved ? (
-                                                <Button
-                                                    variant="ghost"
-                                                    size="icon"
-                                                    onClick={() => onApprove(pharmacist.id)}
-                                                    className="h-8 w-8 text-green-600 hover:text-green-700 hover:bg-green-50"
-                                                >
-                                                    <Check className="w-4 h-4" />
-                                                </Button>
-                                            ) : (
-                                                <Button
-                                                    variant="ghost"
-                                                    size="icon"
-                                                    onClick={() => onReject(pharmacist.id)}
-                                                    className="h-8 w-8 text-amber-600 hover:text-amber-700 hover:bg-amber-50"
-                                                >
-                                                    <X className="w-4 h-4" />
-                                                </Button>
+                                            {!pharmacist.isApproved && !pharmacist.isReject && (
+                                                <>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        onClick={() => onApprove(pharmacist.id)}
+                                                        className="h-8 w-8 text-green-600 hover:text-green-700 hover:bg-green-50"
+                                                        title="Approve"
+                                                    >
+                                                        <Check className="w-4 h-4" />
+                                                    </Button>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        onClick={() => onReject(pharmacist.id)}
+                                                        className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50"
+                                                        title="Reject"
+                                                    >
+                                                        <X className="w-4 h-4" />
+                                                    </Button>
+                                                </>
                                             )}
 
                                             <Button
                                                 variant="ghost"
                                                 size="icon"
                                                 onClick={() => onDelete(pharmacist.id)}
-                                                className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50"
+                                                className="h-8 w-8 text-gray-400 hover:text-red-600 hover:bg-red-50"
+                                                title="Delete"
                                             >
                                                 <Trash2 className="w-4 h-4" />
                                             </Button>

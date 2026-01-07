@@ -49,12 +49,67 @@ export interface AdminPharmacist {
   id: number;
   email: string;
   userId: string;
+  userName: string;
   pharmacistImage: string | null;
   licenseNumber: string;
   isApproved: boolean;
+  isReject: boolean;
   pharmacyId: number;
   pharmacyName: string;
   pharmacyPhone: string;
   pharmacyImagePath: string;
   city: string;
+}
+
+export interface AdminPharmacyDetails {
+  id: number;
+  name: string;
+  phone: string;
+  averageRating: number;
+  city: string;
+  imagePath: string;
+  postalCode: string;
+  country: string;
+  street: string;
+  latitude: number;
+  longitude: number;
+  distanceFromUser: number | null;
+  deliveryFee: number;
+}
+
+export interface AdminMedicine {
+  id: number;
+  brandName: string;
+  genericName: string;
+  strength: string;
+  atcCode: string;
+  imagePath: string;
+  price: number;
+  quantity: number;
+  dosageFormType: string;
+  strengthUnit: string;
+  genderSuitability: string;
+  medicationCategory: string;
+  averageRating: number;
+  description: string;
+  warning: string;
+  suitableFor: string;
+  notSuitableFor: string;
+  composition: string;
+  directionsForUse: string;
+  pharmacy: {
+    id: number;
+    name: string;
+    phone: string;
+    averageRating: number;
+    city: string;
+    imagePath: string;
+    postalCode: string;
+    country: string;
+    street: string;
+    latitude: number;
+    longitude: number;
+    distanceFromUser: number | null;
+    deliveryFee: number;
+  };
 }

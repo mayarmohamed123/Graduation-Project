@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Lock, Mail, User, MapPin, Building, Camera, FileText, Phone } from "lucide-react";
+import { Lock, Mail, User, MapPin, Building, Camera, FileText, Phone, DollarSign } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/Components/ui/input";
@@ -18,17 +17,19 @@ import { pharmacyService } from "@/Services/pharmaciesServices";
 import toast from "react-hot-toast";
 
 export default function PharmacyRegisterPage() {
-  const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [isRegistering, setIsRegistering] = useState(false);
   const [profilePreview, setProfilePreview] = useState<string | null>(null);
   const [pharmacyPreview, setPharmacyPreview] = useState<string | null>(null);
+  const [registeredPharmacistId, setRegisteredPharmacistId] = useState<number | null>(null);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     setValue,
+    getValues,
     trigger,
   } = useForm<PharmacyRegistrationFormData>({
     resolver: zodResolver(pharmacyRegistrationSchema),
@@ -76,44 +77,83 @@ export default function PharmacyRegisterPage() {
     }
   };
 
-  // Navigate to previous step
-  const handleBack = () => {
-    setCurrentStep(1);
+  // Navigate to Step 3 after Step 2 (Performs Registration)
+  const handleNextToPayment = async () => {
+    const stage2Fields: (keyof PharmacyRegistrationFormData)[] = [
+      "pharmacyName",
+      "pharmacistPhoneNumber",
+      "licenseNumber",
+      "country",
+      "city",
+      "street",
+      "pharmacyImage"
+    ];
+
+    const isValid = await trigger(stage2Fields);
+    if (isValid) {
+      setIsRegistering(true);
+      try {
+        const data = getValues();
+        const formData = new FormData();
+        
+        formData.append("userName", data.userName);
+        formData.append("Email", data.email);
+        formData.append("Password", data.password);
+        formData.append("PharmacyName", data.pharmacyName);
+        formData.append("LicenseNumber", data.licenseNumber);
+        formData.append("PhoneNumber", data.pharmacistPhoneNumber);
+        
+        formData.append("address.Country", data.country);
+        formData.append("address.city", data.city);
+        formData.append("address.Street", data.street);
+
+        if (data.profilePicture) formData.append("pharmacistImage", data.profilePicture);
+        if (data.pharmacyImage) formData.append("pharmacyImage", data.pharmacyImage);
+
+        const response = await pharmacyService.register(formData);
+        
+        if (response.pharmacistId) {
+          setRegisteredPharmacistId(response.pharmacistId);
+          toast.success("Registration successful! Proceed to payment.");
+          setCurrentStep(3);
+        } else {
+          throw new Error("Registration succeeded but no ID was returned.");
+        }
+      } catch (error) {
+        toast.error(error instanceof Error ? error.message : "Registration failed");
+      } finally {
+        setIsRegistering(false);
+      }
+    }
   };
 
-  // Form submission
-  const onSubmit = async (data: PharmacyRegistrationFormData) => {
+  // Navigate to previous step
+  const handleBack = () => {
+    if (currentStep === 3) {
+      setCurrentStep(2);
+    } else if (currentStep === 2) {
+      setCurrentStep(1);
+    }
+  };
+
+  // Form submission (Step 3: Payment)
+  const onSubmit = async () => {
+    if (!registeredPharmacistId) {
+      toast.error("Please complete registration first");
+      return;
+    }
+
     setIsLoading(true);
     try {
-      const formData = new FormData();
+      const response = await pharmacyService.createPharmacySubscriptionSession(registeredPharmacistId);
       
-      formData.append("userName", data.userName);
-      formData.append("Email", data.email);
-      formData.append("Password", data.password);
-      formData.append("PharmacyName", data.pharmacyName);
-      formData.append("LicenseNumber", data.licenseNumber);
-      formData.append("PhoneNumber", data.pharmacistPhoneNumber);
-      
-      formData.append("address.Country", data.country);
-      formData.append("address.city", data.city);
-      formData.append("address.Street", data.street);
-
-      if (data.profilePicture) {
-        formData.append("pharmacistImage", data.profilePicture);
+      if (response.sessionUrl) {
+        window.location.href = response.sessionUrl;
+      } else {
+        throw new Error("Payment session creation failed");
       }
-      if (data.pharmacyImage) {
-        formData.append("pharmacyImage", data.pharmacyImage);
-      }
-
-      const response = await pharmacyService.register(formData);
-      
-      toast.success(response.message || "Registration successful! Awaiting admin approval.");
-      
-      setTimeout(() => {
-        router.push("/login");
-      }, 2000);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Registration failed");
+      toast.error(error instanceof Error ? error.message : "Payment failed");
     } finally {
       setIsLoading(false);
     }
@@ -437,11 +477,12 @@ export default function PharmacyRegisterPage() {
                     Back
                   </Button>
                   <Button
-                    type="submit"
-                    disabled={isLoading}
+                    type="button"
+                    onClick={handleNextToPayment}
+                    disabled={isRegistering}
                     className="flex-1 bg-[#2BBBC5] text-white rounded-3xl hover:bg-[#249da5] disabled:opacity-50"
                   >
-                    {isLoading ? "Registering..." : "Next"}
+                    {isRegistering ? "Registering..." : "Next"}
                   </Button>
                 </div>
 
@@ -451,6 +492,47 @@ export default function PharmacyRegisterPage() {
                     Sign In
                   </a>
                 </p>
+              </div>
+            )}
+
+            {/* Stage 3: Payment Section */}
+            {currentStep === 3 && (
+              <div className="space-y-6">
+                <div className="bg-[#f0f9fa] p-6 rounded-2xl border-2 border-dashed border-[#2BBBC5] text-center">
+                  <DollarSign className="mx-auto text-[#2BBBC5] mb-4" size={48} />
+                  <h3 className="text-xl font-bold text-[#2BBBC5] mb-2">Pharmacy Subscription</h3>
+                  <p className="text-gray-600">
+                    To register your pharmacy on our platform, a one-time subscription fee of 
+                    <span className="font-bold text-[#2BBBC5]"> $200 </span>
+                    is required.
+                  </p>
+                </div>
+
+                <div className="bg-gray-50 p-4 rounded-xl">
+                  <p className="text-sm text-gray-500 italic">
+                    By clicking &quot;Agree & Pay&quot;, you agree to our terms of service regarding pharmacy registration. 
+                    You will be redirected to Stripe to complete the transaction.
+                  </p>
+                </div>
+
+                <div className="flex gap-3 mt-4">
+                  <Button
+                    type="button"
+                    onClick={handleBack}
+                    variant="outline"
+                    className="flex-1 rounded-3xl border-2 border-[#2BBBC5] text-[#2BBBC5] hover:bg-gray-50"
+                  >
+                    Back
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={onSubmit}
+                    disabled={isLoading}
+                    className="flex-1 bg-[#2BBBC5] text-white rounded-3xl hover:bg-[#249da5] disabled:opacity-50"
+                  >
+                    {isLoading ? "Processing..." : "Agree & Pay"}
+                  </Button>
+                </div>
               </div>
             )}
           </form>

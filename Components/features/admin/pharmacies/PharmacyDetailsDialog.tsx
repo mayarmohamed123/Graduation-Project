@@ -74,12 +74,19 @@ export function PharmacyDetailsDialog({ pharmacist, isOpen, onClose, onUpdate }:
                                     {pharmacist.email[0].toUpperCase()}
                                 </AvatarFallback>
                             </Avatar>
-                            <Badge 
-                                variant="outline" 
-                                className={pharmacist.isApproved ? "bg-green-50 text-green-700 border-green-200" : "bg-yellow-50 text-yellow-700 border-yellow-200"}
-                            >
-                                {pharmacist.isApproved ? "Verified" : "Pending"}
-                            </Badge>
+                            {pharmacist.isApproved ? (
+                                <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                                    Verified
+                                </Badge>
+                            ) : pharmacist.isReject ? (
+                                <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">
+                                    Rejected
+                                </Badge>
+                            ) : (
+                                <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
+                                    Pending
+                                </Badge>
+                            )}
                         </div>
 
                         <div className="flex-1 space-y-4 w-full">

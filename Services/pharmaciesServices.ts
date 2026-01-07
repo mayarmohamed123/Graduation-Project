@@ -31,14 +31,59 @@ class PharmacyService {
 
   // Register a new pharmacist/pharmacy
   async register(formData: FormData): Promise<PharmacyRegistrationResponse> {
-    return await apiRequest<PharmacyRegistrationResponse>(
+    interface RawPharmacyRegisterResponse {
+      message: string;
+      name: string;
+      userId: string;
+      email: string;
+      role: string;
+      pharmacistProfileId?: number;
+      pharmacistId?: number;
+      PharmacistId?: number;
+      id?: number;
+      pharmacyId?: number;
+    }
+
+    const response = await apiRequest<RawPharmacyRegisterResponse>(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/Pharmacties/register`,
       {
         method: "POST",
         data: formData,
         requiresAuth: false,
-        headers: {
-          // No need for Content-Type when using FormData
+      }
+    );
+
+    // Handle different possible field names for ID (Mapping from API pharmacistProfileId)
+    const pharmacistId = 
+      response.pharmacistId || 
+      response.pharmacistProfileId || 
+      response.PharmacistId || 
+      response.id || 
+      response.pharmacyId || 
+      0;
+
+    return {
+      message: response.message || "",
+      name: response.name || "",
+      userId: response.userId || "",
+      email: response.email || "",
+      role: response.role || "",
+      pharmacistId
+    };
+  }
+
+  // Create payment session for pharmacy subscription
+  async createPharmacySubscriptionSession(
+    pharmacistId: number
+  ): Promise<{ message: string; sessionUrl: string; sessionId: string }> {
+    return await apiRequest<{ message: string; sessionUrl: string; sessionId: string }>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/payments/create-session`,
+      {
+        method: "POST",
+        data: {
+          pharmacistId,
+          paymentFor: "PharmacistRegistration",
+          amount: 200,
         },
       }
     );

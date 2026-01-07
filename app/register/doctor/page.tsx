@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Lock, Mail, User, Phone, MapPin, Building, DollarSign, Camera } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -17,19 +16,40 @@ import { doctorRegistrationSchema, type DoctorRegistrationFormData } from "@/lib
 import { doctorService } from "@/Services/doctorService";
 import toast from "react-hot-toast";
 
+const SPECIALTIES = [
+  { label: "Pediatrics", value: "2" },
+  { label: "Cardiology", value: "3" },
+  { label: "Neurology", value: "4" },
+  { label: "Orthopedics", value: "5" },
+  { label: "Dermatology", value: "6" },
+  { label: "Ophthalmology", value: "7" },
+  { label: "ENT", value: "8" },
+  { label: "Psychiatry", value: "9" },
+  { label: "Gynecology", value: "10" },
+  { label: "Urology", value: "11" },
+  { label: "Gastroenterology", value: "12" },
+  { label: "Endocrinology", value: "13" },
+  { label: "Nephrology", value: "14" },
+  { label: "Rheumatology", value: "15" },
+  { label: "Oncology", value: "16" },
+  { label: "GeneralSurgery", value: "17" },
+  { label: "Dentistry", value: "18" },
+];
+
 export default function DoctorRegisterPage() {
-  const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [isRegistering, setIsRegistering] = useState(false);
   const [profilePreview, setProfilePreview] = useState<string | null>(null);
   const [clinicPreview, setClinicPreview] = useState<string | null>(null);
+  const [registeredDoctorId, setRegisteredDoctorId] = useState<number | null>(null);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     setValue,
-
+    getValues,
     trigger,
   } = useForm<DoctorRegistrationFormData>({
     resolver: zodResolver(doctorRegistrationSchema),
@@ -82,55 +102,92 @@ export default function DoctorRegisterPage() {
     }
   };
 
-  // Navigate to previous step
-  const handleBack = () => {
-    setCurrentStep(1);
+  // Navigate to Step 3 after Step 2 (Performs Registration)
+  const handleNextToPayment = async () => {
+    // Validate stage 2 fields before advancing
+    const stage2Fields: (keyof DoctorRegistrationFormData)[] = [
+      "clinicName",
+      "clinicPhoneNumber",
+      "country",
+      "city",
+      "street",
+      "consultationType",
+      "price",
+      "clinicImage",
+    ];
+
+    const isValid = await trigger(stage2Fields);
+    if (isValid) {
+      // Perform Registration here
+      setIsRegistering(true);
+      try {
+        const data = getValues();
+        
+        const formData = new FormData();
+        formData.append("userName", `${data.firstName}${data.lastName}`);
+        formData.append("Email", data.email);
+        formData.append("Specialty", data.specialty);
+        formData.append("Gender", data.gender);
+        formData.append("Password", data.password);
+        formData.append("ClinicName", data.clinicName);
+        formData.append("ClinicPhone", data.clinicPhoneNumber);
+        formData.append("ClinicAddress.Country", data.country);
+        formData.append("ClinicAddress.City", data.city);
+        formData.append("ClinicAddress.Street", data.street);
+        formData.append("ConsultationType", data.consultationType);
+        formData.append("consultationPrice", data.price);
+
+        if (data.profilePicture) formData.append("doctorImage", data.profilePicture);
+        if (data.clinicImage) formData.append("clinicImage", data.clinicImage);
+
+        const response = await doctorService.registerDoctor(formData);
+        console.log("Doctor registered with ID:", response.doctorId);
+        
+        if (response.doctorId) {
+          setRegisteredDoctorId(response.doctorId);
+          toast.success("Registration successful! Proceed to payment.");
+          setCurrentStep(3);
+        } else {
+          throw new Error("Registration succeeded but no ID was returned. Please contact support.");
+        }
+      } catch (error) {
+        toast.error(error instanceof Error ? error.message : "Registration failed");
+      } finally {
+        setIsRegistering(false);
+      }
+    }
   };
 
-  // Form submission
-  const onSubmit = async (data: DoctorRegistrationFormData) => {
+  // Navigate to previous step
+  const handleBack = () => {
+    if (currentStep === 3) {
+      setCurrentStep(2);
+    } else if (currentStep === 2) {
+      setCurrentStep(1);
+    }
+  };
+
+  // Form submission (Step 3: Payment)
+  const onSubmit = async () => {
+    console.log("Current registeredDoctorId:", registeredDoctorId);
+    if (!registeredDoctorId) {
+      toast.error("Please complete registration first (No ID found)");
+      return;
+    }
+
     setIsLoading(true);
     try {
-      // Create FormData object
-      const formData = new FormData();
+      // 2. Create subscription payment session
+      const paymentResponse = await doctorService.createSubscriptionSession(registeredDoctorId);
       
-      // Append all form fields
-      // Combine firstName and lastName as userName
-      formData.append("userName", `${data.firstName}${data.lastName}`);
-      formData.append("Email", data.email);
-      formData.append("Specialty", data.specialty);
-      formData.append("Gender", data.gender);
-      formData.append("Password", data.password);
-      formData.append("ClinicName", data.clinicName);
-      formData.append("ClinicPhone", data.clinicPhoneNumber);
-      
-      // Append address fields in the correct format
-      formData.append("ClinicAddress.Country", data.country);
-      formData.append("ClinicAddress.City", data.city);
-      formData.append("ClinicAddress.Street", data.street);
-      
-      formData.append("ConsultationType", data.consultationType);
-      formData.append("consultationPrice", data.price);
-
-      // Append files if they exist
-      if (data.profilePicture) {
-        formData.append("doctorImage", data.profilePicture);
+      if (paymentResponse.sessionUrl) {
+        // Redirect to Stripe checkout
+        window.location.href = paymentResponse.sessionUrl;
+      } else {
+        throw new Error("Payment session creation failed");
       }
-      if (data.clinicImage) {
-        formData.append("clinicImage", data.clinicImage);
-      }
-
-      // Call the registration service
-      const response = await doctorService.registerDoctor(formData);
-      
-      toast.success(response.message || "Registration successful! Awaiting admin approval.");
-      
-      // Navigate to login page
-      setTimeout(() => {
-        router.push("/login");
-      }, 2000);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Registration failed");
+      toast.error(error instanceof Error ? error.message : "Payment failed");
     } finally {
       setIsLoading(false);
     }
@@ -161,7 +218,9 @@ export default function DoctorRegisterPage() {
             <p className="text-gray-500 text-sm mb-5">
               {currentStep === 1 
                 ? "Account info first, clinic/hospital next." 
-                : "Your Clinic Information"}
+                : currentStep === 2
+                ? "Your Clinic Information"
+                : "Payment Information"}
             </p>
 
             {/* Stage 1: Personal/Account Information */}
@@ -256,11 +315,17 @@ export default function DoctorRegisterPage() {
                       className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2BBBC5]"
                       size={18}
                     />
-                    <Input
+                    <select
                       {...register("specialty")}
-                      placeholder="Specialty"
-                      className="pl-9 rounded-3xl border-2 border-[#2BBBC5] placeholder-[#2BBBC5] focus-visible:ring-0 focus-visible:border-[#2BBBC5]"
-                    />
+                      className="w-full pl-9 pr-4 py-2 rounded-3xl border-2 border-[#2BBBC5] text-[#2BBBC5] focus:outline-none focus:border-[#2BBBC5] appearance-none bg-white"
+                    >
+                      <option value="">Select Specialty</option>
+                      {SPECIALTIES.map((specialty) => (
+                        <option key={specialty.value} value={specialty.value}>
+                          {specialty.label}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                   {errors.specialty && (
                     <p className="text-red-500 text-xs mt-1 ml-3">
@@ -558,11 +623,12 @@ export default function DoctorRegisterPage() {
                     Back
                   </Button>
                   <Button
-                    type="submit"
-                    disabled={isLoading}
+                    type="button"
+                    onClick={handleNextToPayment}
+                    disabled={isRegistering}
                     className="flex-1 bg-[#2BBBC5] text-white rounded-3xl hover:bg-[#249da5] disabled:opacity-50"
                   >
-                    {isLoading ? "Registering..." : "Next"}
+                    {isRegistering ? "Registering..." : "Next"}
                   </Button>
                 </div>
 
@@ -572,6 +638,47 @@ export default function DoctorRegisterPage() {
                     Sign In
                   </a>
                 </p>
+              </div>
+            )}
+
+            {/* Stage 3: Payment Section */}
+            {currentStep === 3 && (
+              <div className="space-y-6">
+                <div className="bg-[#f0f9fa] p-6 rounded-2xl border-2 border-dashed border-[#2BBBC5] text-center">
+                  <DollarSign className="mx-auto text-[#2BBBC5] mb-4" size={48} />
+                  <h3 className="text-xl font-bold text-[#2BBBC5] mb-2">Subscription Fee</h3>
+                  <p className="text-gray-600">
+                    To join our platform and start receiving patients, a one-time subscription fee of 
+                    <span className="font-bold text-[#2BBBC5]"> $100 </span>
+                    is required.
+                  </p>
+                </div>
+
+                <div className="bg-gray-50 p-4 rounded-xl">
+                  <p className="text-sm text-gray-500 italic">
+                    By clicking &quot;Agree & Pay&quot;, you agree to our terms of service regarding subscription payments. 
+                    You will be redirected to our secure payment processor (Stripe) to complete the transaction.
+                  </p>
+                </div>
+
+                <div className="flex gap-3 mt-4">
+                  <Button
+                    type="button"
+                    onClick={handleBack}
+                    variant="outline"
+                    className="flex-1 rounded-3xl border-2 border-[#2BBBC5] text-[#2BBBC5] hover:bg-gray-50"
+                  >
+                    Back
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={onSubmit}
+                    disabled={isLoading}
+                    className="flex-1 bg-[#2BBBC5] text-white rounded-3xl hover:bg-[#249da5] disabled:opacity-50"
+                  >
+                    {isLoading ? "Processing..." : "Agree & Pay"}
+                  </Button>
+                </div>
               </div>
             )}
           </form>

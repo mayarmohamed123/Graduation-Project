@@ -7,3 +7,4 @@ export * from "./radio-group";
 export * from "./textarea";
 export * from "./calendar";
 export * from "./dialog";
+export * from "./table";

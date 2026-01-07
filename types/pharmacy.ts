@@ -18,6 +18,7 @@ export interface PharmacyRegistrationResponse {
     message: string;
     name: string;
     userId: string;
+    pharmacistId: number;
     email: string;
     role: string;
 }

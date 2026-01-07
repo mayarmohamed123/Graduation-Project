@@ -139,6 +139,23 @@ export const doctorService = {
     );
   },
 
+  // Create payment session for doctor subscription
+  createSubscriptionSession: async (
+    doctorId: number
+  ): Promise<CreateSessionResponse> => {
+    return await apiRequest<CreateSessionResponse>(
+      `${baseUrl}/payments/create-session`,
+      {
+        method: "POST",
+        data: {
+          doctorId,
+          paymentFor: "DoctorRegistration",
+          amount: 100,
+        },
+      }
+    );
+  },
+
   // Verify payment session after appointment
   verifyPaymentSession: async (
     sessionId: string
@@ -154,14 +171,37 @@ export const doctorService = {
   ): Promise<{
     message: string;
     userId: string;
+    doctorId: number;
     email: string;
     role: string;
   }> => {
-    return await apiRequest(`${baseUrl}/doctors/register`, {
+    interface RawRegisterResponse {
+      message: string;
+      userId: string;
+      email: string;
+      role: string;
+      doctorProfileId?: number;
+      doctorId?: number;
+      DoctorId?: number;
+      id?: number;
+    }
+
+    const response = await apiRequest<RawRegisterResponse>(`${baseUrl}/doctors/register`, {
       method: "POST",
       data: formData,
       requiresAuth: false,
     });
+    
+    // Handle different possible field names for ID (Mapping from API doctorProfileId)
+    const doctorId = response.doctorId || response.doctorProfileId || response.DoctorId || response.id || 0;
+    
+    return {
+      message: response.message,
+      userId: response.userId,
+      email: response.email,
+      role: response.role,
+      doctorId
+    };
   },
 
   // Update doctor profile with FormData
