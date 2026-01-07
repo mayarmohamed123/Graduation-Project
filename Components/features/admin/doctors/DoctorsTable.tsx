@@ -88,9 +88,9 @@ export function DoctorsTable({ doctors, loading, onApprove, onReject, onDelete, 
                                     <td className="px-6 py-4">
                                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${doctor.isApproved
                                             ? "bg-green-100 text-green-800"
-                                            : "bg-yellow-100 text-yellow-800"
+                                            : doctor.isRejected ? "bg-red-100 text-red-800" : "bg-yellow-100 text-yellow-800"
                                             }`}>
-                                            {doctor.isApproved ? "Approved" : "Pending"}
+                                            {doctor.isApproved ? "Approved" : doctor.isRejected ? "Rejected" : "Pending"}
                                         </span>
                                     </td>
                                     <td className="px-6 py-4 text-right">
@@ -102,7 +102,7 @@ export function DoctorsTable({ doctors, loading, onApprove, onReject, onDelete, 
                                             >
                                                 <Eye className="w-4 h-4" />
                                             </button>
-                                            {!doctor.isApproved && (
+                                            {!doctor.isApproved && !doctor.isRejected && (
                                                 <button
                                                     onClick={() => onApprove(doctor.id)}
                                                     className="p-1.5 rounded-lg text-green-600 hover:bg-green-50 transition-colors"
@@ -111,7 +111,7 @@ export function DoctorsTable({ doctors, loading, onApprove, onReject, onDelete, 
                                                     <Check className="w-4 h-4" />
                                                 </button>
                                             )}
-                                            {doctor.isApproved && (
+                                            {!doctor.isApproved && !doctor.isRejected && (
                                                 <button
                                                     onClick={() => onReject(doctor.id)}
                                                     className="p-1.5 rounded-lg text-amber-600 hover:bg-amber-50 transition-colors"
@@ -120,13 +120,14 @@ export function DoctorsTable({ doctors, loading, onApprove, onReject, onDelete, 
                                                     <X className="w-4 h-4" />
                                                 </button>
                                             )}
-                                            <button
+                                            {doctor.isApproved || doctor.isRejected ? (<button
                                                 onClick={() => onDelete(doctor.id)}
                                                 className="p-1.5 rounded-lg text-red-600 hover:bg-red-50 transition-colors"
                                                 title="Delete"
                                             >
                                                 <Trash2 className="w-4 h-4" />
                                             </button>
+                                            ) : (<></>)}
                                         </div>
                                     </td>
                                 </tr>

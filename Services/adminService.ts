@@ -43,12 +43,22 @@ class AdminService {
   }
 
   /**
-   * Update doctor info
+   * Update doctor profile info
    */
-  async updateDoctor(id: number, data: Partial<AdminDoctor>): Promise<void> {
+  async updateDoctorProfile(userId: string, formData: FormData): Promise<void> {
     return await apiRequest(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Admin/update-doctorprofile/${id}`,
-      { method: "PUT", requiresAuth: true }
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Admin/update-doctorprofile/${userId}`,
+      { method: "PUT", requiresAuth: true, data: formData }
+    );
+  }
+
+  /**
+   * Update doctor clinic info
+   */
+  async updateClinic(userId: string, formData: FormData): Promise<void> {
+    return await apiRequest(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Admin/update-clinic/${userId}`,
+      { method: "PUT", requiresAuth: true, data: formData }
     );
   }
 }

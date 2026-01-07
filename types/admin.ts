@@ -1,8 +1,10 @@
 export interface AdminDoctor {
   id: number;
+  userId: string;
   email: string;
   specialty: string;
   isApproved: boolean;
+  isRejected: boolean;
   gender: string;
   averageRating: number;
   username: string;
@@ -22,4 +24,24 @@ export interface AdminDoctor {
   countPatient: number;
   countReviews: number;
   countFavourite: number;
+}
+
+export interface DoctorProfileData {
+  username?: string;
+  email?: string;
+  specialty?: string;
+  image?: File | string;
+  consultationPrice?: number;
+  consultationType?: string;
+}
+
+export interface ClinicInfoData {
+  name?: string;
+  Phone?: string;
+  ConsultationPrice?: number;
+  city?: string;
+  street?: string;
+  country?: string;
+  ConsultationType?: string;
+  image?: File | string;
 }

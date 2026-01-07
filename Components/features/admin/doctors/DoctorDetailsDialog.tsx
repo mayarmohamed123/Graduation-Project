@@ -8,7 +8,7 @@ import {
     DialogTitle,
     DialogFooter,
 } from "@/Components/ui/dialog";
-import { AdminDoctor } from "@/types/admin";
+import { AdminDoctor, DoctorProfileData, ClinicInfoData } from "@/types/admin";
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { Label } from "@/Components/ui/label";
@@ -19,7 +19,7 @@ interface DoctorDetailsDialogProps {
     doctor: AdminDoctor | null;
     isOpen: boolean;
     onClose: () => void;
-    onUpdate: (id: number, data: Partial<AdminDoctor>) => Promise<void>;
+    onUpdate: (id: number, profileData: DoctorProfileData, clinicData: ClinicInfoData) => Promise<void>;
 }
 
 export function DoctorDetailsDialog({
@@ -32,19 +32,87 @@ export function DoctorDetailsDialog({
     const [formData, setFormData] = useState<Partial<AdminDoctor>>({});
     const [loading, setLoading] = useState(false);
 
+    const [selectedDoctorImage, setSelectedDoctorImage] = useState<File | null>(null);
+    const [selectedClinicImage, setSelectedClinicImage] = useState<File | null>(null);
+    const [previewDoctorImage, setPreviewDoctorImage] = useState<string | null>(null);
+    const [previewClinicImage, setPreviewClinicImage] = useState<string | null>(null);
+
     useEffect(() => {
         if (doctor) {
             setFormData(doctor);
+            setPreviewDoctorImage(doctor.doctorImage);
+            setPreviewClinicImage(doctor.clinicImagePath);
         }
         setIsEditing(false);
+        setSelectedDoctorImage(null);
+        setSelectedClinicImage(null);
     }, [doctor, isOpen]);
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'doctor' | 'clinic') => {
+        const file = e.target.files?.[0];
+        if (file) {
+            const previewUrl = URL.createObjectURL(file);
+            if (type === 'doctor') {
+                setSelectedDoctorImage(file);
+                setPreviewDoctorImage(previewUrl);
+            } else {
+                setSelectedClinicImage(file);
+                setPreviewClinicImage(previewUrl);
+            }
+        }
+    };
 
     if (!doctor) return null;
 
     const handleSave = async () => {
         try {
             setLoading(true);
-            await onUpdate(doctor.id, formData);
+
+            // Prepare doctor profile data - only include changed fields
+            const profileData: DoctorProfileData = {};
+
+            if (formData.username !== doctor.username) {
+                profileData.username = formData.username;
+            }
+            if (formData.email !== doctor.email) {
+                profileData.email = formData.email;
+            }
+            if (formData.specialty !== doctor.specialty) {
+                profileData.specialty = formData.specialty;
+            }
+            if (formData.consultationPrice !== doctor.consultationPrice) {
+                profileData.consultationPrice = formData.consultationPrice;
+            }
+            if (formData.consultationType !== doctor.consultationType) {
+                profileData.consultationType = formData.consultationType;
+            }
+            if (selectedDoctorImage) {
+                profileData.image = selectedDoctorImage;
+            }
+
+            // Prepare clinic data - only include changed fields
+            const clinicData: ClinicInfoData = {};
+
+            if (formData.clinicName !== doctor.clinicName) {
+                clinicData.name = formData.clinicName;
+            }
+            if (formData.clinicPhone !== doctor.clinicPhone) {
+                clinicData.Phone = formData.clinicPhone;
+            }
+            if (formData.city !== doctor.city) {
+                clinicData.city = formData.city;
+            }
+            if (formData.street !== doctor.street) {
+                clinicData.street = formData.street;
+            }
+            if (formData.country !== doctor.country) {
+                clinicData.country = formData.country;
+            }
+            if (selectedClinicImage) {
+                clinicData.image = selectedClinicImage;
+            }
+
+            await onUpdate(doctor.id, profileData, clinicData);
             setIsEditing(false);
         } catch (error) {
             console.error("Failed to update doctor:", error);
@@ -59,10 +127,10 @@ export function DoctorDetailsDialog({
                 <DialogHeader>
                     <div className="flex items-start justify-between gap-4">
                         <div className="flex items-center gap-4">
-                            <div className="relative h-16 w-16 rounded-full overflow-hidden bg-gray-100 flex-shrink-0 border">
-                                {doctor.doctorImage ? (
+                            <div className="relative h-16 w-16 rounded-full overflow-hidden bg-gray-100 flex-shrink-0 border group">
+                                {previewDoctorImage ? (
                                     <Image
-                                        src={doctor.doctorImage}
+                                        src={previewDoctorImage}
                                         alt={doctor.email}
                                         fill
                                         sizes="(max-width: 768px) 100vw, 100px"
@@ -72,6 +140,24 @@ export function DoctorDetailsDialog({
                                     <div className="w-full h-full flex items-center justify-center text-gray-400 font-bold text-xl">
                                         {doctor.email?.substring(0, 2).toUpperCase()}
                                     </div>
+                                )}
+                                {isEditing && (
+                                    <>
+                                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                                            onClick={() => document.getElementById('doctor-image-upload')?.click()}>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
+                                                <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
+                                                <circle cx="12" cy="13" r="3" />
+                                            </svg>
+                                        </div>
+                                        <input
+                                            id="doctor-image-upload"
+                                            type="file"
+                                            accept="image/*"
+                                            className="hidden"
+                                            onChange={(e) => handleFileChange(e, 'doctor')}
+                                        />
+                                    </>
                                 )}
                             </div>
                             <div>
@@ -190,10 +276,10 @@ export function DoctorDetailsDialog({
                         </h3>
 
                         <div className="flex gap-4 mb-4">
-                            <div className="relative h-20 w-32 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0 border">
-                                {doctor.clinicImagePath ? (
+                            <div className="relative h-20 w-32 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0 border group">
+                                {previewClinicImage ? (
                                     <Image
-                                        src={doctor.clinicImagePath}
+                                        src={previewClinicImage}
                                         alt={doctor.clinicName}
                                         fill
                                         sizes="(max-width: 768px) 100vw, 150px"
@@ -203,6 +289,24 @@ export function DoctorDetailsDialog({
                                     <div className="w-full h-full flex items-center justify-center text-gray-400">
                                         <Building className="w-8 h-8 opacity-20" />
                                     </div>
+                                )}
+                                {isEditing && (
+                                    <>
+                                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                                            onClick={() => document.getElementById('clinic-image-upload')?.click()}>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
+                                                <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
+                                                <circle cx="12" cy="13" r="3" />
+                                            </svg>
+                                        </div>
+                                        <input
+                                            id="clinic-image-upload"
+                                            type="file"
+                                            accept="image/*"
+                                            className="hidden"
+                                            onChange={(e) => handleFileChange(e, 'clinic')}
+                                        />
+                                    </>
                                 )}
                             </div>
                             <div className="flex-1 space-y-2">
@@ -271,10 +375,14 @@ export function DoctorDetailsDialog({
                                 {loading ? "Saving..." : "Save Changes"}
                             </Button>
                         </>
-                    ) : (
+                    ) : doctor.isApproved ? (
                         <>
                             <Button variant="outline" onClick={onClose}>Close</Button>
                             <Button onClick={() => setIsEditing(true)}>Edit Details</Button>
+                        </>
+                    ) : (
+                        <>
+                            <Button variant="outline" onClick={onClose}>Close</Button>
                         </>
                     )}
                 </DialogFooter>
