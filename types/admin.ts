@@ -45,3 +45,16 @@ export interface ClinicInfoData {
   ConsultationType?: string;
   image?: File | string;
 }
+export interface AdminPharmacist {
+  id: number;
+  email: string;
+  userId: string;
+  pharmacistImage: string | null;
+  licenseNumber: string;
+  isApproved: boolean;
+  pharmacyId: number;
+  pharmacyName: string;
+  pharmacyPhone: string;
+  pharmacyImagePath: string;
+  city: string;
+}

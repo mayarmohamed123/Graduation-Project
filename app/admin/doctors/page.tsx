@@ -5,7 +5,7 @@ import { DoctorsFilters } from "@/Components/features/admin/doctors/DoctorsFilte
 import { DoctorsTable } from "@/Components/features/admin/doctors/DoctorsTable";
 import { DoctorDetailsDialog } from "@/Components/features/admin/doctors/DoctorDetailsDialog";
 import { ConfirmationDialog } from "@/Components/ui/confirmation-dialog";
-import { adminService } from "@/Services/adminService";
+import { adminService } from "@/Services/admin/adminService";
 import { AdminDoctor, DoctorProfileData, ClinicInfoData } from "@/types/admin";
 import { toast } from "react-hot-toast";
 

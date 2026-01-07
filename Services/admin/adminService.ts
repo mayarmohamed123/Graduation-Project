@@ -1,4 +1,4 @@
-import { apiRequest } from "./api";
+import { apiRequest } from "../api";
 import { AdminDoctor } from "@/types/admin";
 
 class AdminService {
