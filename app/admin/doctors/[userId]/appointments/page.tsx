@@ -7,6 +7,7 @@ import { DoctorInfoCard } from "@/Components/features/admin/appointments/DoctorI
 import { AppointmentsTable } from "@/Components/features/admin/appointments/AppointmentsTable";
 import { AppointmentsHeader } from "@/Components/features/admin/appointments/AppointmentsHeader";
 import LoadingSpinner from "@/Components/common/LoadingSpinner";
+import { adminService } from "@/Services/admin/adminService";
 import { toast } from "react-hot-toast";
 
 export default function DoctorAppointmentsPage() {
@@ -22,14 +23,7 @@ export default function DoctorAppointmentsPage() {
         if (!userId) return;
 
         try {
-            const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "https://sehhaapi.runasp.net/api";
-            const response = await fetch(`${baseUrl}/Admin/doctorappointments/${userId}`);
-
-            if (!response.ok) {
-                throw new Error("there is no appointments for this doctor");
-            }
-
-            const data = await response.json();
+            const data = await adminService.getDoctorAppointments(userId);
             setAppointments(data);
             setError(null);
         } catch (err) {
@@ -43,31 +37,18 @@ export default function DoctorAppointmentsPage() {
 
     const handleStatusUpdate = async (action: 'approve' | 'reject' | 'complete', appointmentId: number) => {
         setProcessingId(appointmentId);
-        const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "https://sehhaapi.runasp.net/api";
 
         try {
-            let url = "";
-            let method = "PUT";
-
             switch (action) {
                 case 'approve':
-                    url = `${baseUrl}/Admin/approveappointment/${appointmentId}/${userId}`;
-                    method = "PUT";
+                    await adminService.approveAppointment(appointmentId, userId);
                     break;
                 case 'reject':
-                    url = `${baseUrl}/Admin/rejectappointment/${appointmentId}`;
-                    method = "PUT";
+                    await adminService.rejectAppointment(appointmentId);
                     break;
                 case 'complete':
-                    url = `${baseUrl}/Admin/completeappointment/${appointmentId}`;
-                    method = "PATCH";
+                    await adminService.completeAppointment(appointmentId);
                     break;
-            }
-
-            const response = await fetch(url, { method });
-
-            if (!response.ok) {
-                throw new Error(`Failed to ${action} appointment`);
             }
 
             toast.success(`Appointment ${action}d successfully`);
