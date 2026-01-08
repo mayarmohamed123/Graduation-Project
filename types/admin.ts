@@ -145,6 +145,7 @@ export interface UserOrder {
   street: string;
   phoneNumber: string;
   totalPrice: number;
+  delieveryFee: number;
   status: string;
   paymentStatus: string;
   createdAt: string;

@@ -125,6 +125,10 @@ export function OrderRow({ order }: OrderRowProps) {
                                         <span className="font-medium text-gray-900">EGP {(item.unitPrice * item.quantity).toFixed(2)}</span>
                                     </div>
                                 ))}
+                                <div className="pt-2 border-t border-gray-200 flex justify-between font-semibold text-gray-900">
+                                    <span>Delivery Fee</span>
+                                    <span>EGP {order.delieveryFee.toFixed(2)}</span>
+                                </div>
                                 <div className="pt-2 border-t border-gray-200 flex justify-between font-bold text-gray-900">
                                     <span>Total</span>
                                     <span>EGP {order.totalPrice.toFixed(2)}</span>
