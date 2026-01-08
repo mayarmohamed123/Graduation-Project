@@ -76,15 +76,15 @@ export const apiRequest = async <T = unknown>(
     if (!response.ok) {
       let errorMessage = `API error: ${response.status} ${response.statusText}`;
       try {
-        const errorData = await response.json();
-        errorMessage = errorData?.message || errorMessage;
-      } catch {
+        const errorText = await response.text();
         try {
-          const errorText = await response.text();
-          errorMessage = errorText || errorMessage;
+          const errorData = JSON.parse(errorText);
+          errorMessage = errorData?.message || errorText || errorMessage;
         } catch {
-          // ignore
+          errorMessage = errorText || errorMessage;
         }
+      } catch {
+        // ignore if text() fails
       }
       throw new Error(errorMessage);
     }

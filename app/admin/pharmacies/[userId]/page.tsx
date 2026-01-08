@@ -1,16 +1,14 @@
 "use client";
 
-import { useEffect, useState, use } from "react";
+import { useEffect, useState, use, useCallback } from "react";
 import { 
     getPharmacistById, 
     getPharmacyOfPharmacist, 
-    getPharmacyMedicines 
 } from "@/Services/admin/pharmacies";
-import { AdminPharmacist, AdminPharmacyDetails, AdminMedicine } from "@/types/admin";
+import { AdminPharmacist, AdminPharmacyDetails } from "@/types/admin";
 import { DetailPageHeader } from "@/Components/features/admin/pharmacies/details/DetailPageHeader";
 import { PharmacistProfileCard } from "@/Components/features/admin/pharmacies/details/PharmacistProfileCard";
 import { PharmacyInfoCard } from "@/Components/features/admin/pharmacies/details/PharmacyInfoCard";
-import { MedicineInventoryTable } from "@/Components/features/admin/pharmacies/details/MedicineInventoryTable";
 import { Activity } from "lucide-react";
 import { Button } from "@/Components/ui/button";
 import { useRouter } from "next/navigation";
@@ -21,34 +19,28 @@ export default function PharmacyDetailPage({ params }: { params: Promise<{ userI
     const router = useRouter();
     const [pharmacist, setPharmacist] = useState<AdminPharmacist | null>(null);
     const [pharmacy, setPharmacy] = useState<AdminPharmacyDetails | null>(null);
-    const [medicines, setMedicines] = useState<AdminMedicine[]>([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setLoading(true);
-                const pharmacistData = await getPharmacistById(userId);
-                setPharmacist(pharmacistData);
+    const fetchData = useCallback(async () => {
+        try {
+            const pharmacistData = await getPharmacistById(userId);
+            setPharmacist(pharmacistData);
 
-                if (pharmacistData) {
-                    const [pharmacyData, medicinesData] = await Promise.all([
-                        getPharmacyOfPharmacist(userId),
-                        getPharmacyMedicines(pharmacistData.pharmacyId)
-                    ]);
-                    setPharmacy(pharmacyData);
-                    setMedicines(medicinesData);
-                }
-            } catch (error) {
-                console.error("Failed to fetch pharmacy details:", error);
-                toast.error("Failed to load pharmacy details");
-            } finally {
-                setLoading(false);
+            if (pharmacistData) {
+                const pharmacyData = await getPharmacyOfPharmacist(userId);
+                setPharmacy(pharmacyData);
             }
-        };
-
-        fetchData();
+        } catch (error) {
+            console.error("Failed to fetch pharmacy details:", error);
+            toast.error("Failed to load pharmacy details");
+        } finally {
+            setLoading(false);
+        }
     }, [userId]);
+
+    useEffect(() => {
+        fetchData();
+    }, [fetchData]);
 
     if (loading) {
         return (
@@ -80,17 +72,13 @@ export default function PharmacyDetailPage({ params }: { params: Promise<{ userI
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
                 <div className="lg:col-span-3">
-                    <PharmacistProfileCard pharmacist={pharmacist} />
+                    <PharmacistProfileCard pharmacist={pharmacist} onRefresh={fetchData} />
                 </div>
                 {pharmacy && (
-                    <div className="lg:col-span-9">
-                        <PharmacyInfoCard pharmacy={pharmacy} />
+                    <div className="lg:col-span-9 h-full">
+                        <PharmacyInfoCard pharmacy={pharmacy} userId={userId} onRefresh={fetchData} />
                     </div>
                 )}
-            </div>
-
-            <div className="w-full">
-                <MedicineInventoryTable medicines={medicines} />
             </div>
         </div>
     );
