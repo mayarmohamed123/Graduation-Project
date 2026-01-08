@@ -23,19 +23,20 @@ export function DoctorsTable({ doctors, loading, onApprove, onReject, onDelete, 
                             <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Stats</th>
                             <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Clinic & Price</th>
                             <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
+                            <th className="px-6 py-4 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Activity</th>
                             <th className="px-6 py-4 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
                         {loading ? (
                             <tr>
-                                <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
+                                <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
                                     Loading doctors...
                                 </td>
                             </tr>
                         ) : doctors.length === 0 ? (
                             <tr>
-                                <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
+                                <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
                                     No doctors found matching your criteria.
                                 </td>
                             </tr>
@@ -94,15 +95,28 @@ export function DoctorsTable({ doctors, loading, onApprove, onReject, onDelete, 
                                             {doctor.isApproved ? "Approved" : doctor.isRejected ? "Rejected" : "Pending"}
                                         </span>
                                     </td>
-                                    <td className="px-6 py-4 text-right">
-                                        <div className="flex items-center justify-end gap-2">
+                                    <td className="px-6 py-4">
+                                        <div className="flex items-center justify-center gap-2">
                                             <Link
                                                 href={`/admin/doctors/${doctor.userId}/appointments`}
-                                                className="p-1.5 rounded-lg text-blue-600 hover:bg-blue-50 transition-colors"
+                                                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
                                                 title="Show Appointments"
                                             >
-                                                <Calendar className="w-4 h-4" />
+                                                <Calendar className="w-3.5 h-3.5" />
+                                                <span>Appts</span>
                                             </Link>
+                                            <Link
+                                                href={`/admin/doctors/${doctor.userId}/patients`}
+                                                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-purple-600 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors"
+                                                title="Show Patients"
+                                            >
+                                                <Users className="w-3.5 h-3.5" />
+                                                <span>Patients</span>
+                                            </Link>
+                                        </div>
+                                    </td>
+                                    <td className="px-6 py-4 text-right">
+                                        <div className="flex items-center justify-end gap-2">
                                             <button
                                                 onClick={() => onViewDetails(doctor)}
                                                 className="p-1.5 rounded-lg text-indigo-600 hover:bg-indigo-50 transition-colors"

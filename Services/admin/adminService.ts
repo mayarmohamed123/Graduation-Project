@@ -1,5 +1,10 @@
 import { apiRequest } from "../api";
-import { AdminDoctor, AdminUser, UserOrder } from "@/types/admin";
+import {
+  AdminDoctor,
+  AdminUser,
+  UserOrder,
+  DoctorPatient,
+} from "@/types/admin";
 import { DoctorAppointment } from "@/types/appointments";
 
 class AdminService {
@@ -39,6 +44,16 @@ class AdminService {
   async getUserAppointments(userId: string): Promise<DoctorAppointment[]> {
     return await apiRequest<DoctorAppointment[]>(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/Admin/user-appointments/${userId}`,
+      { requiresAuth: true }
+    );
+  }
+
+  /**
+   * Get all patients for a specific doctor
+   */
+  async getDoctorPatients(userId: string): Promise<DoctorPatient[]> {
+    return await apiRequest<DoctorPatient[]>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Admin/patientsofdoctor/${userId}`,
       { requiresAuth: true }
     );
   }

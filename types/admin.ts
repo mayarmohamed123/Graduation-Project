@@ -150,3 +150,16 @@ export interface UserOrder {
   createdAt: string;
   items: OrderItem[];
 }
+export interface DoctorPatient {
+  appointmentId: number;
+  patientName: string;
+  patientPhone: string;
+  patientAge: number;
+  patientId: string;
+  patientGender: string;
+  startAt: string;
+  endAt: string;
+  status: string;
+  isPaid: boolean;
+  clinicName: string;
+}
