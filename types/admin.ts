@@ -113,3 +113,54 @@ export interface AdminMedicine {
     deliveryFee: number;
   };
 }
+export interface AdminUser {
+  id: string;
+  userName: string;
+  email: string;
+  address: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  profileImage: string | null;
+  phoneNumber: string | null;
+}
+export interface OrderItem {
+  medicationId: number;
+  medicicationImage: string;
+  medicationName: string;
+  quantity: number;
+  unitPrice: number;
+}
+
+export interface UserOrder {
+  id: number;
+  userId: string;
+  userName: string;
+  userImage: string;
+  userEmail: string;
+  pharmacyId: number;
+  pharmacyName: string;
+  pharmacyImage: string;
+  city: string;
+  country: string;
+  street: string;
+  phoneNumber: string;
+  totalPrice: number;
+  delieveryFee: number;
+  status: string;
+  paymentStatus: string;
+  createdAt: string;
+  items: OrderItem[];
+}
+export interface DoctorPatient {
+  appointmentId: number;
+  patientName: string;
+  patientPhone: string;
+  patientAge: number;
+  patientId: string;
+  patientGender: string;
+  startAt: string;
+  endAt: string;
+  status: string;
+  isPaid: boolean;
+  clinicName: string;
+}

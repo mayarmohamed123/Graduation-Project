@@ -66,12 +66,9 @@ export default function DashboardSidebar({ role }: DashboardSidebarProps) {
 
   const adminMenuItems = [
     { name: "Dashboard", icon: LayoutDashboard, href: "/admin" },
-    { name: "Patients Management", icon: Users, href: "/admin/patients" },
     { name: "Doctors Management", icon: Stethoscope, href: "/admin/doctors" },
     { name: "Pharmacies Management", icon: Building2, href: "/admin/pharmacies" },
-    { name: "Appointments Control", icon: Calendar, href: "/admin/appointments" },
-    { name: "Orders", icon: ClipboardList, href: "/admin/orders" },
-    { name: "Inventory Insights", icon: Archive, href: "/admin/inventory" },
+    { name: "User Management", icon: Users, href: "/admin/users" },
     { name: "Revenue & Payments", icon: DollarSign, href: "/admin/revenue" },
     { name: "Analytics", icon: BarChart3, href: "/admin/analytics" },
     { name: "Messages", icon: MessageSquare, href: "/admin/messages" },

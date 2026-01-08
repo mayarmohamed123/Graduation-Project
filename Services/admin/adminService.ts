@@ -1,5 +1,11 @@
 import { apiRequest } from "../api";
-import { AdminDoctor } from "@/types/admin";
+import {
+  AdminDoctor,
+  AdminUser,
+  UserOrder,
+  DoctorPatient,
+} from "@/types/admin";
+import { DoctorAppointment } from "@/types/appointments";
 
 class AdminService {
   /**
@@ -8,6 +14,46 @@ class AdminService {
   async getAllDoctors(): Promise<AdminDoctor[]> {
     return await apiRequest<AdminDoctor[]>(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/Admin/allDoctorsShowToAdmin`,
+      { requiresAuth: true }
+    );
+  }
+
+  /**
+   * Get all regular users for admin view
+   */
+  async getAllRegularUsers(): Promise<AdminUser[]> {
+    return await apiRequest<AdminUser[]>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Admin/getallregularusers`,
+      { requiresAuth: true }
+    );
+  }
+
+  /**
+   * Get all orders for a specific user
+   */
+  async getUserOrders(userId: string): Promise<UserOrder[]> {
+    return await apiRequest<UserOrder[]>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Admin/user-orders/${userId}`,
+      { requiresAuth: true }
+    );
+  }
+
+  /**
+   * Get all appointments for a specific user
+   */
+  async getUserAppointments(userId: string): Promise<DoctorAppointment[]> {
+    return await apiRequest<DoctorAppointment[]>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Admin/user-appointments/${userId}`,
+      { requiresAuth: true }
+    );
+  }
+
+  /**
+   * Get all patients for a specific doctor
+   */
+  async getDoctorPatients(userId: string): Promise<DoctorPatient[]> {
+    return await apiRequest<DoctorPatient[]>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Admin/patientsofdoctor/${userId}`,
       { requiresAuth: true }
     );
   }
@@ -59,6 +105,49 @@ class AdminService {
     return await apiRequest(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/Admin/update-clinic/${userId}`,
       { method: "PUT", requiresAuth: true, data: formData }
+    );
+  }
+
+  /**
+   * Get all appointments for a doctor
+   */
+  async getDoctorAppointments(userId: string): Promise<DoctorAppointment[]> {
+    return await apiRequest<DoctorAppointment[]>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Admin/doctorappointments/${userId}`,
+      { requiresAuth: true }
+    );
+  }
+
+  /**
+   * Approve an appointment
+   */
+  async approveAppointment(
+    appointmentId: number,
+    userId: string
+  ): Promise<void> {
+    return await apiRequest(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Admin/approveappointment/${appointmentId}/${userId}`,
+      { method: "PUT", requiresAuth: true }
+    );
+  }
+
+  /**
+   * Reject an appointment
+   */
+  async rejectAppointment(appointmentId: number): Promise<void> {
+    return await apiRequest(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Admin/rejectappointment/${appointmentId}`,
+      { method: "PUT", requiresAuth: true }
+    );
+  }
+
+  /**
+   * Complete an appointment
+   */
+  async completeAppointment(appointmentId: number): Promise<void> {
+    return await apiRequest(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Admin/completeappointment/${appointmentId}`,
+      { method: "PATCH", requiresAuth: true }
     );
   }
 }
