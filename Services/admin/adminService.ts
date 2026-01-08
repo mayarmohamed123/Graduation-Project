@@ -1,5 +1,5 @@
 import { apiRequest } from "../api";
-import { AdminDoctor } from "@/types/admin";
+import { AdminDoctor, AdminUser, UserOrder } from "@/types/admin";
 import { DoctorAppointment } from "@/types/appointments";
 
 class AdminService {
@@ -9,6 +9,36 @@ class AdminService {
   async getAllDoctors(): Promise<AdminDoctor[]> {
     return await apiRequest<AdminDoctor[]>(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/Admin/allDoctorsShowToAdmin`,
+      { requiresAuth: true }
+    );
+  }
+
+  /**
+   * Get all regular users for admin view
+   */
+  async getAllRegularUsers(): Promise<AdminUser[]> {
+    return await apiRequest<AdminUser[]>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Admin/getallregularusers`,
+      { requiresAuth: true }
+    );
+  }
+
+  /**
+   * Get all orders for a specific user
+   */
+  async getUserOrders(userId: string): Promise<UserOrder[]> {
+    return await apiRequest<UserOrder[]>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Admin/user-orders/${userId}`,
+      { requiresAuth: true }
+    );
+  }
+
+  /**
+   * Get all appointments for a specific user
+   */
+  async getUserAppointments(userId: string): Promise<DoctorAppointment[]> {
+    return await apiRequest<DoctorAppointment[]>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Admin/user-appointments/${userId}`,
       { requiresAuth: true }
     );
   }
