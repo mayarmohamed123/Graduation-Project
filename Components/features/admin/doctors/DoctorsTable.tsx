@@ -1,5 +1,6 @@
 import Image from "next/image";
-import { Check, X, Trash2, Eye, Star, Users } from "lucide-react";
+import Link from "next/link";
+import { Check, X, Trash2, Eye, Star, Users, Calendar } from "lucide-react";
 import { AdminDoctor } from "@/types/admin";
 
 interface DoctorsTableProps {
@@ -95,6 +96,13 @@ export function DoctorsTable({ doctors, loading, onApprove, onReject, onDelete, 
                                     </td>
                                     <td className="px-6 py-4 text-right">
                                         <div className="flex items-center justify-end gap-2">
+                                            <Link
+                                                href={`/admin/doctors/${doctor.userId}/appointments`}
+                                                className="p-1.5 rounded-lg text-blue-600 hover:bg-blue-50 transition-colors"
+                                                title="Show Appointments"
+                                            >
+                                                <Calendar className="w-4 h-4" />
+                                            </Link>
                                             <button
                                                 onClick={() => onViewDetails(doctor)}
                                                 className="p-1.5 rounded-lg text-indigo-600 hover:bg-indigo-50 transition-colors"

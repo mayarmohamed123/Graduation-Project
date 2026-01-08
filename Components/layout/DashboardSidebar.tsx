@@ -69,7 +69,6 @@ export default function DashboardSidebar({ role }: DashboardSidebarProps) {
     { name: "Patients Management", icon: Users, href: "/admin/patients" },
     { name: "Doctors Management", icon: Stethoscope, href: "/admin/doctors" },
     { name: "Pharmacies Management", icon: Building2, href: "/admin/pharmacies" },
-    { name: "Appointments Control", icon: Calendar, href: "/admin/appointments" },
     { name: "Orders", icon: ClipboardList, href: "/admin/orders" },
     { name: "Inventory Insights", icon: Archive, href: "/admin/inventory" },
     { name: "Revenue & Payments", icon: DollarSign, href: "/admin/revenue" },

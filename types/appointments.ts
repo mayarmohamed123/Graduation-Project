@@ -29,3 +29,26 @@ export interface AppointmentStats {
   totalCancelledAppointmentCount: number;
   totalCompletedAppointmentCount: number;
 }
+
+export interface DoctorAppointment {
+  id: number;
+  doctorId: number;
+  doctorAppUserId: string;
+  appointmentAmount: number;
+  doctorName: string;
+  doctorSpeciality: string;
+  doctorImage: string;
+  userId: string;
+  userNameLogged: string;
+  userImageLogged: string;
+  clinicId: number;
+  clinicName: string;
+  clinicImage: string;
+  patientName: string;
+  patientPhone: string;
+  patientAge: number;
+  patientGender: string;
+  startAt: string;
+  endAt: string;
+  status: string;
+}
