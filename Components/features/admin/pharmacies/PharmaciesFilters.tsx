@@ -4,8 +4,8 @@ import { Input } from "@/Components/ui/input";
 interface PharmaciesFiltersProps {
     searchTerm: string;
     onSearchChange: (value: string) => void;
-    filter: "all" | "approved" | "pending";
-    onFilterChange: (value: "all" | "approved" | "pending") => void;
+    filter: "all" | "approved" | "pending" | "rejected";
+    onFilterChange: (value: "all" | "approved" | "pending" | "rejected") => void;
 }
 
 export function PharmaciesFilters({ searchTerm, onSearchChange, filter, onFilterChange }: PharmaciesFiltersProps) {
@@ -23,12 +23,13 @@ export function PharmaciesFilters({ searchTerm, onSearchChange, filter, onFilter
             </div>
             <select
                 value={filter}
-                onChange={(e) => onFilterChange(e.target.value as "all" | "approved" | "pending")}
+                onChange={(e) => onFilterChange(e.target.value as "all" | "approved" | "pending" | "rejected")}
                 className="h-10 px-3 py-2 border rounded-md text-sm ring-offset-background focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none bg-background transition-colors"
             >
                 <option value="all">All Status</option>
                 <option value="approved">Approved</option>
                 <option value="pending">Pending</option>
+                <option value="rejected">Rejected</option>
             </select>
         </div>
     );

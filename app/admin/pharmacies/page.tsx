@@ -1,20 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { PharmaciesFilters } from "@/Components/features/admin/pharmacies/PharmaciesFilters";
 import { PharmaciesTable } from "@/Components/features/admin/pharmacies/PharmaciesTable";
-import { PharmacyDetailsDialog } from "@/Components/features/admin/pharmacies/PharmacyDetailsDialog";
 import { AdminPharmacist } from "@/types/admin";
-import { getAdminPharmacists, approvePharmacist, rejectPharmacist, deletePharmacist, updatePharmacistProfile } from "@/Services/admin/pharmacies";
+import { getAdminPharmacists, approvePharmacist, rejectPharmacist, deletePharmacist } from "@/Services/admin/pharmacies";
 import { toast } from "react-hot-toast";
 
 export default function PharmaciesManagement() {
     const [pharmacists, setPharmacists] = useState<AdminPharmacist[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
-    const [filter, setFilter] = useState<"all" | "approved" | "pending">("all");
-    const [selectedPharmacist, setSelectedPharmacist] = useState<AdminPharmacist | null>(null);
-    const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+    const [filter, setFilter] = useState<"all" | "approved" | "pending" | "rejected">("all");
+
+    const router = useRouter();
 
     useEffect(() => {
         fetchPharmacists();
@@ -37,7 +37,7 @@ export default function PharmaciesManagement() {
         try {
             const res = await approvePharmacist(id);
             toast.success(res.message || "Pharmacist approved successfully");
-            setPharmacists(prev => prev.map(p => p.id === id ? { ...p, isApproved: true } : p));
+            setPharmacists(prev => prev.map(p => p.id === id ? { ...p, isApproved: true, isReject: false } : p));
         } catch (error) {
             const message = error instanceof Error ? error.message : "Failed to approve pharmacist";
             toast.error(message);
@@ -48,7 +48,7 @@ export default function PharmaciesManagement() {
         try {
             const res = await rejectPharmacist(id);
             toast.success(res.message || "Pharmacist rejected successfully");
-            setPharmacists(prev => prev.map(p => p.id === id ? { ...p, isApproved: false } : p));
+            setPharmacists(prev => prev.map(p => p.id === id ? { ...p, isApproved: false, isReject: true } : p));
         } catch (error) {
             const message = error instanceof Error ? error.message : "Failed to reject pharmacist";
             toast.error(message);
@@ -68,24 +68,9 @@ export default function PharmaciesManagement() {
         }
     };
 
-    const handleUpdate = async (userId: string, data: Partial<AdminPharmacist>) => {
-        try {
-            const res = await updatePharmacistProfile(userId, data);
-            toast.success(res.message || "Profile updated successfully");
-            setPharmacists(prev => prev.map(p => p.userId === userId ? { ...p, ...data } : p));
-            if (selectedPharmacist && selectedPharmacist.userId === userId) {
-                setSelectedPharmacist({ ...selectedPharmacist, ...data });
-            }
-        } catch (error) {
-            const message = error instanceof Error ? error.message : "Failed to update profile";
-            toast.error(message);
-            throw error;
-        }
-    };
 
     const handleViewDetails = (pharmacist: AdminPharmacist) => {
-        setSelectedPharmacist(pharmacist);
-        setIsDetailsOpen(true);
+        router.push(`/admin/pharmacies/${pharmacist.userId}`);
     };
 
     const filteredPharmacists = pharmacists.filter(pharmacist => {
@@ -95,12 +80,13 @@ export default function PharmaciesManagement() {
             pharmacist.city.toLowerCase().includes(searchTerm.toLowerCase());
 
         if (filter === "approved") return matchesSearch && pharmacist.isApproved;
-        if (filter === "pending") return matchesSearch && !pharmacist.isApproved;
+        if (filter === "rejected") return matchesSearch && pharmacist.isReject;
+        if (filter === "pending") return matchesSearch && !pharmacist.isApproved && !pharmacist.isReject;
         return matchesSearch;
     });
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 max-w-7xl mx-auto">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900">Pharmacies Management</h1>
@@ -122,13 +108,6 @@ export default function PharmaciesManagement() {
                 onReject={handleReject}
                 onDelete={handleDelete}
                 onViewDetails={handleViewDetails}
-            />
-
-            <PharmacyDetailsDialog
-                pharmacist={selectedPharmacist}
-                isOpen={isDetailsOpen}
-                onClose={() => setIsDetailsOpen(false)}
-                onUpdate={handleUpdate}
             />
         </div>
     );

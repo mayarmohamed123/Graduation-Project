@@ -1,0 +1,71 @@
+import { Building2, Globe } from "lucide-react";
+import Image from "next/image";
+import { AdminPharmacyDetails } from "@/types/admin";
+import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
+import { Badge } from "@/Components/ui/badge";
+
+interface PharmacyInfoCardProps {
+    pharmacy: AdminPharmacyDetails;
+}
+
+export function PharmacyInfoCard({ pharmacy }: PharmacyInfoCardProps) {
+    return (
+        <Card className="shadow-sm">
+            <CardHeader className="border-b pb-4">
+                <CardTitle className="flex items-center gap-2 text-lg">
+                    <Building2 className="h-5 w-5 text-primary" />
+                    Pharmacy Information
+                </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                        <div className="relative aspect-video rounded-lg overflow-hidden border bg-gray-50">
+                            {pharmacy.imagePath ? (
+                                <Image src={pharmacy.imagePath} alt={pharmacy.name} fill className="object-cover" />
+                            ) : (
+                                <div className="flex h-full items-center justify-center text-gray-300">
+                                    <Building2 className="h-12 w-12" />
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                    <div className="space-y-4">
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                <p className="text-[10px] uppercase font-bold text-gray-400">Pharmacy Name</p>
+                                <p className="text-sm font-semibold">{pharmacy.name}</p>
+                            </div>
+                            <div>
+                                <p className="text-[10px] uppercase font-bold text-gray-400">Phone</p>
+                                <p className="text-sm font-semibold">{pharmacy.phone}</p>
+                            </div>
+                            <div>
+                                <p className="text-[10px] uppercase font-bold text-gray-400">Location</p>
+                                <p className="text-sm font-semibold">{pharmacy.city}, {pharmacy.country}</p>
+                            </div>
+                            <div>
+                                <p className="text-[10px] uppercase font-bold text-gray-400">Delivery Fee</p>
+                                <p className="text-sm font-semibold">${pharmacy.deliveryFee.toFixed(2)}</p>
+                            </div>
+                            <div className="col-span-2">
+                                <p className="text-[10px] uppercase font-bold text-gray-400">Address</p>
+                                <p className="text-sm">{pharmacy.street}, {pharmacy.postalCode}</p>
+                            </div>
+                        </div>
+                        <div className="pt-2 flex items-center gap-2">
+                            <Badge variant="secondary" className="bg-blue-50 text-blue-700 border-blue-100 flex items-center gap-1">
+                                <Globe className="h-3 w-3" />
+                                Lat: {pharmacy.latitude.toFixed(4)}
+                            </Badge>
+                            <Badge variant="secondary" className="bg-blue-50 text-blue-700 border-blue-100 flex items-center gap-1">
+                                <Globe className="h-3 w-3" />
+                                Long: {pharmacy.longitude.toFixed(4)}
+                            </Badge>
+                        </div>
+                    </div>
+                </div>
+            </CardContent>
+        </Card>
+    );
+}

@@ -1,5 +1,35 @@
 import { apiRequest } from "../api";
-import { AdminPharmacist } from "@/types/admin";
+import { AdminPharmacist, AdminPharmacyDetails, AdminMedicine } from "@/types/admin";
+
+/**
+ * Get pharmacist data by userId
+ */
+export const getPharmacistById = async (userId: string): Promise<AdminPharmacist> => {
+  return await apiRequest<AdminPharmacist>(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/Admin/getpharmacist/${userId}`,
+    { requiresAuth: true }
+  );
+};
+
+/**
+ * Get pharmacy of pharmacist by userId
+ */
+export const getPharmacyOfPharmacist = async (userId: string): Promise<AdminPharmacyDetails> => {
+  return await apiRequest<AdminPharmacyDetails>(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/Admin/GetPharmacyOfPharmacist/${userId}`,
+    { requiresAuth: true }
+  );
+};
+
+/**
+ * Get all medicines in a pharmacy
+ */
+export const getPharmacyMedicines = async (pharmacyId: number): Promise<AdminMedicine[]> => {
+  return await apiRequest<AdminMedicine[]>(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/Admin/pharmacy/${pharmacyId}`,
+    { requiresAuth: true }
+  );
+};
 
 /**
  * Get all pharmacists for admin view
