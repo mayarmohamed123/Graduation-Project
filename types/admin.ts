@@ -164,3 +164,25 @@ export interface DoctorPatient {
   isPaid: boolean;
   clinicName: string;
 }
+
+export interface AdminPayment {
+  id: number;
+  referenceId: string;
+  paymentFor:
+    | "order"
+    | "appointment"
+    | "doctorRegistration"
+    | "pharmacistRegistration";
+  paymentForName: string;
+  status: string;
+  amount: number;
+  processedAt: string;
+  payerUserId: string;
+  payerName: string;
+  payerPhone: string | null;
+  payerAddress: string | null;
+  payerLongitude: number | null;
+  payerLatitude: number | null;
+  payerImage: string;
+  payerEmail: string;
+}

@@ -163,7 +163,9 @@ export type NotificationType =
   | "newAppointmentForDoctor"
   | "inventoryLowStock"
   | "newOrderForPharmacist"
-  | "inventoryOutOfStock";
+  | "inventoryOutOfStock"
+  | "newDoctorRegisteration"
+  | "newPharmacistRegisteration";
 
 /**
  * Get user notifications API response

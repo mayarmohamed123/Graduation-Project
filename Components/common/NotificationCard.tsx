@@ -1,5 +1,5 @@
 import { Notification, NotificationType } from "@/types";
-import { Calendar, CheckCircle, XCircle, Clock, Package, AlertTriangle, PackageX } from "lucide-react";
+import { Calendar, CheckCircle, XCircle, Clock, Package, AlertTriangle, PackageX, User } from "lucide-react";
 import { formatDistanceToNow, differenceInDays } from "date-fns";
 
 interface NotificationCardProps {
@@ -37,6 +37,10 @@ export default function NotificationCard({ notification, onClick }: Notification
         return { icon: AlertTriangle, bg: "bg-orange-100", color: "text-orange-600" };
       case "inventoryOutOfStock":
         return { icon: PackageX, bg: "bg-red-100", color: "text-red-600" };
+      case "newDoctorRegisteration":
+        return { icon: User, bg: "bg-indigo-100", color: "text-indigo-600" };
+      case "newPharmacistRegisteration":
+        return { icon: User, bg: "bg-teal-100", color: "text-teal-600" };
       default:
         return { icon: Calendar, bg: "bg-gray-100", color: "text-gray-600" };
     }
@@ -62,6 +66,10 @@ export default function NotificationCard({ notification, onClick }: Notification
         return "bg-orange-50/50";
       case "inventoryOutOfStock":
         return "bg-red-50/50";
+      case "newDoctorRegisteration":
+        return "bg-indigo-50";
+      case "newPharmacistRegisteration":
+        return "bg-teal-50";
       default:
         return "bg-gray-50";
     }

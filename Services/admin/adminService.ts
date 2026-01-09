@@ -4,8 +4,10 @@ import {
   AdminUser,
   UserOrder,
   DoctorPatient,
+  AdminPayment,
 } from "@/types/admin";
 import { DoctorAppointment } from "@/types/appointments";
+import { Notification } from "@/types";
 
 class AdminService {
   /**
@@ -148,6 +150,76 @@ class AdminService {
     return await apiRequest(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/Admin/completeappointment/${appointmentId}`,
       { method: "PATCH", requiresAuth: true }
+    );
+  }
+
+  /**
+   * Get all admin notifications
+   */
+  async getAdminNotifications(): Promise<{ notifications: Notification[] }> {
+    return await apiRequest<{ notifications: Notification[] }>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Admin/admin-notifications`,
+      { requiresAuth: true }
+    );
+  }
+
+  /**
+   * Mark a notification as read
+   */
+  async markNotificationAsRead(id: number): Promise<void> {
+    return await apiRequest(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Notifications/${id}/read`,
+      { method: "PUT", requiresAuth: true }
+    );
+  }
+
+  /**
+   * Mark all notifications as read
+   */
+  async markAllNotificationsAsRead(): Promise<void> {
+    return await apiRequest(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Notifications/read-all`,
+      { method: "PUT", requiresAuth: true }
+    );
+  }
+
+  /**
+   * Get order payments
+   */
+  async getOrderPayments(): Promise<AdminPayment[]> {
+    return await apiRequest<AdminPayment[]>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Admin/payment/orders`,
+      { requiresAuth: true }
+    );
+  }
+
+  /**
+   * Get appointment payments
+   */
+  async getAppointmentPayments(): Promise<AdminPayment[]> {
+    return await apiRequest<AdminPayment[]>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Admin/payment/appointments`,
+      { requiresAuth: true }
+    );
+  }
+
+  /**
+   * Get doctor registration payments
+   */
+  async getDoctorRegistrationPayments(): Promise<AdminPayment[]> {
+    return await apiRequest<AdminPayment[]>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Admin/payment/doctor-registrations`,
+      { requiresAuth: true }
+    );
+  }
+
+  /**
+   * Get pharmacist registration payments
+   */
+  async getPharmacistRegistrationPayments(): Promise<AdminPayment[]> {
+    return await apiRequest<AdminPayment[]>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Admin/payment/pharmacist-registrations`,
+      { requiresAuth: true }
     );
   }
 }
