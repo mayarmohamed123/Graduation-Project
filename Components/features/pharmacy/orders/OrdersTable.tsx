@@ -8,6 +8,7 @@ interface OrdersTableProps {
     onCancel: (orderId: number) => void;
     onMarkDelivered: (orderId: number) => void;
     actionLoading: number | null;
+    hideDetails?: boolean;
 }
 
 export default function OrdersTable({
@@ -16,6 +17,7 @@ export default function OrdersTable({
     onCancel,
     onMarkDelivered,
     actionLoading,
+    hideDetails = false,
 }: OrdersTableProps) {
     const router = useRouter();
 
@@ -57,7 +59,7 @@ export default function OrdersTable({
                             <th className="px-6 py-3 text-left text-sm font-semibold">Total Price</th>
                             <th className="px-6 py-3 text-left text-sm font-semibold">Date</th>
                             <th className="px-6 py-3 text-left text-sm font-semibold">Action</th>
-                            <th className="px-6 py-3 text-left text-sm font-semibold"></th>
+                            {!hideDetails && <th className="px-6 py-3 text-left text-sm font-semibold"></th>}
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
@@ -72,6 +74,7 @@ export default function OrdersTable({
                                 actionLoading={actionLoading}
                                 getStatusBadgeColor={getStatusBadgeColor}
                                 getPaymentBadgeColor={getPaymentBadgeColor}
+                                hideDetails={hideDetails}
                             />
                         ))}
                     </tbody>
@@ -90,6 +93,7 @@ interface OrderRowProps {
     actionLoading: number | null;
     getStatusBadgeColor: (status: string) => string;
     getPaymentBadgeColor: (status: string) => string;
+    hideDetails: boolean;
 }
 
 function OrderRow({
@@ -101,9 +105,13 @@ function OrderRow({
     actionLoading,
     getStatusBadgeColor,
     getPaymentBadgeColor,
+    hideDetails,
 }: OrderRowProps) {
     return (
-        <tr className="hover:bg-gray-50 cursor-pointer transition-colors">
+        <tr 
+            className={`${hideDetails ? '' : 'hover:bg-gray-50 cursor-pointer'} transition-colors`}
+            onClick={() => !hideDetails && onRowClick(order.id)}
+        >
             <td className="px-6 py-4 text-sm text-teal-600 font-medium">#{order.id}</td>
             <td className="px-6 py-4">
                 <div className="flex items-center gap-3">
@@ -152,18 +160,20 @@ function OrderRow({
                     actionLoading={actionLoading}
                 />
             </td>
-            <td className="px-6 py-4">
-                <button
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        onRowClick(order.id);
-                    }}
-                    className="text-gray-400 hover:text-primary transition-colors"
-                    title="View Details"
-                >
-                    <ChevronRight className="w-5 h-5 text-primary" />
-                </button>
-            </td>
+            {!hideDetails && (
+                <td className="px-6 py-4">
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onRowClick(order.id);
+                        }}
+                        className="text-gray-400 hover:text-primary transition-colors"
+                        title="View Details"
+                    >
+                        <ChevronRight className="w-5 h-5 text-primary" />
+                    </button>
+                </td>
+            )}
         </tr>
     );
 }

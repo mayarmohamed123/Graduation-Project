@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Check, X, Trash2, Eye, Building2, Phone, MapPin } from "lucide-react";
+import { Check, X, Trash2, Eye, Building2, Phone, MapPin, Package, ClipboardList } from "lucide-react";
 import { AdminPharmacist } from "@/types/admin";
 import { Avatar, AvatarFallback, AvatarImage } from "@/Components/ui/avatar";
 import { Badge } from "@/Components/ui/badge";
@@ -12,9 +12,20 @@ interface PharmaciesTableProps {
     onReject: (id: number) => void;
     onDelete: (id: number) => void;
     onViewDetails: (pharmacist: AdminPharmacist) => void;
+    onInventoryClick?: (pharmacist: AdminPharmacist) => void;
+    onOrdersClick?: (pharmacist: AdminPharmacist) => void;
 }
 
-export function PharmaciesTable({ pharmacists, loading, onApprove, onReject, onDelete, onViewDetails }: PharmaciesTableProps) {
+export function PharmaciesTable({ 
+    pharmacists, 
+    loading, 
+    onApprove, 
+    onReject, 
+    onDelete, 
+    onViewDetails,
+    onInventoryClick,
+    onOrdersClick
+}: PharmaciesTableProps) {
     return (
         <div className="bg-white rounded-xl shadow-sm border overflow-hidden">
             <div className="overflow-x-auto">
@@ -25,13 +36,14 @@ export function PharmaciesTable({ pharmacists, loading, onApprove, onReject, onD
                             <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Pharmacy Details</th>
                             <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">License</th>
                             <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
+                            <th className="px-6 py-4 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Activity</th>
                             <th className="px-6 py-4 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
                         {loading ? (
                             <tr>
-                                <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
+                                <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
                                     <div className="flex flex-col items-center gap-2">
                                         <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
                                         <span>Loading pharmacies...</span>
@@ -40,7 +52,7 @@ export function PharmaciesTable({ pharmacists, loading, onApprove, onReject, onD
                             </tr>
                         ) : pharmacists.length === 0 ? (
                             <tr>
-                                <td colSpan={5} className="px-6 py-8 text-center text-gray-500 text-sm">
+                                <td colSpan={6} className="px-6 py-8 text-center text-gray-500 text-sm">
                                     No pharmacies found matching your criteria.
                                 </td>
                             </tr>
@@ -112,6 +124,26 @@ export function PharmaciesTable({ pharmacists, loading, onApprove, onReject, onD
                                                 Pending
                                             </Badge>
                                         )}
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        <div className="flex items-center justify-center gap-2">
+                                            <Button
+                                                variant="ghost"
+                                                className="h-9 px-3 text-teal-600 hover:text-teal-700 hover:bg-teal-50 rounded-lg transition-all flex items-center gap-2"
+                                                onClick={() => onInventoryClick?.(pharmacist)}
+                                            >
+                                                <Package className="w-4 h-4" />
+                                                <span className="text-xs font-semibold">Inventory</span>
+                                            </Button>
+                                            <Button
+                                                variant="ghost"
+                                                className="h-9 px-3 text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-lg transition-all flex items-center gap-2"
+                                                onClick={() => onOrdersClick?.(pharmacist)}
+                                            >
+                                                <ClipboardList className="w-4 h-4" />
+                                                <span className="text-xs font-semibold">Orders</span>
+                                            </Button>
+                                        </div>
                                     </td>
                                     <td className="px-6 py-4 text-right">
                                         <div className="flex items-center justify-end gap-1.5">

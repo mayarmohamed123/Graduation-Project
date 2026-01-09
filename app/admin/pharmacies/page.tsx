@@ -7,12 +7,18 @@ import { PharmaciesTable } from "@/Components/features/admin/pharmacies/Pharmaci
 import { AdminPharmacist } from "@/types/admin";
 import { getAdminPharmacists, approvePharmacist, rejectPharmacist, deletePharmacist } from "@/Services/admin/pharmacies";
 import { toast } from "react-hot-toast";
+import { ConfirmDialog } from "@/Components/common/ConfirmDialog";
 
 export default function PharmaciesManagement() {
     const [pharmacists, setPharmacists] = useState<AdminPharmacist[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
     const [filter, setFilter] = useState<"all" | "approved" | "pending" | "rejected">("all");
+    
+    // Delete dialog state
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [idToDelete, setIdToDelete] = useState<number | null>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     const router = useRouter();
 
@@ -55,22 +61,40 @@ export default function PharmaciesManagement() {
         }
     };
 
-    const handleDelete = async (id: number) => {
-        if (!window.confirm("Are you sure you want to delete this pharmacist and their pharmacy? This action cannot be undone.")) return;
+    const handleDelete = (id: number) => {
+        setIdToDelete(id);
+        setDeleteDialogOpen(true);
+    };
+
+    const handleConfirmDelete = async () => {
+        if (!idToDelete) return;
         
         try {
-            const res = await deletePharmacist(id);
+            setIsDeleting(true);
+            const res = await deletePharmacist(idToDelete);
             toast.success(res.message || "Pharmacist deleted successfully");
-            setPharmacists(prev => prev.filter(p => p.id !== id));
+            setPharmacists(prev => prev.filter(p => p.id !== idToDelete));
+            setDeleteDialogOpen(false);
         } catch (error) {
             const message = error instanceof Error ? error.message : "Failed to delete pharmacist";
             toast.error(message);
+        } finally {
+            setIsDeleting(false);
+            setIdToDelete(null);
         }
     };
 
 
     const handleViewDetails = (pharmacist: AdminPharmacist) => {
         router.push(`/admin/pharmacies/${pharmacist.userId}`);
+    };
+
+    const handleInventoryClick = (pharmacist: AdminPharmacist) => {
+        router.push(`/admin/pharmacies/${pharmacist.userId}/inventory`);
+    };
+
+    const handleOrdersClick = (pharmacist: AdminPharmacist) => {
+        router.push(`/admin/pharmacies/${pharmacist.userId}/orders`);
     };
 
     const filteredPharmacists = pharmacists.filter(pharmacist => {
@@ -108,6 +132,19 @@ export default function PharmaciesManagement() {
                 onReject={handleReject}
                 onDelete={handleDelete}
                 onViewDetails={handleViewDetails}
+                onInventoryClick={handleInventoryClick}
+                onOrdersClick={handleOrdersClick}
+            />
+
+            <ConfirmDialog
+                isOpen={deleteDialogOpen}
+                onClose={() => setDeleteDialogOpen(false)}
+                onConfirm={handleConfirmDelete}
+                title="Delete Pharmacy"
+                description="Are you sure you want to delete this pharmacist and their pharmacy? This action cannot be undone."
+                confirmText="Delete"
+                variant="destructive"
+                isLoading={isDeleting}
             />
         </div>
     );
