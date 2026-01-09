@@ -1,13 +1,18 @@
 import { apiRequest } from "../api";
 import {
+  UpdatePasswordData,
+  UpdatePasswordResponse,
+  Notification,
+} from "@/types";
+import {
   AdminDoctor,
   AdminUser,
   UserOrder,
   DoctorPatient,
   AdminPayment,
+  AdminProfile,
 } from "@/types/admin";
 import { DoctorAppointment } from "@/types/appointments";
-import { Notification } from "@/types";
 
 class AdminService {
   /**
@@ -220,6 +225,46 @@ class AdminService {
     return await apiRequest<AdminPayment[]>(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/Admin/payment/pharmacist-registrations`,
       { requiresAuth: true }
+    );
+  }
+
+  /**
+   * Get admin profile
+   */
+  async getAdminProfile(): Promise<AdminProfile> {
+    return await apiRequest<AdminProfile>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Admin/profile`,
+      { requiresAuth: true, cache: "no-store" }
+    );
+  }
+
+  /**
+   * Update admin profile
+   */
+  async updateAdminProfile(formData: FormData): Promise<void> {
+    return await apiRequest<void>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Admin/update-profile`,
+      {
+        method: "PUT",
+        requiresAuth: true,
+        data: formData,
+      }
+    );
+  }
+
+  /**
+   * Update admin password
+   */
+  async updateAdminPassword(
+    data: UpdatePasswordData
+  ): Promise<UpdatePasswordResponse> {
+    return await apiRequest<UpdatePasswordResponse>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Admin/update-password`,
+      {
+        method: "PUT",
+        requiresAuth: true,
+        data,
+      }
     );
   }
 }

@@ -186,3 +186,12 @@ export interface AdminPayment {
   payerImage: string;
   payerEmail: string;
 }
+
+export interface AdminProfile {
+  id: string;
+  email: string;
+  userName: string;
+  phoneNumber: string | null;
+  profileImage: string | null;
+  address: string | null;
+}
