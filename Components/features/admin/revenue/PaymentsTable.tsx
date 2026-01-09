@@ -3,7 +3,7 @@
 import { AdminPayment } from "@/types/admin";
 import { PaymentRow } from "./PaymentRow";
 import { CreditCard, Search } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 interface PaymentsTableProps {
     payments: AdminPayment[];
@@ -13,18 +13,22 @@ export function PaymentsTable({ payments }: PaymentsTableProps) {
     const [searchTerm, setSearchTerm] = useState("");
     const [statusFilter, setStatusFilter] = useState("all");
 
-    const filteredPayments = payments.filter((payment) => {
-        const matchesSearch =
-            payment.payerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            payment.payerEmail.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            payment.referenceId.toLowerCase().includes(searchTerm.toLowerCase());
+    const filteredPayments = useMemo(() => {
+        return payments.filter((payment) => {
+            const matchesSearch =
+                payment.payerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                payment.payerEmail.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                payment.referenceId.toLowerCase().includes(searchTerm.toLowerCase());
 
-        const matchesStatus = statusFilter === "all" || payment.status.toLowerCase() === statusFilter.toLowerCase();
+            const matchesStatus = statusFilter === "all" || payment.status.toLowerCase() === statusFilter.toLowerCase();
 
-        return matchesSearch && matchesStatus;
-    });
+            return matchesSearch && matchesStatus;
+        });
+    }, [payments, searchTerm, statusFilter]);
 
-    const statuses = ["all", ...new Set(payments.map(p => p.status.toLowerCase()))];
+    const statuses = useMemo(() => {
+        return ["all", ...new Set(payments.map(p => p.status.toLowerCase()))];
+    }, [payments]);
 
     if (payments.length === 0) {
         return (

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { adminService } from "@/Services/admin/adminService";
 import { AdminPayment } from "@/types/admin";
 import { PaymentsTable } from "@/Components/features/admin/revenue/PaymentsTable";
@@ -18,11 +18,21 @@ import { toast } from "react-hot-toast";
 
 type PaymentType = "orders" | "appointments" | "doctors" | "pharmacists";
 
+const TABS = [
+  { id: "orders", label: "Pharmacy Orders", icon: ShoppingCart, color: "text-blue-600", bg: "bg-blue-50" },
+  { id: "appointments", label: "Appointments", icon: Stethoscope, color: "text-purple-600", bg: "bg-purple-50" },
+  { id: "doctors", label: "Doctor Subscriptions", icon: ShieldCheck, color: "text-indigo-600", bg: "bg-indigo-50" },
+  { id: "pharmacists", label: "Pharmacist Subscriptions", icon: Building2, color: "text-teal-600", bg: "bg-teal-50" },
+];
+
 export default function AdminRevenuePage() {
   const [activeTab, setActiveTab] = useState<PaymentType>("orders");
   const [payments, setPayments] = useState<AdminPayment[]>([]);
   const [loading, setLoading] = useState(true);
-  const [totalRevenue, setTotalRevenue] = useState(0);
+
+  const totalRevenue = useMemo(() => {
+    return payments.reduce((acc, curr) => acc + curr.amount, 0);
+  }, [payments]);
 
   const fetchPayments = useCallback(async () => {
     try {
@@ -45,8 +55,6 @@ export default function AdminRevenuePage() {
       }
 
       setPayments(data);
-      const total = data.reduce((acc, curr) => acc + curr.amount, 0);
-      setTotalRevenue(total);
     } catch (err) {
       console.error("Failed to fetch payments:", err);
       toast.error("Failed to load payment records");
@@ -58,13 +66,6 @@ export default function AdminRevenuePage() {
   useEffect(() => {
     fetchPayments();
   }, [fetchPayments]);
-
-  const tabs = [
-    { id: "orders", label: "Pharmacy Orders", icon: ShoppingCart, color: "text-blue-600", bg: "bg-blue-50" },
-    { id: "appointments", label: "Appointments", icon: Stethoscope, color: "text-purple-600", bg: "bg-purple-50" },
-    { id: "doctors", label: "Doctor Subscriptions", icon: ShieldCheck, color: "text-indigo-600", bg: "bg-indigo-50" },
-    { id: "pharmacists", label: "Pharmacist Subscriptions", icon: Building2, color: "text-teal-600", bg: "bg-teal-50" },
-  ];
 
   return (
     <div className="space-y-6">
@@ -100,7 +101,7 @@ export default function AdminRevenuePage() {
 
       {/* Modern Tab System */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-        {tabs.map((tab) => (
+        {TABS.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id as PaymentType)}
