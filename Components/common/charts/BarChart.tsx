@@ -4,6 +4,7 @@ import {
     Bar,
     BarChart as RechartsBarChart,
     CartesianGrid,
+    Legend,
     ResponsiveContainer,
     Tooltip,
     XAxis,
@@ -11,14 +12,20 @@ import {
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
 
+interface BarConfig {
+    dataKey: string;
+    name: string;
+    color: string;
+}
+
 interface BarChartProps {
     data: object[];
     title: string;
-    dataKey: string;
+    bars: BarConfig[];
     xAxisKey: string;
-    color?: string;
     height?: string;
     showGrid?: boolean;
+    showLegend?: boolean;
     barRadius?: [number, number, number, number];
     headerAction?: React.ReactNode;
 }
@@ -26,11 +33,11 @@ interface BarChartProps {
 export default function BarChart({
     data,
     title,
-    dataKey,
+    bars,
     xAxisKey,
-    color = "#2DD4BF",
     height = "h-[300px]",
     showGrid = true,
+    showLegend = true,
     barRadius = [4, 4, 0, 0],
     headerAction,
 }: BarChartProps) {
@@ -74,7 +81,16 @@ export default function BarChart({
                         />
                         <YAxis />
                         <Tooltip />
-                        <Bar dataKey={dataKey} fill={color} radius={barRadius} />
+                        {showLegend && <Legend />}
+                        {bars.map((bar) => (
+                            <Bar 
+                                key={bar.dataKey}
+                                dataKey={bar.dataKey} 
+                                name={bar.name}
+                                fill={bar.color} 
+                                radius={barRadius} 
+                            />
+                        ))}
                     </RechartsBarChart>
                 </ResponsiveContainer>
             </CardContent>

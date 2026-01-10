@@ -119,7 +119,7 @@ export interface DashboardWeekStats {
 /**
  * Orders dashboard API response
  */
-export interface OrdersDashboardResponse {
+export interface PharmacistOrdersDashboardResponse {
   thisWeek: DashboardWeekStats;
   lastWeek: DashboardWeekStats;
 }

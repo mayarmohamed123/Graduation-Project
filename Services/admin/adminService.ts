@@ -1,18 +1,22 @@
 import { apiRequest } from "../api";
 import {
-  UpdatePasswordData,
-  UpdatePasswordResponse,
-  Notification,
-} from "@/types";
-import {
   AdminDoctor,
   AdminUser,
   UserOrder,
+  DoctorPatient as AdminDoctorPatient,
+  AdminPayment as AdminAdminPayment,
+  AdminProfile as AdminAdminProfile,
   DoctorPatient,
   AdminPayment,
   AdminProfile,
 } from "@/types/admin";
+import { DashboardResponse, TopPerformersResponse } from "@/types/admin-stats";
 import { DoctorAppointment } from "@/types/appointments";
+import {
+  UpdatePasswordData,
+  UpdatePasswordResponse,
+  Notification,
+} from "@/types/user";
 
 class AdminService {
   /**
@@ -265,6 +269,26 @@ class AdminService {
         requiresAuth: true,
         data,
       }
+    );
+  }
+
+  /**
+   * Get dashboard statistics
+   */
+  async getDashboardStats(): Promise<DashboardResponse> {
+    return await apiRequest<DashboardResponse>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Admin/dashboard-stats`,
+      { requiresAuth: true }
+    );
+  }
+
+  /**
+   * Get top performers
+   */
+  async getTopPerformers(): Promise<TopPerformersResponse> {
+    return await apiRequest<TopPerformersResponse>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Admin/top-performers`,
+      { requiresAuth: true }
     );
   }
 }

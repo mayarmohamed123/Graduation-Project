@@ -6,3 +6,5 @@ export * from "./medicine";
 export * from "./cart";
 export * from "./prescription";
 export * from "./pharmacist";
+export * from "./admin-stats";
+export * from "./admin-analytics";
