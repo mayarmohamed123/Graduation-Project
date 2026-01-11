@@ -122,9 +122,9 @@ export default function DoctorDashboardPage() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {appointments.length > 0 ? (
-            appointments.slice(0, 2).map((appointment) => (
+            appointments.slice(0, 3).map((appointment) => (
               <AppointmentCard
                 key={appointment.id}
                 appointment={appointment}

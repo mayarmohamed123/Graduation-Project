@@ -186,7 +186,7 @@ export default function AppointmentsPage() {
                     </div>
 
                     {/* Appointments Grid */}
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         {filteredAppointments.map((appointment, index) => (
                             <AppointmentCard
                                 key={index}
