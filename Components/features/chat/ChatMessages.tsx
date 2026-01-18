@@ -1,8 +1,9 @@
 "use client"
-import { Message } from "@/Services/chatServices";
+import { Message, Participant } from "@/Services/chatServices";
 import { useEffect, useRef } from "react";
 import { format } from "date-fns";
 import { Send, ArrowLeft } from "lucide-react";
+import Image from "next/image";
 
 interface ChatMessagesProps {
   messages: Message[];
@@ -11,6 +12,7 @@ interface ChatMessagesProps {
   isLoading: boolean;
   connectionStatus: string;
   onBack?: () => void;
+  participants?: Participant[];
 }
 
 export default function ChatMessages({
@@ -20,6 +22,7 @@ export default function ChatMessages({
   isLoading,
   connectionStatus,
   onBack,
+  participants = [],
 }: ChatMessagesProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -58,20 +61,19 @@ export default function ChatMessages({
         </div>
         <div className="flex items-center gap-2">
           <div
-            className={`w-2 h-2 rounded-full ${
-              connectionStatus === "connected"
-                ? "bg-green-500"
-                : connectionStatus === "connecting" || connectionStatus === "reconnecting"
+            className={`w-2 h-2 rounded-full ${connectionStatus === "connected"
+              ? "bg-green-500"
+              : connectionStatus === "connecting" || connectionStatus === "reconnecting"
                 ? "bg-yellow-500"
                 : "bg-red-500"
-            }`}
+              }`}
           ></div>
           <span className="text-xs text-gray-500 capitalize">{connectionStatus}</span>
         </div>
       </div>
 
       {/* Messages */}
-      <div 
+      <div
         className="flex-1 min-h-0 overflow-y-scroll p-4 space-y-4 chat-scroll"
         style={{
           scrollbarWidth: 'thin',
@@ -90,23 +92,42 @@ export default function ChatMessages({
           <>
             {messages.map((message) => {
               const isCurrentUser = message.senderId === currentUserId;
+              const sender = participants.find(p => p.userId === message.senderId);
+
               return (
                 <div
                   key={message.id}
-                  className={`flex ${isCurrentUser ? "justify-end" : "justify-start"}`}
+                  className={`flex gap-2 ${isCurrentUser ? "justify-end" : "justify-start"}`}
                 >
+                  {/* Avatar for other user */}
+                  {!isCurrentUser && (
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary/20 to-primary/40 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                      {sender?.profileImage ? (
+                        <Image
+                          src={sender.profileImage}
+                          alt={sender.userName}
+                          width={32}
+                          height={32}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <span className="text-primary font-bold text-xs">
+                          {(sender?.userName || "U").substring(0, 2).toUpperCase()}
+                        </span>
+                      )}
+                    </div>
+                  )}
+
                   <div
-                    className={`max-w-[70%] rounded-2xl px-4 py-2 ${
-                      isCurrentUser
-                        ? "bg-primary text-white rounded-br-sm"
-                        : "bg-gray-100 text-gray-900 rounded-bl-sm"
-                    }`}
+                    className={`max-w-[70%] rounded-2xl px-4 py-2 ${isCurrentUser
+                      ? "bg-primary text-white rounded-br-sm"
+                      : "bg-gray-100 text-gray-900 rounded-bl-sm"
+                      }`}
                   >
                     <p className="text-sm">{message.text}</p>
                     <p
-                      className={`text-xs mt-1 ${
-                        isCurrentUser ? "text-white/70" : "text-gray-500"
-                      }`}
+                      className={`text-xs mt-1 ${isCurrentUser ? "text-white/70" : "text-gray-500"
+                        }`}
                     >
                       {format(new Date(message.sentAt), "h:mm a")}
                     </p>
@@ -127,11 +148,11 @@ export default function ChatMessages({
             type="text"
             placeholder="Type a message..."
             className="flex-1 px-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-            disabled={connectionStatus !== "connected"}
+            disabled={connectionStatus === "connecting" || connectionStatus === "reconnecting"}
           />
           <button
             type="submit"
-            disabled={connectionStatus !== "connected"}
+            disabled={connectionStatus === "connecting" || connectionStatus === "reconnecting"}
             className="p-3 bg-primary text-white rounded-full hover:bg-primary/90 transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Send className="w-5 h-5" />

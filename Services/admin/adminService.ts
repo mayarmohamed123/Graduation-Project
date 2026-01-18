@@ -17,6 +17,7 @@ import {
   UpdatePasswordResponse,
   Notification,
 } from "@/types/user";
+import { Message, Thread } from "../chatServices";
 
 class AdminService {
   /**
@@ -289,6 +290,60 @@ class AdminService {
     return await apiRequest<TopPerformersResponse>(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/Admin/top-performers`,
       { requiresAuth: true }
+    );
+  }
+
+  /**
+   * Get all admin chat threads
+   */
+  async getAdminThreads(): Promise<Thread[]> {
+    return await apiRequest<Thread[]>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/chat/my-threads`,
+      { requiresAuth: true, cache: "no-store" }
+    );
+  }
+
+  /**
+   * Start chat with a doctor
+   */
+  async startChatWithDoctor(doctorId: number): Promise<Thread> {
+    return await apiRequest<Thread>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Admin/chat/start-with-doctor?doctorId=${doctorId}`,
+      { method: "POST", requiresAuth: true }
+    );
+  }
+
+  /**
+   * Start chat with a pharmacist
+   */
+  async startChatWithPharmacist(pharmacistId: number): Promise<Thread> {
+    return await apiRequest<Thread>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Admin/chat/start-with-pharmacist?pharmacistId=${pharmacistId}`,
+      { method: "POST", requiresAuth: true }
+    );
+  }
+
+  /**
+   * Get messages for a specific admin chat thread
+   */
+  async getThreadMessages(threadId: number): Promise<Message[]> {
+    return await apiRequest<Message[]>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Admin/chat/${threadId}/messages`,
+      { requiresAuth: true, cache: "no-store" }
+    );
+  }
+
+  /**
+   * Send a message from admin
+   */
+  async sendAdminMessage(threadId: number, text: string): Promise<Message> {
+    return await apiRequest<Message>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Admin/chat/send`,
+      {
+        method: "POST",
+        requiresAuth: true,
+        data: { ThreadId: threadId, text },
+      }
     );
   }
 }

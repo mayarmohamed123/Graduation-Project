@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Check, X, Trash2, Eye, Star, Users, Calendar } from "lucide-react";
+import { Check, X, Trash2, Eye, Star, Users, Calendar, MessageCircle } from "lucide-react";
 import { AdminDoctor } from "@/types/admin";
 
 interface DoctorsTableProps {
@@ -10,9 +10,10 @@ interface DoctorsTableProps {
     onReject: (id: number) => void;
     onDelete: (id: number) => void;
     onViewDetails: (doctor: AdminDoctor) => void;
+    onStartChat?: (doctorId: number) => void;
 }
 
-export function DoctorsTable({ doctors, loading, onApprove, onReject, onDelete, onViewDetails }: DoctorsTableProps) {
+export function DoctorsTable({ doctors, loading, onApprove, onReject, onDelete, onViewDetails, onStartChat }: DoctorsTableProps) {
     return (
         <div className="bg-white rounded-xl shadow-sm border overflow-hidden">
             <div className="overflow-x-auto">
@@ -124,6 +125,15 @@ export function DoctorsTable({ doctors, loading, onApprove, onReject, onDelete, 
                                             >
                                                 <Eye className="w-4 h-4" />
                                             </button>
+                                            {onStartChat && doctor.isApproved && (
+                                                <button
+                                                    onClick={() => onStartChat(doctor.id)}
+                                                    className="p-1.5 rounded-lg text-blue-600 hover:bg-blue-50 transition-colors"
+                                                    title="Start Chat"
+                                                >
+                                                    <MessageCircle className="w-4 h-4" />
+                                                </button>
+                                            )}
                                             {!doctor.isApproved && !doctor.isRejected && (
                                                 <button
                                                     onClick={() => onApprove(doctor.id)}

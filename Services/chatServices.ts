@@ -7,6 +7,7 @@ const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
 export interface Participant {
   userId: string;
   userName: string;
+  profileImage?: string;
 }
 
 export interface Thread {
@@ -76,4 +77,8 @@ export async function startConversationWithPharmacist(
   );
 }
 
-
+export async function startConversationWithAdmin(): Promise<Thread> {
+  return apiRequest<Thread>(`${API_BASE}/chat/start-with-admin`, {
+    method: "POST",
+  });
+}

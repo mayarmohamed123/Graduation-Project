@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { fetchMyThreads, Thread } from "@/Services/chatServices";
+import { fetchMyThreads, Thread, Message } from "@/Services/chatServices";
 import { useChat } from "@/hooks/useChat";
 import { toast } from "react-hot-toast";
 import { useAuth } from "@/hooks/useAuth";
@@ -10,37 +10,58 @@ import ChatMessages from "./ChatMessages";
 
 interface ChatProps {
   basePath?: string;
+  fetchThreadsFn?: () => Promise<Thread[]>;
+  fetchMessagesFn?: (id: number) => Promise<Message[]>;
+  sendMessageFn?: (id: number, text: string) => Promise<Message>;
 }
 
-export default function Chat({ basePath = "/user/chat" }: ChatProps) {
+export default function Chat({
+  basePath = "/user/chat",
+  fetchThreadsFn,
+  fetchMessagesFn,
+  sendMessageFn,
+}: ChatProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user } = useAuth();
-  
+
   const [threads, setThreads] = useState<Thread[]>([]);
   const [selectedThreadId, setSelectedThreadId] = useState<number | null>(null);
   const [isLoadingThreads, setIsLoadingThreads] = useState(true);
 
-  const { messages, sendMessage, connectionStatus } = useChat(selectedThreadId);
+  const { messages, sendMessage, connectionStatus } = useChat(
+    selectedThreadId,
+    fetchMessagesFn,
+    sendMessageFn
+  );
 
-  // Load threads on mount
+  // Load threads on mount and when URL threadId changes
   useEffect(() => {
     const loadThreads = async () => {
       try {
         console.log("user", user?.id);
-        const data = await fetchMyThreads();
-        setThreads(data);
-        
+        const fetchFn = fetchThreadsFn || fetchMyThreads;
+        const data = await fetchFn();
+
+        // Sort threads by most recent message (newest first)
+        const sortedData = data.sort((a, b) => {
+          const dateA = a.lastMessage?.sentAt ? new Date(a.lastMessage.sentAt).getTime() : 0;
+          const dateB = b.lastMessage?.sentAt ? new Date(b.lastMessage.sentAt).getTime() : 0;
+          return dateB - dateA; // Descending order (newest first)
+        });
+
+        setThreads(sortedData);
+
         // Check if there's a threadId in URL params
         const urlThreadId = searchParams.get("threadId");
         if (urlThreadId) {
           const threadId = parseInt(urlThreadId, 10);
-          if (data.some((t) => t.id === threadId)) {
+          if (sortedData.some((t) => t.id === threadId)) {
             setSelectedThreadId(threadId);
           }
-        } else if (data.length > 0) {
+        } else if (sortedData.length > 0) {
           // Auto-select first thread if no URL param
-          setSelectedThreadId(data[0].id);
+          setSelectedThreadId(sortedData[0].id);
         }
       } catch (error) {
         console.error("Failed to load threads:", error);
@@ -53,7 +74,7 @@ export default function Chat({ basePath = "/user/chat" }: ChatProps) {
     };
 
     loadThreads();
-  }, [searchParams, user]);
+  }, [searchParams, user, fetchThreadsFn]);
 
   const handleSelectThread = (threadId: number) => {
     setSelectedThreadId(threadId);
@@ -105,6 +126,7 @@ export default function Chat({ basePath = "/user/chat" }: ChatProps) {
             isLoading={false}
             connectionStatus={connectionStatus}
             onBack={handleBack}
+            participants={threads.find(t => t.id === selectedThreadId)?.participants}
           />
         ) : (
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 h-full flex items-center justify-center">

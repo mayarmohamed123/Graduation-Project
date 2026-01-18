@@ -6,6 +6,7 @@ import { PharmaciesFilters } from "@/Components/features/admin/pharmacies/Pharma
 import { PharmaciesTable } from "@/Components/features/admin/pharmacies/PharmaciesTable";
 import { AdminPharmacist } from "@/types/admin";
 import { getAdminPharmacists, approvePharmacist, rejectPharmacist, deletePharmacist } from "@/Services/admin/pharmacies";
+import { adminService } from "@/Services/admin/adminService";
 import { toast } from "react-hot-toast";
 import { ConfirmDialog } from "@/Components/common/ConfirmDialog";
 
@@ -14,7 +15,7 @@ export default function PharmaciesManagement() {
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
     const [filter, setFilter] = useState<"all" | "approved" | "pending" | "rejected">("all");
-    
+
     // Delete dialog state
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [idToDelete, setIdToDelete] = useState<number | null>(null);
@@ -68,7 +69,7 @@ export default function PharmaciesManagement() {
 
     const handleConfirmDelete = async () => {
         if (!idToDelete) return;
-        
+
         try {
             setIsDeleting(true);
             const res = await deletePharmacist(idToDelete);
@@ -95,6 +96,16 @@ export default function PharmaciesManagement() {
 
     const handleOrdersClick = (pharmacist: AdminPharmacist) => {
         router.push(`/admin/pharmacies/${pharmacist.userId}/orders`);
+    };
+
+    const handleStartChat = async (pharmacistId: number) => {
+        try {
+            const thread = await adminService.startChatWithPharmacist(pharmacistId);
+            router.push(`/admin/messages?threadId=${thread.id}`);
+        } catch (error) {
+            console.error("Failed to start chat:", error);
+            toast.error("Failed to start chat with pharmacist");
+        }
     };
 
     const filteredPharmacists = pharmacists.filter(pharmacist => {
@@ -134,6 +145,7 @@ export default function PharmaciesManagement() {
                 onViewDetails={handleViewDetails}
                 onInventoryClick={handleInventoryClick}
                 onOrdersClick={handleOrdersClick}
+                onStartChat={handleStartChat}
             />
 
             <ConfirmDialog

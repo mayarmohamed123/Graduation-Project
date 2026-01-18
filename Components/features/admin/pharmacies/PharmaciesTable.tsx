@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Check, X, Trash2, Eye, Building2, Phone, MapPin, Package, ClipboardList } from "lucide-react";
+import { Check, X, Trash2, Eye, Building2, Phone, MapPin, Package, ClipboardList, MessageCircle } from "lucide-react";
 import { AdminPharmacist } from "@/types/admin";
 import { Avatar, AvatarFallback, AvatarImage } from "@/Components/ui/avatar";
 import { Badge } from "@/Components/ui/badge";
@@ -14,17 +14,19 @@ interface PharmaciesTableProps {
     onViewDetails: (pharmacist: AdminPharmacist) => void;
     onInventoryClick?: (pharmacist: AdminPharmacist) => void;
     onOrdersClick?: (pharmacist: AdminPharmacist) => void;
+    onStartChat?: (pharmacistId: number) => void;
 }
 
-export function PharmaciesTable({ 
-    pharmacists, 
-    loading, 
-    onApprove, 
-    onReject, 
-    onDelete, 
+export function PharmaciesTable({
+    pharmacists,
+    loading,
+    onApprove,
+    onReject,
+    onDelete,
     onViewDetails,
     onInventoryClick,
-    onOrdersClick
+    onOrdersClick,
+    onStartChat
 }: PharmaciesTableProps) {
     return (
         <div className="bg-white rounded-xl shadow-sm border overflow-hidden">
@@ -148,16 +150,29 @@ export function PharmaciesTable({
                                     <td className="px-6 py-4 text-right">
                                         <div className="flex items-center justify-end gap-1.5">
                                             {!pharmacist.isReject && (
-                                                <Button
-                                                    variant="ghost"
-                                                    size="icon"
-                                                    onClick={() => onViewDetails(pharmacist)}
-                                                    className="h-8 w-8 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
-                                                >
-                                                    <Eye className="w-4 h-4" />
-                                                </Button>
+                                                <>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        onClick={() => onViewDetails(pharmacist)}
+                                                        className="h-8 w-8 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                                                    >
+                                                        <Eye className="w-4 h-4" />
+                                                    </Button>
+                                                    {onStartChat && pharmacist.isApproved && (
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="icon"
+                                                            onClick={() => onStartChat(pharmacist.id)}
+                                                            className="h-8 w-8 text-green-600 hover:text-green-700 hover:bg-green-50"
+                                                            title="Start Chat"
+                                                        >
+                                                            <MessageCircle className="w-4 h-4" />
+                                                        </Button>
+                                                    )}
+                                                </>
                                             )}
-                                            
+
                                             {!pharmacist.isApproved && !pharmacist.isReject && (
                                                 <>
                                                     <Button

@@ -1,7 +1,7 @@
 "use client";
 import { Thread } from "@/Services/chatServices";
 import { formatDistanceToNow } from "date-fns";
-
+import Image from "next/image";
 interface ChatThreadListProps {
   threads: Thread[];
   selectedThreadId: number | null;
@@ -56,7 +56,7 @@ export default function ChatThreadList({
       <div className="flex-shrink-0 p-4 border-b border-gray-200">
         <h2 className="text-xl font-bold text-gray-900">Messages</h2>
       </div>
-      <div 
+      <div
         className="flex-1 min-h-0 overflow-y-scroll chat-scroll"
         style={{
           scrollbarWidth: 'thin',
@@ -66,42 +66,52 @@ export default function ChatThreadList({
         {threads.map((thread) => {
           const otherParticipant = thread.participants.find(p => p.userId !== currentUserId) || thread.participants[0];
           return (
-          <button
-            key={thread.id}
-            onClick={() => onSelectThread(thread.id)}
-            className={`w-full p-4 flex items-start gap-3 hover:bg-gray-50 transition border-b border-gray-100 ${
-              selectedThreadId === thread.id ? "bg-primary/5 border-l-4 border-l-primary" : ""
-            }`}
-          >
-            {/* Avatar */}
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary/20 to-primary/40 flex items-center justify-center flex-shrink-0 overflow-hidden">
-                <span className="text-primary font-bold text-sm">
-                  {(otherParticipant?.userName || "U").substring(0, 2).toUpperCase()}
-                </span>
-            </div>
-
-            {/* Content */}
-            <div className="flex-1 text-left min-w-0">
-              <div className="flex items-center justify-between mb-1">
-                <h3 className="font-semibold text-gray-900 truncate">
-                  {otherParticipant?.userName || "Unknown User"}
-                </h3>
-                {thread.lastMessage && (
-                  <span className="text-xs text-gray-500 ml-2 flex-shrink-0">
-                    {formatDistanceToNow(new Date(thread.lastMessage.sentAt), {
-                      addSuffix: true,
-                    })}
+            <button
+              key={thread.id}
+              onClick={() => onSelectThread(thread.id)}
+              className={`w-full p-4 flex items-start gap-3 hover:bg-gray-50 transition border-b border-gray-100 ${selectedThreadId === thread.id ? "bg-primary/5 border-l-4 border-l-primary" : ""
+                }`}
+            >
+              {/* Avatar */}
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary/20 to-primary/40 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                {otherParticipant?.profileImage ? (
+                  <Image
+                    src={otherParticipant.profileImage}
+                    alt={otherParticipant.userName}
+                    width={48}
+                    height={48}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span className="text-primary font-bold text-sm">
+                    {(otherParticipant?.userName || "U").substring(0, 2).toUpperCase()}
                   </span>
                 )}
               </div>
-              {thread.lastMessage && (
-                <p className="text-sm text-gray-600 truncate">
-                  {thread.lastMessage.text}
-                </p>
-              )}
-            </div>
-          </button>
-        );})}
+
+              {/* Content */}
+              <div className="flex-1 text-left min-w-0">
+                <div className="flex items-center justify-between mb-1">
+                  <h3 className="font-semibold text-gray-900 truncate">
+                    {otherParticipant?.userName || "Unknown User"}
+                  </h3>
+                  {thread.lastMessage && (
+                    <span className="text-xs text-gray-500 ml-2 flex-shrink-0">
+                      {formatDistanceToNow(new Date(thread.lastMessage.sentAt), {
+                        addSuffix: true,
+                      })}
+                    </span>
+                  )}
+                </div>
+                {thread.lastMessage && (
+                  <p className="text-sm text-gray-600 truncate">
+                    {thread.lastMessage.text}
+                  </p>
+                )}
+              </div>
+            </button>
+          );
+        })}
       </div>
     </div>
   );
