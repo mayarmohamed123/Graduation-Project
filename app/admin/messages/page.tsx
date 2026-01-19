@@ -1,10 +1,14 @@
+"use client";
+import Chat from "@/Components/features/chat/Chat";
+import { adminService } from "@/Services/admin/adminService";
+
 export default function AdminMessagesPage() {
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-800">Messages</h1>
-      <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 min-h-[400px] flex items-center justify-center">
-        <p className="text-gray-500">Messages content will be implemented here.</p>
-      </div>
-    </div>
+    <Chat
+      basePath="/admin/messages"
+      fetchThreadsFn={adminService.getAdminThreads}
+      fetchMessagesFn={adminService.getThreadMessages}
+      sendMessageFn={adminService.sendAdminMessage}
+    />
   );
 }

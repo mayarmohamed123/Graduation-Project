@@ -48,7 +48,7 @@ export default function BarChart({
     const finalBars = bars || (dataKey ? [{ dataKey, name: title, color: color || "#2bbbc5" }] : []);
 
     return (
-        <Card className="shadow-sm border-none">
+        <Card className="shadow-sm border-none font-outfit">
             <CardHeader>
                 <div className="flex items-center justify-between">
                     <CardTitle>{title}</CardTitle>
@@ -59,10 +59,10 @@ export default function BarChart({
                 <ResponsiveContainer width="100%" height="100%">
                     <RechartsBarChart data={data}>
                         {showGrid && <CartesianGrid strokeDasharray="3 3" vertical={false} />}
-                        <XAxis 
-                            dataKey={xAxisKey} 
-                            interval={0} 
-                            tickLine={false} 
+                        <XAxis
+                            dataKey={xAxisKey}
+                            interval={0}
+                            tickLine={false}
                             axisLine={false}
                             height={80}
                             tick={(props: { x: number; y: number; payload: { value: string } }) => {
@@ -79,7 +79,7 @@ export default function BarChart({
                                             fontSize={10}
                                             className="font-medium"
                                         >
-                                          {payload.value}
+                                            {payload.value}
                                         </text>
                                     </g>
                                 );
@@ -89,12 +89,12 @@ export default function BarChart({
                         <Tooltip />
                         {showLegend && finalBars.length > 0 && <Legend />}
                         {finalBars.map((bar) => (
-                            <Bar 
+                            <Bar
                                 key={bar.dataKey}
-                                dataKey={bar.dataKey} 
+                                dataKey={bar.dataKey}
                                 name={bar.name}
-                                fill={bar.color} 
-                                radius={barRadius} 
+                                fill={bar.color}
+                                radius={barRadius}
                             />
                         ))}
                     </RechartsBarChart>

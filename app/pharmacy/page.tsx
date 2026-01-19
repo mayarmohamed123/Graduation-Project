@@ -2,11 +2,11 @@
 
 import React, { useEffect, useState } from "react";
 import { StatisticsCard } from "@/Components/features/doctor";
-import { 
-  ShoppingCart, 
-  DollarSign, 
-  Store, 
-  X, 
+import {
+  ShoppingCart,
+  DollarSign,
+  Store,
+  X,
   Timer,
   Loader2,
   ArrowRight
@@ -136,10 +136,15 @@ export default function PharmacyDashboardPage() {
         <BarChart
           data={bestSellers}
           title="Best Selling Medicines"
-          dataKey="sales"
           xAxisKey="name"
-          color="#2BBBC5"
           height="h-[350px]"
+          bars={[
+            {
+              dataKey: "sales",
+              name: "Sales",
+              color: "#2BBBC5",
+            },
+          ]}
         />
         <LineChart
           data={todaySales}
@@ -163,12 +168,12 @@ export default function PharmacyDashboardPage() {
           <h2 className="text-2xl font-bold text-gray-900 font-outfit">Recent Orders</h2>
           <Button variant="ghost" className="text-primary hover:text-primary/80 group" asChild>
             <Link href="/pharmacy/orders" className="flex items-center gap-2">
-              View All Orders 
+              View All Orders
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
             </Link>
           </Button>
         </div>
-        
+
         <OrdersTable
           orders={recentOrders}
           onAccept={handleAcceptOrder}

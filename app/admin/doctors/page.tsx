@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { DoctorsFilters } from "@/Components/features/admin/doctors/DoctorsFilters";
 import { DoctorsTable } from "@/Components/features/admin/doctors/DoctorsTable";
 import { DoctorDetailsDialog } from "@/Components/features/admin/doctors/DoctorDetailsDialog";
@@ -10,6 +11,7 @@ import { AdminDoctor, DoctorProfileData, ClinicInfoData } from "@/types/admin";
 import { toast } from "react-hot-toast";
 
 export default function DoctorsManagement() {
+    const router = useRouter();
     const [doctors, setDoctors] = useState<AdminDoctor[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
@@ -181,6 +183,16 @@ export default function DoctorsManagement() {
         setIsDetailsOpen(true);
     };
 
+    const handleStartChat = async (doctorId: number) => {
+        try {
+            const thread = await adminService.startChatWithDoctor(doctorId);
+            router.push(`/admin/messages?threadId=${thread.id}`);
+        } catch (error) {
+            console.error("Failed to start chat:", error);
+            toast.error("Failed to start chat with doctor");
+        }
+    };
+
     const filteredDoctors = doctors.filter(doctor => {
         const matchesSearch =
             doctor.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -215,6 +227,7 @@ export default function DoctorsManagement() {
                 onReject={handleReject}
                 onDelete={handleDeleteClick}
                 onViewDetails={handleViewDetails}
+                onStartChat={handleStartChat}
             />
 
             <DoctorDetailsDialog
