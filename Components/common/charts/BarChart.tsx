@@ -21,7 +21,9 @@ interface BarConfig {
 interface BarChartProps {
     data: object[];
     title: string;
-    bars: BarConfig[];
+    bars?: BarConfig[];
+    dataKey?: string;
+    color?: string;
     xAxisKey: string;
     height?: string;
     showGrid?: boolean;
@@ -34,6 +36,8 @@ export default function BarChart({
     data,
     title,
     bars,
+    dataKey,
+    color,
     xAxisKey,
     height = "h-[300px]",
     showGrid = true,
@@ -41,6 +45,8 @@ export default function BarChart({
     barRadius = [4, 4, 0, 0],
     headerAction,
 }: BarChartProps) {
+    const finalBars = bars || (dataKey ? [{ dataKey, name: title, color: color || "#2bbbc5" }] : []);
+
     return (
         <Card className="shadow-sm border-none">
             <CardHeader>
@@ -81,8 +87,8 @@ export default function BarChart({
                         />
                         <YAxis />
                         <Tooltip />
-                        {showLegend && <Legend />}
-                        {bars.map((bar) => (
+                        {showLegend && finalBars.length > 0 && <Legend />}
+                        {finalBars.map((bar) => (
                             <Bar 
                                 key={bar.dataKey}
                                 dataKey={bar.dataKey} 

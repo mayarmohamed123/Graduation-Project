@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Search, Trash2, Edit } from "lucide-react";
+import { Search, Trash2, Edit, Star } from "lucide-react";
 import Image from "next/image";
 import { 
   Card, 
@@ -20,6 +20,7 @@ interface MedicineTableProps {
   onSearchChange: (value: string) => void;
   onEdit?: (medicine: Medicine) => void;
   onDelete?: (medicine: Medicine) => void;
+  onViewReviews?: (medicine: Medicine) => void;
 }
 
 export const MedicineTable = ({ 
@@ -27,7 +28,8 @@ export const MedicineTable = ({
   searchQuery, 
   onSearchChange,
   onEdit,
-  onDelete
+  onDelete,
+  onViewReviews
 }: MedicineTableProps) => {
   return (
     <Card className="border-none shadow-sm rounded-[2rem] overflow-hidden">
@@ -117,6 +119,13 @@ export const MedicineTable = ({
                   </td>
                   <td className="pr-8 pl-4 py-5">
                     <div className="flex items-center justify-center gap-2">
+                      <button 
+                        onClick={() => onViewReviews?.(medicine)}
+                        className="p-1.5 hover:bg-teal-50 rounded-lg text-gray-400 hover:text-teal-500 transition-all active:scale-90"
+                        title="View Reviews"
+                      >
+                        <Star className="w-4 h-4" />
+                      </button>
                       <button 
                         onClick={() => onDelete?.(medicine)}
                         className="p-1.5 hover:bg-amber-50 rounded-lg text-gray-400 hover:text-amber-500 transition-all active:scale-90"
