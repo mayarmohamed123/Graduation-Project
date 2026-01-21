@@ -35,9 +35,9 @@ export { default as ordersOutlineIcon } from "./material-symbols-light_orders-ou
 export { default as notificationEmptyImage } from "./notifiaction.svg";
 
 // Service/Section Images
-export { default as heroSectionImage } from "./HeroSection.svg";
+export { default as heroSectionImage } from "./heroSectionImage.svg";
 export { default as aboutImage } from "./about.svg";
-export { default as workImage } from "./work.svg";
+export { default as workImage } from "./workImage.svg";
 export { default as doctorServiceIcon } from "./Frame 5.svg";
 export { default as pharmacyServiceIcon } from "./Frame 5 (1).svg";
 export { default as bloodServiceIcon } from "./Frame 5 (2).svg";

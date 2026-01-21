@@ -73,13 +73,13 @@ export default function WorkSection() {
         </div>
 
         {/* Right Side - Image */}
-        <div className="flex justify-center z-10">
+        <div className="flex justify-center z-10 w-full lg:justify-end">
           <Image
             src={workImage}
             alt="How it works illustration"
             width={500}
             height={500}
-            className="rounded-2xl shadow-lg w-full max-w-md"
+            className="rounded-2xl shadow-lg w-full max-w-lg lg:max-w-xl xl:max-w-2xl"
           />
         </div>
       </div>

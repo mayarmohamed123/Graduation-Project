@@ -78,7 +78,7 @@ export default function Page() {
         </div>
 
         {/* --- Slider Section --- */}
-        <div className="w-full max-w-6xl mt-10">
+        <div className="w-full max-w-6xl mt-10 min-h-[400px] md:min-h-[280px]">
           <Swiper
             modules={[Navigation, Autoplay]}
             spaceBetween={30}
@@ -86,10 +86,10 @@ export default function Page() {
             navigation
             autoplay={{ delay: 4000 }}
             loop
-            className="pb-10 ">
+            className="pb-10 !h-full">
             {/* Slide 1 */}
-            <SwiperSlide>
-              <div className="flex flex-col md:flex-row items-center justify-between bg-linear-to-r from-[#2BBBC5] to-[#D5F4F6] rounded-3xl shadow-md p-8">
+            <SwiperSlide className="h-full">
+              <div className="flex flex-col md:flex-row items-center justify-between bg-linear-to-r from-[#2BBBC5] to-[#D5F4F6] rounded-3xl shadow-md p-8 min-h-[350px] md:min-h-[240px]">
                 <div className="max-w-md py-5">
                   <h2 className="text-2xl font-medium text-white mb-2">
                     Find Trusted Doctors Near You
@@ -105,22 +105,24 @@ export default function Page() {
                 <Image
                   src={sliderDoctors}
                   alt="Doctors"
-                  width={320}
-                  height={320}
+                  width={300}
+                  height={300}
                   className="mt-6 md:mt-0"
+                  priority
                 />
               </div>
             </SwiperSlide>
 
             {/* Slide 2 */}
-            <SwiperSlide>
-              <div className="flex flex-col md:flex-row items-center justify-between bg-linear-to-r from-primary to-white rounded-3xl shadow-md p-8">
+            <SwiperSlide className="h-full">
+              <div className="flex flex-col md:flex-row items-center justify-between bg-linear-to-r from-primary to-white rounded-3xl shadow-md p-8 min-h-[350px] md:min-h-[240px]">
                 <Image
                   src={sliderMedicine}
                   alt="Medicines"
-                  width={250}
-                  height={250}
+                  width={200}
+                  height={200}
                   className="mt-6 md:mt-0"
+                  priority
                 />
 
                 <div className="max-w-md">
@@ -139,8 +141,8 @@ export default function Page() {
             </SwiperSlide>
 
             {/* Slide 3 */}
-            <SwiperSlide>
-              <div className="flex flex-col md:flex-row items-center justify-between  bg-linear-to-r from-[#2BBBC5] to-[#D5F4F6] rounded-3xl shadow-md p-8">
+            <SwiperSlide className="h-full">
+              <div className="flex flex-col md:flex-row items-center justify-between  bg-linear-to-r from-[#2BBBC5] to-[#D5F4F6] rounded-3xl shadow-md p-8 min-h-[350px] md:min-h-[240px]">
                 <div className="max-w-md">
                   <h2 className="text-2xl font-medium text-white mb-2">
                     Save Lives. Donate Blood Today.
@@ -155,9 +157,10 @@ export default function Page() {
                 <Image
                   src={sliderDonate}
                   alt="Donate Blood"
-                  width={250}
-                  height={250}
+                  width={200}
+                  height={200}
                   className="mt-6 md:mt-0"
+                  priority
                 />
               </div>
             </SwiperSlide>
