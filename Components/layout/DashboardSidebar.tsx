@@ -18,8 +18,7 @@ import {
   Stethoscope,
   Building2,
   DollarSign,
-  ClipboardList,
-  Archive,
+  Star,
 } from "lucide-react";
 import { sehhaLogo } from "@/assets";
 import { useAuth } from "@/hooks/useAuth";
@@ -51,6 +50,7 @@ export default function DashboardSidebar({ role }: DashboardSidebarProps) {
     { name: "Messages", icon: MessageSquare, href: "/doctor/messages" },
     { name: "Notifications", icon: Bell, href: "/doctor/notifications" },
     { name: "Analytics", icon: BarChart3, href: "/doctor/analytics" },
+    { name: "Reviews", icon: Star, href: "/doctor/reviews" },
     { name: "Settings", icon: Settings, href: "/doctor/settings" },
   ];
 
@@ -61,6 +61,7 @@ export default function DashboardSidebar({ role }: DashboardSidebarProps) {
     { name: "Messages", icon: MessageSquare, href: "/pharmacy/messages" },
     { name: "Notifications", icon: Bell, href: "/pharmacy/notifications" },
     { name: "Analytics", icon: BarChart3, href: "/pharmacy/analytics" },
+    { name: "Reviews", icon: Star, href: "/pharmacy/reviews" },
     { name: "Settings", icon: Settings, href: "/pharmacy/settings" },
   ];
 
@@ -73,6 +74,7 @@ export default function DashboardSidebar({ role }: DashboardSidebarProps) {
     { name: "Analytics", icon: BarChart3, href: "/admin/analytics" },
     { name: "Messages", icon: MessageSquare, href: "/admin/messages" },
     { name: "Notifications", icon: Bell, href: "/admin/notifications" },
+    { name: "Reviews", icon: Star, href: "/admin/reviews" },
     { name: "Settings", icon: Settings, href: "/admin/settings" },
   ];
 

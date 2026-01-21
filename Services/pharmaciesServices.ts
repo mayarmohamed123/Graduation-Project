@@ -1,4 +1,4 @@
-import { Pharmacy, PharmacyRegistrationResponse, InventoryAnalysis, CategoryDashboardResponse, OrdersDashboardResponse, PharmacyStatsResponse, BestSellingMedicine, TodaySalesByTime } from "@/types";
+import { Pharmacy, PharmacyRegistrationResponse, InventoryAnalysis, CategoryDashboardResponse, OrdersDashboardResponse, PharmacyStatsResponse, BestSellingMedicine, TodaySalesByTime, Review } from "@/types";
 import { Medicine } from "@/types/medicine";
 import { apiRequest } from "./api";
 
@@ -219,6 +219,39 @@ class PharmacyService {
       {
         cache: "no-store",
         requiresAuth: false,
+      }
+    );
+  }
+
+  // Get Pharmacy Reviews
+  async getPharmacyReviews(pharmacyId: number): Promise<Review[]> {
+    return await apiRequest<Review[]>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Review/pharmacy/${pharmacyId}`,
+      {
+        cache: "no-store",
+        requiresAuth: true,
+      }
+    );
+  }
+
+  // Delete a review
+  async deleteReview(reviewId: number): Promise<{ message: string }> {
+    return await apiRequest<{ message: string }>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Review/${reviewId}`,
+      {
+        method: "DELETE",
+        requiresAuth: true,
+      }
+    );
+  }
+
+  // Get Medicine Reviews
+  async getMedicineReviews(medicineId: number): Promise<Review[]> {
+    return await apiRequest<Review[]>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Review/medication/${medicineId}`,
+      {
+        cache: "no-store",
+        requiresAuth: true,
       }
     );
   }

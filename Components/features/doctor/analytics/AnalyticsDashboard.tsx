@@ -105,9 +105,10 @@ export default function AnalyticsDashboard({
                 <BarChart
                     data={ageData}
                     title="Patient Age Distribution"
-                    dataKey="count"
+                    bars={[
+                        { dataKey: "count", name: "Patients", color: "#2DD4BF" }
+                    ]}
                     xAxisKey="range"
-                    color="#2DD4BF"
                 />
                 <PieChart
                     data={genderChartData}

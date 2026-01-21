@@ -10,6 +10,7 @@ import { InventoryHeader } from "@/Components/features/pharmacy/inventory/Invent
 import { InventoryStats } from "@/Components/features/pharmacy/inventory/InventoryStats";
 import { CategoryGrid } from "@/Components/features/pharmacy/inventory/CategoryGrid";
 import { MedicineTable } from "@/Components/features/pharmacy/inventory/MedicineTable";
+import { MedicineReviewsDialog } from "@/Components/features/pharmacy/inventory/MedicineReviewsDialog";
 
 import { toast } from "react-hot-toast";
 import { ConfirmDialog } from "@/Components/common/ConfirmDialog";
@@ -26,6 +27,10 @@ export default function InventoryPage() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [medicineToDelete, setMedicineToDelete] = useState<Medicine | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  // Reviews State
+  const [reviewsDialogOpen, setReviewsDialogOpen] = useState(false);
+  const [selectedMedicineForReviews, setSelectedMedicineForReviews] = useState<Medicine | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -124,6 +129,10 @@ export default function InventoryPage() {
         onSearchChange={setSearchQuery}
         onEdit={(medicine) => router.push(`/pharmacy/inventory/add?id=${medicine.id}`)}
         onDelete={handleDelete}
+        onViewReviews={(medicine) => {
+          setSelectedMedicineForReviews(medicine);
+          setReviewsDialogOpen(true);
+        }}
       />
 
       <ConfirmDialog
@@ -136,6 +145,12 @@ export default function InventoryPage() {
         cancelText="Keep Product"
         isLoading={isDeleting}
         variant="destructive"
+      />
+
+      <MedicineReviewsDialog 
+        isOpen={reviewsDialogOpen}
+        onClose={() => setReviewsDialogOpen(false)}
+        medicine={selectedMedicineForReviews}
       />
     </div>
   );

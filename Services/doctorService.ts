@@ -78,8 +78,8 @@ export const doctorService = {
   },
 
   // Get Doctor Reviews
-  GetDoctorReviews: async (id: number): Promise<Review> => {
-    return await apiRequest<Review>(`${baseUrl}/Review/doctor/${id}`, {
+  GetDoctorReviews: async (id: number): Promise<Review[]> => {
+    return await apiRequest<Review[]>(`${baseUrl}/Review/doctor/${id}`, {
       cache: "no-store",
     });
   },
