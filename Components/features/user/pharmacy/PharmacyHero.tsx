@@ -104,9 +104,9 @@ export default function PharmacyHero({ pharmacy }: PharmacyHeroProps) {
                 <h3>About Pharmacy</h3>
               </div>
               <p className="text-sm text-gray-600 leading-relaxed max-w-2xl">
-                {pharmacy.name} is a leading healthcare provider committed to providing 
-                high-quality medications and professional pharmaceutical services. 
-                Our experienced pharmacists are always ready to assist you with your 
+                {pharmacy.name} is a leading healthcare provider committed to providing
+                high-quality medications and professional pharmaceutical services.
+                Our experienced pharmacists are always ready to assist you with your
                 medical needs and health advice.
               </p>
             </div>
@@ -145,8 +145,8 @@ export default function PharmacyHero({ pharmacy }: PharmacyHeroProps) {
                 </div>
               </div>
 
-               {/* Hours */}
-               <div className="flex items-center gap-3">
+              {/* Hours */}
+              <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center flex-shrink-0">
                   <Clock className="w-5 h-5 text-amber-600" />
                 </div>
@@ -159,20 +159,20 @@ export default function PharmacyHero({ pharmacy }: PharmacyHeroProps) {
 
             {/* Badges/Trust Section */}
             <div className="mt-8 flex flex-wrap items-center gap-6 pt-6 border-t border-gray-100">
-                <div className="flex items-center gap-2">
-                    <ShieldCheck className="w-5 h-5 text-green-500" />
-                    <span className="text-xs font-bold text-gray-700">Verified Healthcare Provider</span>
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="w-5 h-5 text-green-500" />
+                <span className="text-xs font-bold text-gray-700">Verified Healthcare Provider</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CreditCard className="w-5 h-5 text-blue-500" />
+                <div className="flex gap-1">
+                  {acceptedInsurances.slice(0, 3).map(ins => (
+                    <span key={ins} className="text-[10px] bg-gray-100 px-1.5 py-0.5 rounded text-gray-600 font-medium">
+                      {ins}
+                    </span>
+                  ))}
                 </div>
-                <div className="flex items-center gap-2">
-                    <CreditCard className="w-5 h-5 text-blue-500" />
-                    <div className="flex gap-1">
-                        {acceptedInsurances.slice(0, 3).map(ins => (
-                            <span key={ins} className="text-[10px] bg-gray-100 px-1.5 py-0.5 rounded text-gray-600 font-medium">
-                                {ins}
-                            </span>
-                        ))}
-                    </div>
-                </div>
+              </div>
             </div>
           </div>
         </div>

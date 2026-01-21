@@ -24,13 +24,13 @@ export default function PharmacyMedicineList({ medicines }: PharmacyMedicineList
     return medicines.filter((medicine) => {
       const matchesSearch = medicine.brandName
         .toLowerCase()
-        .includes(searchQuery.toLowerCase()) || 
+        .includes(searchQuery.toLowerCase()) ||
         medicine.genericName.toLowerCase().includes(searchQuery.toLowerCase());
-      
+
       const matchesCategory = selectedCategory === "All" || medicine.medicationCategory === selectedCategory;
       const matchesForm = selectedForm === "All" || medicine.dosageFormType === selectedForm;
       const matchesUnit = selectedUnit === "All" || medicine.strengthUnit === selectedUnit;
-      
+
       return matchesSearch && matchesCategory && matchesForm && matchesUnit;
     });
   }, [medicines, searchQuery, selectedCategory, selectedForm, selectedUnit]);
@@ -52,14 +52,14 @@ export default function PharmacyMedicineList({ medicines }: PharmacyMedicineList
     <div className="flex flex-col lg:flex-row gap-8 w-full">
       {/* Sidebar Filters */}
       <aside className="w-full lg:w-72 flex-shrink-0">
-        <div className="bg-white rounded-3xl border border-gray-200 p-6 sticky top-6 shadow-sm">
+        <div className="bg-white rounded-3xl border border-gray-200 p-6 shadow-sm">
           <div className="flex items-center justify-between mb-8">
             <h3 className="font-bold text-gray-900 flex items-center gap-2 text-lg">
               <SlidersHorizontal className="w-5 h-5 text-primary" />
               Filters
             </h3>
             {activeFiltersCount > 0 && (
-              <button 
+              <button
                 onClick={clearFilters}
                 className="text-xs text-primary hover:underline font-bold"
               >
@@ -77,11 +77,10 @@ export default function PharmacyMedicineList({ medicines }: PharmacyMedicineList
                   <button
                     key={cat}
                     onClick={() => setSelectedCategory(cat)}
-                    className={`px-4 py-2.5 rounded-xl text-sm font-semibold transition-all text-left flex items-center justify-between group ${
-                      selectedCategory === cat
+                    className={`px-4 py-2.5 rounded-xl text-sm font-semibold transition-all text-left flex items-center justify-between group ${selectedCategory === cat
                       ? "bg-primary text-white shadow-md shadow-primary/20"
                       : "bg-gray-50 text-gray-600 hover:bg-gray-100"
-                    }`}
+                      }`}
                   >
                     <span>{cat}</span>
                     {selectedCategory === cat && <CheckCircle2 className="w-4 h-4" />}
@@ -98,11 +97,10 @@ export default function PharmacyMedicineList({ medicines }: PharmacyMedicineList
                   <button
                     key={form}
                     onClick={() => setSelectedForm(form)}
-                    className={`px-4 py-2.5 rounded-xl text-sm font-semibold transition-all text-left flex items-center justify-between group ${
-                      selectedForm === form
+                    className={`px-4 py-2.5 rounded-xl text-sm font-semibold transition-all text-left flex items-center justify-between group ${selectedForm === form
                       ? "bg-primary text-white shadow-md shadow-primary/20"
                       : "bg-gray-50 text-gray-600 hover:bg-gray-100"
-                    }`}
+                      }`}
                   >
                     <span>{form}</span>
                     {selectedForm === form && <CheckCircle2 className="w-4 h-4" />}
@@ -119,11 +117,10 @@ export default function PharmacyMedicineList({ medicines }: PharmacyMedicineList
                   <button
                     key={unit}
                     onClick={() => setSelectedUnit(unit)}
-                    className={`px-4 py-2.5 rounded-xl text-sm font-semibold transition-all text-left flex items-center justify-between group ${
-                      selectedUnit === unit
+                    className={`px-4 py-2.5 rounded-xl text-sm font-semibold transition-all text-left flex items-center justify-between group ${selectedUnit === unit
                       ? "bg-primary text-white shadow-md shadow-primary/20"
                       : "bg-gray-50 text-gray-600 hover:bg-gray-100"
-                    }`}
+                      }`}
                   >
                     <span>{unit}</span>
                     {selectedUnit === unit && <CheckCircle2 className="w-4 h-4" />}
@@ -139,14 +136,14 @@ export default function PharmacyMedicineList({ medicines }: PharmacyMedicineList
       <main className="flex-1 min-w-0">
         {/* Search Header - Centered In Content Area */}
         <div className="mb-10">
-          <div className="max-w-2xl mx-auto">
-            <SearchInput 
-              onSearch={setSearchQuery} 
+          <div className="max-w-full ">
+            <SearchInput
+              onSearch={setSearchQuery}
               placeholder="Search specifically in this pharmacy..."
-              className="!mb-0" 
+              className="!mb-0"
             />
           </div>
-          
+
           <div className="flex items-center justify-between mt-8 pb-4 border-b border-gray-100">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
@@ -160,11 +157,11 @@ export default function PharmacyMedicineList({ medicines }: PharmacyMedicineList
 
             {/* Display active filters summary on mobile if any */}
             <div className="lg:hidden">
-                {activeFiltersCount > 0 && (
-                    <span className="text-xs bg-primary text-white px-3 py-1 rounded-full font-bold">
-                        {activeFiltersCount} Filters Active
-                    </span>
-                )}
+              {activeFiltersCount > 0 && (
+                <span className="text-xs bg-primary text-white px-3 py-1 rounded-full font-bold">
+                  {activeFiltersCount} Filters Active
+                </span>
+              )}
             </div>
           </div>
         </div>
@@ -185,7 +182,7 @@ export default function PharmacyMedicineList({ medicines }: PharmacyMedicineList
             <p className="text-gray-500 max-w-xs mx-auto mb-8">
               We couldn&apos;t find any medicine matching your search or selected filters.
             </p>
-            <button 
+            <button
               onClick={clearFilters}
               className="px-8 py-3 bg-primary text-white rounded-2xl font-bold shadow-lg shadow-primary/20 hover:scale-105 transition-transform"
             >
