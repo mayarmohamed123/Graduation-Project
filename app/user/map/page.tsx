@@ -91,7 +91,7 @@ export default function MapPage() {
                         <input
                             type="text"
                             className="block w-full pl-10 pr-3 py-2.5 border border-gray-200 rounded-lg leading-5 bg-gray-50 placeholder-gray-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition duration-150 ease-in-out sm:text-sm"
-                            placeholder="Search by name..."
+                            placeholder="Search by name or clinic name ..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />

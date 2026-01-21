@@ -66,9 +66,8 @@ export default function HomeMapSection() {
                 {/* Left Side: Content */}
                 <div className="space-y-8">
                     <div>
-                        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight mb-4">
-                            Find <span className="text-primary">Doctors & Pharmacies</span>{" "}
-                            Near You
+                        <h2 className="text-2xl md:text-3xl font-semibold text-primary mb-2">
+                            Find Doctors & Pharmacies Near You
                         </h2>
                         <p className="text-lg text-gray-600 leading-relaxed max-w-lg">
                             Explore verified doctors and licensed pharmacies around your

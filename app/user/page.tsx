@@ -15,6 +15,7 @@ import {
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
 import TopRatedDoctors from "@/Components/features/sections/TopRatedDoctors";
+import TopRatedPharmacies from "@/Components/features/sections/TopRatedPharmacies";
 import HomeMapSection from "@/Components/features/sections/HomeMapSection";
 import PrimaryButton from "@/Components/common/PrimaryButton";
 import { useLocation } from "@/hooks/useLocation";
@@ -62,7 +63,7 @@ export default function Page() {
   return (
     <div>
       {/* Hero Section */}
-      <section className="min-h-screen bg-gray-50 flex flex-col items-center justify-center py-10 px-4">
+      <section className="min-h-screen bg-white flex flex-col items-center justify-center py-8 px-4">
         <div className="max-w-4xl w-full">
           {/* Header with Logout */}
 
@@ -104,8 +105,8 @@ export default function Page() {
                 <Image
                   src={sliderDoctors}
                   alt="Doctors"
-                  width={400}
-                  height={400}
+                  width={320}
+                  height={320}
                   className="mt-6 md:mt-0"
                 />
               </div>
@@ -117,8 +118,8 @@ export default function Page() {
                 <Image
                   src={sliderMedicine}
                   alt="Medicines"
-                  width={300}
-                  height={300}
+                  width={250}
+                  height={250}
                   className="mt-6 md:mt-0"
                 />
 
@@ -154,8 +155,8 @@ export default function Page() {
                 <Image
                   src={sliderDonate}
                   alt="Donate Blood"
-                  width={300}
-                  height={300}
+                  width={250}
+                  height={250}
                   className="mt-6 md:mt-0"
                 />
               </div>
@@ -165,12 +166,12 @@ export default function Page() {
       </section>
 
       {/* Card section */}
-      <section className="w-full max-w-6xl mx-auto mt-20 pb-10 px-4 text-center">
-        <h2 className="text-2xl md:text-3xl font-semibold text-[#2BBBC5] mb-10">
+      <section className="w-full max-w-6xl mx-auto mt-10 pb-10 px-4 ">
+        <h3 className="text-2xl md:text-3xl font-semibold text-primary mb-10">
           What Would You Like to Do Today?
-        </h2>
+        </h3>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 text-center">
           {actionCards.map((card) => (
             <div
               key={card.id}
@@ -206,7 +207,10 @@ export default function Page() {
         </div>
       </section>
 
-      {/* Top Reated */}
+      {/* Top Pharmacies */}
+      <TopRatedPharmacies />
+
+      {/* Top Rated Doctors */}
       <TopRatedDoctors />
 
       {/* Map Section */}

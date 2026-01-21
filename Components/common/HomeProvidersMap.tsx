@@ -154,7 +154,7 @@ export default function HomeProvidersMap({
                         position={[userLocation.lat, userLocation.lng]}
                         icon={L.divIcon({
                             html: renderToStaticMarkup(
-                                <div className="w-6 h-6 bg-blue-500 rounded-full border-2 border-white shadow-md pulse-animation"></div>
+                                <div className="w-6 h-6 bg-blue-500 rounded-full border-2 border-white shadow-lg pulse-animation"></div>
                             ),
                             className: "user-marker",
                             iconSize: [24, 24],
@@ -177,20 +177,24 @@ export default function HomeProvidersMap({
                                 <Popup className="custom-popup">
                                     <div className="p-1 min-w-[220px]">
                                         <div className="flex items-center gap-2 mb-2">
-                                            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                                            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
                                                 <Stethoscope size={16} />
                                             </div>
-                                            <div>
-                                                <h3 className="font-semibold text-gray-900 text-sm hover:text-primary transition-colors">
+
+                                            <div className="flex flex-col justify-center leading-tight ">
+                                                <h3 className="font-semibold text-gray-900 text-sm hover:text-primary transition-colors leading-tight">
                                                     <Link href={`/user/appointment/${doc.id}`}>
                                                         Dr. {doc.username}
                                                     </Link>
                                                 </h3>
-                                                <p className="text-xs text-primary">{doc.specialty}</p>
+                                                <p className="text-xs text-primary leading-tight">
+                                                    {doc.specialty}
+                                                </p>
                                             </div>
                                         </div>
 
-                                        <div className="flex items-start gap-1.5 text-gray-500 text-xs mb-2">
+
+                                        <div className="flex items-center gap-1.5 text-gray-500 text-xs mb-2 ">
                                             <MapPin size={12} className="mt-0.5 shrink-0" />
                                             <p>{doc.clinicName || doc.city || "Clinic"}</p>
                                         </div>
@@ -278,6 +282,6 @@ export default function HomeProvidersMap({
                         )
                 )}
             </MapContainer>
-        </div>
+        </div >
     );
 }

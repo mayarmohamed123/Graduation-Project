@@ -59,11 +59,11 @@ export default function TopRatedPharmacies() {
       {/* Header */}
       <div className="mb-4">
         <div className="flex items-center justify-between mb-2">
-          <h2 className="text-2xl font-semibold text-primary">
+          <h3 className="text-2xl md:text-3xl font-semibold text-primary mb-2">
             {isShowingAll ? "All Pharmacies" : "Top Pharmacies Near You"}
-          </h2>
+          </h3>
           {!isShowingAll && (
-            <button 
+            <button
               onClick={handleSeeAll}
               className="text-sm text-primary hover:underline"
             >
@@ -71,9 +71,9 @@ export default function TopRatedPharmacies() {
             </button>
           )}
         </div>
-        <p className="text-sm text-gray-600">
-          {isShowingAll 
-            ? "Browse our full list of trusted pharmacies." 
+        <p className="text-lg text-gray-600 leading-relaxed ">
+          {isShowingAll
+            ? "Browse our full list of trusted pharmacies."
             : "Find trusted pharmacies that offer quick delivery and quality service."}
         </p>
       </div>
