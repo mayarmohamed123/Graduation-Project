@@ -23,13 +23,19 @@ export default function PharmacyDetailsPage() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const [pharmacyData, medicinesData] = await Promise.all([
-          pharmacyService.getPharmacyById(pharmacyId),
-          pharmacyService.getPharmacyMedicinesById(pharmacyId),
-        ]);
-
+        // Fetch pharmacy first
+        const pharmacyData = await pharmacyService.getPharmacyById(pharmacyId);
         setPharmacy(pharmacyData);
-        setMedicines(Array.isArray(medicinesData) ? medicinesData : []);
+
+        // Try to fetch medicines, but don't fail if they're not available
+        try {
+          const medicinesData = await pharmacyService.getPharmacyMedicinesById(pharmacyId);
+          setMedicines(Array.isArray(medicinesData) ? medicinesData : []);
+        } catch (medicineErr) {
+          console.log("No medicines available for this pharmacy:", medicineErr);
+          // Set empty array if medicines aren't available
+          setMedicines([]);
+        }
       } catch (err) {
         console.error("Error fetching pharmacy data:", err);
         setError("Failed to load pharmacy details. Please try again later.");

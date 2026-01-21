@@ -15,6 +15,7 @@ import {
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
 import TopRatedDoctors from "@/Components/features/sections/TopRatedDoctors";
+import HomeMapSection from "@/Components/features/sections/HomeMapSection";
 import PrimaryButton from "@/Components/common/PrimaryButton";
 import { useLocation } from "@/hooks/useLocation";
 
@@ -64,10 +65,10 @@ export default function Page() {
       <section className="min-h-screen bg-gray-50 flex flex-col items-center justify-center py-10 px-4">
         <div className="max-w-4xl w-full">
           {/* Header with Logout */}
-      
-            <h1 className="heading text-center">
-              Welcome back, {isLoading ? "..." : (userName || "User")}!👋
-            </h1>
+
+          <h1 className="heading text-center">
+            Welcome back, {isLoading ? "..." : (userName || "User")}!👋
+          </h1>
 
           <p className="text-[#8E8E8E] text-lg mb-10 text-center">
             Take care of your health today ,explore trusted doctors, order
@@ -207,6 +208,9 @@ export default function Page() {
 
       {/* Top Reated */}
       <TopRatedDoctors />
+
+      {/* Map Section */}
+      <HomeMapSection />
     </div>
   );
 }
