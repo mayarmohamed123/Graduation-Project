@@ -7,15 +7,18 @@ import PageHeaderWithBack from "@/Components/common/PageHeaderWithBack";
 import Switch from "@/Components/common/Switch";
 import NotificationCard from "@/Components/common/NotificationCard";
 import { useNotifications } from "@/hooks/useNotifications";
+import { CheckCheck } from "lucide-react";
+import { Notification } from "@/types";
 
 type TabType = "appointments" | "orders";
 
 export default function NotificationsPage() {
   const [activeTab, setActiveTab] = useState<TabType>("appointments");
-  const { appointments, orders, isLoading, handleMarkAsRead } = useNotifications();
+  const { appointments, orders, isLoading, handleMarkAsRead, handleMarkAllAsRead } = useNotifications();
 
   const currentNotifications = activeTab === "appointments" ? appointments : orders;
   const hasNotifications = currentNotifications.length > 0;
+  const hasUnread = currentNotifications.some((n: Notification) => !n.isRead);
 
   if (isLoading) {
     return (
@@ -28,19 +31,31 @@ export default function NotificationsPage() {
   return (
     <div className="min-h-screen">
       {/* Header */}
-      <PageHeaderWithBack title="Notifications" />
+      <div className="bg-white">
+        <PageHeaderWithBack title="Notifications" />
+      </div>
 
       <div className="max-w-7xl mx-auto px-4 pb-4">
-        {/* Tabs */}
-        <div className="mb-6 flex flex-end">
+        {/* Tabs & Mark All as Read */}
+        <div className="mb-6 flex items-center justify-between">
           <Switch
             tabs={[
               { id: "appointments", label: "Appointments" },
               { id: "orders", label: "Medicine Order" },
             ]}
             activeTab={activeTab}
-            onTabChange={(id) => setActiveTab(id as TabType)}
+            onTabChange={(id: string) => setActiveTab(id as TabType)}
           />
+
+          {hasNotifications && hasUnread && (
+            <button
+              onClick={handleMarkAllAsRead}
+              className="text-sm text-primary hover:text-primary/80 font-medium flex items-center gap-2 transition-colors"
+            >
+              <CheckCheck className="w-4 h-4" />
+              Mark all as read
+            </button>
+          )}
         </div>
 
         {/* Notifications List or Empty State */}
@@ -63,7 +78,7 @@ export default function NotificationsPage() {
           </div>
         ) : (
           <div className="space-y-3">
-            {currentNotifications.map((notification) => (
+            {currentNotifications.map((notification: Notification) => (
               <NotificationCard
                 key={notification.id}
                 notification={notification}

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect, use, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { 
   getPharmacyOfPharmacist, 
@@ -20,7 +20,7 @@ import { AddMedicineFooter } from "@/Components/features/pharmacy/inventory/add-
 import { Card } from "@/Components/ui/card";
 import LoadingSpinner from "@/Components/common/LoadingSpinner";
 
-export default function AdminAddMedicinePage({ params }: { params: Promise<{ userId: string }> }) {
+function AdminAddMedicineContent({ params }: { params: Promise<{ userId: string }> }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const editId = searchParams.get("id");
@@ -125,5 +125,17 @@ export default function AdminAddMedicinePage({ params }: { params: Promise<{ use
         </Card>
       </form>
     </div>
+  );
+}
+
+export default function AdminAddMedicinePage({ params }: { params: Promise<{ userId: string }> }) {
+  return (
+    <Suspense fallback={
+      <div className="flex h-[70vh] items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    }>
+      <AdminAddMedicineContent params={params} />
+    </Suspense>
   );
 }

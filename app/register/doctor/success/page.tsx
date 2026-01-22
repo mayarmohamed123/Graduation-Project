@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Check } from "lucide-react";
 import { Button } from "@/Components/ui/button";
 import { doctorService } from "@/Services/doctorService";
 import toast from "react-hot-toast";
 
-export default function DoctorSuccessPage() {
+function DoctorSuccessContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const sessionId = searchParams.get("sessionId");
@@ -67,5 +67,20 @@ export default function DoctorSuccessPage() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function DoctorSuccessPage() {
+  return (
+    <Suspense fallback={
+      <main className="min-h-screen flex flex-col items-center justify-center bg-[#E5E5E5] p-4">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2BBBC5] mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </main>
+    }>
+      <DoctorSuccessContent />
+    </Suspense>
   );
 }

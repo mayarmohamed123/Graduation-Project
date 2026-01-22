@@ -92,7 +92,7 @@ export function useAuth() {
       console.log("🚀 login: Attempting login for:", email);
       const result = await dispatch(loginUser({ email, password })).unwrap();
       console.log("🚀 login: Success! Result:", result);
-      // Redirect immediately - ProtectedRoute will handle auth check
+      await recheckAuth();
       handleRedirect(result.user);
     } catch (error) {
       console.error("🚀 login: Error:", error);

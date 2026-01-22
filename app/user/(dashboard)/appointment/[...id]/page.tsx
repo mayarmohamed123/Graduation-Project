@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useState } from "react";
+import { use, useState, Suspense } from "react";
 import DoctorReviews from "@/Components/features/doctor/DoctorReviews";
 import LoadingSpinner from "@/Components/common/LoadingSpinner";
 import PrvButton from "@/Components/common/prvButton";
@@ -9,7 +9,7 @@ import DoctorInfoCard from "@/Components/features/appointment/DoctorInfoCard";
 import BookingSection from "@/Components/features/appointment/BookingSection";
 import { useAppointment } from "@/hooks/useAppointment";
 
-export default function AppointmentPage({
+function AppointmentContent({
   params,
 }: {
   params: Promise<{ id: string }>;
@@ -116,5 +116,21 @@ export default function AppointmentPage({
         isLoading={bookLoading}
       />
     </div>
+  );
+}
+
+export default function AppointmentPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen">
+        <LoadingSpinner />
+      </div>
+    }>
+      <AppointmentContent params={params} />
+    </Suspense>
   );
 }

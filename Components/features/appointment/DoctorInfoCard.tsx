@@ -13,6 +13,12 @@ interface DoctorInfoCardProps {
 }
 
 export default function DoctorInfoCard({ doctor }: DoctorInfoCardProps) {
+  const cleanName = (name: string) => {
+    if (!name) return "";
+    return name.split("_")[0];
+  };
+
+  const displayName = cleanName(doctor.username);
   const doctorImageUrl = doctor.doctorImage || userProfileImage;
 
   return (
@@ -22,12 +28,12 @@ export default function DoctorInfoCard({ doctor }: DoctorInfoCardProps) {
           src={doctorImageUrl}
           width={120}
           height={120}
-          alt={doctor.username || "Doctor"}
+          alt={displayName || "Doctor"}
           loading="eager"
           className="rounded-full object-cover"
         />
 
-        <h2 className="text-2xl font-semibold mt-4">{doctor.username}</h2>
+        <h2 className="text-2xl font-semibold mt-4">{displayName}</h2>
         <p className="text-gray-500">{doctor.specialty}</p>
 
         <div className="flex gap-3 mt-4 flex-wrap justify-center">

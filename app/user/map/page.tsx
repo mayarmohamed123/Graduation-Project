@@ -70,7 +70,7 @@ export default function MapPage() {
     }
 
     return (
-        <div className="relative h-[calc(100vh-64px)] w-full overflow-hidden">
+        <div className="relative h-screen w-full overflow-hidden">
             {/* Floating Header with Search */}
             <div className="absolute top-4 left-4 z-[1000] flex flex-col gap-3 max-w-sm w-full">
                 <div className="bg-white/95 backdrop-blur-md p-4 rounded-xl shadow-lg border border-gray-100 w-full transition-all">

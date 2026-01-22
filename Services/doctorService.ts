@@ -56,7 +56,7 @@ export const doctorService = {
     date: string
   ): Promise<AppointmentSlot[]> => {
     return await apiRequest<AppointmentSlot[]>(
-      `${baseUrl}/Appointment/available-slots?doctorId=${doctorId}&date=${date}`,
+      `${baseUrl}/doctors/${doctorId}/slots?=${date}`,
       {
         method: "GET",
         requiresAuth: true,

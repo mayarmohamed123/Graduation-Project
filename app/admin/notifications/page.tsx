@@ -10,10 +10,13 @@ import { notificationEmptyImage } from "@/assets";
 import toast from "react-hot-toast";
 import NotificationCard from "@/Components/common/NotificationCard";
 import { HubConnectionState } from "@microsoft/signalr";
-import LoadingSpinner from "@/Components/common/LoadingSpinner";
+import { LoadingSpinner } from "@/Components";
 import { CheckCheck } from "lucide-react";
+import { useAppDispatch } from "@/store/hooks";
+import { incrementUnreadCount, decrementUnreadCount, setUnreadCount } from "@/store/slices/notificationSlice";
 
 export default function AdminNotificationsPage() {
+  const dispatch = useAppDispatch();
   const { isAuthenticated } = useAuth();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
@@ -40,6 +43,7 @@ export default function AdminNotificationsPage() {
       );
 
       setNotifications((prev) => [data, ...prev]);
+      dispatch(incrementUnreadCount());
     };
 
     // 3- Listen for notifications
@@ -66,7 +70,7 @@ export default function AdminNotificationsPage() {
     return () => {
       connection.off("ReceiveNotification", handleNotification);
     };
-  }, [isAuthenticated]);
+  }, [isAuthenticated, dispatch]);
 
   const fetchNotifications = async () => {
     try {
@@ -91,6 +95,7 @@ export default function AdminNotificationsPage() {
 
     try {
       await adminService.markNotificationAsRead(id);
+      dispatch(decrementUnreadCount());
     } catch (error) {
       console.error("Failed to mark notification as read:", error);
       // Revert on error
@@ -110,6 +115,7 @@ export default function AdminNotificationsPage() {
 
     try {
       await adminService.markAllNotificationsAsRead();
+      dispatch(setUnreadCount(0));
       toast.success("All notifications marked as read");
     } catch (error) {
       console.error("Failed to mark all as read:", error);
