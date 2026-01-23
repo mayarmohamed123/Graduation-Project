@@ -7,10 +7,7 @@ import {
   CheckCircle2,
   Droplet,
   Users,
-  MapPin,
-  Clock,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
 
 import { useRouter } from "next/navigation";
 
@@ -40,22 +37,33 @@ export default function DonationPage() {
       {/* Action Buttons */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto w-full">
         <div className="p-1 rounded-full">
-            <Button
-              className="w-full h-12 rounded-full text-lg font-medium shadow-md transition-transform hover:scale-[1.02]"
-              size="lg"
-              onClick={() => router.push("/user/donation/eligibility")}
-            >
-              Check My Eligibility
-            </Button>
+          <Button
+            className="w-full h-12 rounded-full text-lg font-medium shadow-md transition-transform hover:scale-[1.02]"
+            size="lg"
+            onClick={() => router.push("/user/donation/eligibility")}
+          >
+            Check My Eligibility
+          </Button>
         </div>
         <div className="p-1 rounded-full">
-            <Button
-              variant="outline"
-              className="w-full h-12 rounded-full text-lg font-medium text-primary border-primary hover:bg-primary/10 hover:text-primary transition-transform hover:scale-[1.02]"
-              size="lg"
-            >
-              Find a Drive & Schedule
-            </Button>
+          <Button
+            variant="outline"
+            className="w-full h-12 rounded-full text-lg font-medium text-primary border-primary hover:bg-primary/10 hover:text-primary transition-transform hover:scale-[1.02]"
+            size="lg"
+            onClick={() => router.push("/user/donation/drive")}
+          >
+            Find a Drive & Schedule
+          </Button>
+        </div>
+        <div className="p-1 rounded-full md:col-span-2">
+          <Button
+            variant="ghost"
+            className="w-full h-12 rounded-full text-lg font-medium text-[#2BBBC5] border-2 border-[#2BBBC5] hover:bg-[#2BBBC5]/10 transition-transform hover:scale-[1.01]"
+            size="lg"
+            onClick={() => router.push("/user/donation/request")}
+          >
+            Request a Donation
+          </Button>
         </div>
       </div>
 

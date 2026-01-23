@@ -18,6 +18,7 @@ interface ConfirmationDialogProps {
     cancelText?: string;
     variant?: "default" | "destructive";
     loading?: boolean;
+    children?: React.ReactNode;
 }
 
 export function ConfirmationDialog({
@@ -30,16 +31,20 @@ export function ConfirmationDialog({
     cancelText = "Cancel",
     variant = "default",
     loading = false,
+    children,
 }: ConfirmationDialogProps) {
     return (
         <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
                     <DialogTitle>{title}</DialogTitle>
-                    <DialogDescription>
-                        {description}
-                    </DialogDescription>
+                    {description && (
+                        <DialogDescription>
+                            {description}
+                        </DialogDescription>
+                    )}
                 </DialogHeader>
+                {children}
                 <DialogFooter className="gap-2 sm:gap-0">
                     <Button variant="outline" onClick={onClose} disabled={loading}>
                         {cancelText}
