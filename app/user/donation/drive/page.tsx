@@ -13,6 +13,7 @@ import BloodRequestCard from "@/Components/features/donation/BloodRequestCard";
 import LoadingSpinner from "@/Components/common/LoadingSpinner";
 import toast from "react-hot-toast";
 import { ConfirmationDialog } from "@/Components/ui/confirmation-dialog";
+import PageHeaderWithBack from "@/Components/common/PageHeaderWithBack";
 
 const BloodDriveMap = dynamic(() => import("@/Components/features/donation/BloodDriveMap"), {
     ssr: false,
@@ -182,31 +183,28 @@ export default function BloodDriveSearchPage() {
     }
 
     return (
-        <div className="max-w-7xl mx-auto px-4 md:px-8 py-10 space-y-10">
+        <div className="max-w-7xl mx-auto px-4 md:px-8 pb-10 space-y-10">
+            <PageHeaderWithBack title="Find a Blood Drive Near You" />
+
             {/* Header Section */}
             <div className="space-y-6">
-                <h1 className="text-3xl font-bold text-[#2BBBC5] tracking-tight">Find a Blood Drive Near You</h1>
-
-                <div className="flex flex-col md:flex-row gap-4 items-center w-full justify-between">
-                    <div className="relative w-full md:flex-1">
-                        <Input
-                            placeholder="City or Address"
-                            className="h-14 w-full rounded-full pl-6 pr-12 text-lg border-gray-200 focus:border-primary transition-all shadow-sm"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                        />
-                        <Search className="absolute right-6 top-1/2 -translate-y-1/2 text-primary w-6 h-6" />
-                    </div>
-
-                    <Button
-                        onClick={handleUseMyLocation}
-                        className="h-14 px-8 rounded-full bg-primary hover:bg-primary/90 text-white font-semibold flex items-center gap-2 shadow-md hover:shadow-lg transition-all whitespace-nowrap"
-                    >
-                        <MapPin size={20} />
-                        Use My Location
-                    </Button>
+                <div className="relative w-full md:flex-1">
+                    <Input
+                        placeholder="City or Address"
+                        className="h-14 w-full rounded-full pl-6 pr-12 text-lg border-gray-200 focus:border-primary transition-all shadow-sm"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                    <Search className="absolute right-6 top-1/2 -translate-y-1/2 text-primary w-6 h-6" />
                 </div>
 
+                <Button
+                    onClick={handleUseMyLocation}
+                    className="h-14 px-8 rounded-full bg-primary hover:bg-primary/90 text-white font-semibold flex items-center gap-2 shadow-md hover:shadow-lg transition-all whitespace-nowrap"
+                >
+                    <MapPin size={20} />
+                    Use My Location
+                </Button>
             </div>
 
             {/* View Toggle */}

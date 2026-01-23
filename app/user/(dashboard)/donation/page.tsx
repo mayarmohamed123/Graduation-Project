@@ -10,11 +10,13 @@ import {
 } from "lucide-react";
 
 import { useRouter } from "next/navigation";
+import PageHeaderWithBack from "@/Components/common/PageHeaderWithBack";
 
 export default function DonationPage() {
   const router = useRouter();
   return (
-    <div className="w-full max-w-6xl mx-auto py-10 px-4 md:px-6 space-y-10">
+    <div className="w-full max-w-6xl mx-auto pb-10 px-4 md:px-6 space-y-10">
+      <PageHeaderWithBack title="Donation Dashboard" />
       {/* Hero Section */}
       <div className="flex flex-col items-center text-center space-y-6">
         <div className="p-6 border-primary rounded-xl w-full max-w-2xl bg-white/50 backdrop-blur-sm">

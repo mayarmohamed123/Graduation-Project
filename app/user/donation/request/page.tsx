@@ -2,12 +2,13 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Send, Hospital, Droplet, ClipboardList } from "lucide-react";
+import { Send, Hospital, Droplet, ClipboardList } from "lucide-react";
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { Label } from "@/Components/ui/label";
 import dynamic from "next/dynamic";
 import { bloodRequestService } from "@/Services/bloodRequestService";
+import PageHeaderWithBack from "@/Components/common/PageHeaderWithBack";
 import toast from "react-hot-toast";
 
 const LocationPickerMap = dynamic(() => import("@/Components/features/donation/LocationPickerMap"), {
@@ -91,21 +92,12 @@ export default function BloodRequestPage() {
     };
 
     return (
-        <div className="max-w-4xl mx-auto px-4 py-10 space-y-8">
-            {/* Header */}
-            <div className="flex items-center gap-4">
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => router.back()}
-                    className="rounded-full hover:bg-primary/10 text-primary"
-                >
-                    <ArrowLeft size={24} />
-                </Button>
-                <div>
-                    <h1 className="text-3xl font-bold text-primary">Request Blood Donation</h1>
-                    <p className="text-gray-500">Every second counts. Fill in the details to reach nearby donors.</p>
-                </div>
+        <div className="max-w-4xl mx-auto px-4 pb-10 space-y-8">
+            <PageHeaderWithBack title="Request Blood Donation" />
+
+            {/* Header Content */}
+            <div className="space-y-2 px-1">
+                <p className="text-gray-500">Every second counts. Fill in the details to reach nearby donors.</p>
             </div>
 
             <form onSubmit={handleSubmit} className="bg-white rounded-3xl p-6 md:p-10 shadow-sm border border-gray-100 space-y-8">
