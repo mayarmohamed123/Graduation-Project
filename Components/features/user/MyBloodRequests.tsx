@@ -4,13 +4,14 @@ import { useEffect, useState } from "react";
 import { bloodRequestService } from "@/Services/bloodRequestService";
 import { BloodRequest } from "@/types/blood";
 import { toast } from "react-hot-toast";
-import { MapPin, Clock, Edit2, Trash2, Droplet } from "lucide-react";
+import { MapPin, Clock, Edit2, Trash2, Droplet, Users } from "lucide-react";
 import { Button } from "@/Components/ui/button";
 import { ConfirmationDialog } from "@/Components/ui/confirmation-dialog";
 import { Input } from "@/Components/ui/input";
 import { Label } from "@/Components/ui/label";
 import dynamic from "next/dynamic";
 import { formatBloodType } from "@/lib/bloodUtils";
+import RequestDonorsList from "./RequestDonorsList";
 
 const LocationPickerMap = dynamic(() => import("@/Components/features/donation/LocationPickerMap"), {
     ssr: false,
@@ -40,6 +41,7 @@ export default function MyBloodRequests() {
     const [requestToDelete, setRequestToDelete] = useState<BloodRequest | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
     const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+    const [viewingDonorsFor, setViewingDonorsFor] = useState<{ id: number, name: string } | null>(null);
 
     // Update Form State
     const [updateFormData, setUpdateFormData] = useState({
@@ -57,7 +59,7 @@ export default function MyBloodRequests() {
         try {
             const data = await bloodRequestService.getMyRequests();
             setRequests(data);
-        } catch (_error) {
+        } catch {
             toast.error("Failed to load your blood requests");
         } finally {
             setIsLoading(false);
@@ -83,7 +85,7 @@ export default function MyBloodRequests() {
             setRequests(prev => prev.filter(r => r.id !== requestToDelete.id));
             setIsDeleteOpen(false);
             setRequestToDelete(null);
-        } catch (_error) {
+        } catch {
             toast.error("Failed to delete request");
         } finally {
             setIsDeleting(false);
@@ -113,7 +115,7 @@ export default function MyBloodRequests() {
             toast.success("Request updated successfully");
             setIsUpdateOpen(false);
             fetchRequests();
-        } catch (_error) {
+        } catch {
             toast.error("Failed to update request");
         }
     };
@@ -124,6 +126,16 @@ export default function MyBloodRequests() {
             <div className="flex items-center justify-center py-12">
                 <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
             </div>
+        );
+    }
+
+    if (viewingDonorsFor) {
+        return (
+            <RequestDonorsList
+                requestId={viewingDonorsFor.id}
+                hospitalName={viewingDonorsFor.name}
+                onBack={() => setViewingDonorsFor(null)}
+            />
         );
     }
 
@@ -183,6 +195,14 @@ export default function MyBloodRequests() {
                                     className="flex-1 md:flex-none gap-2 rounded-xl"
                                 >
                                     <Trash2 size={16} /> Delete
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => setViewingDonorsFor({ id: request.id, name: request.hospitalName })}
+                                    className="flex-1 md:flex-none gap-2 rounded-xl text-primary border-primary hover:bg-primary/5"
+                                >
+                                    <Users size={16} /> Donors
                                 </Button>
                             </div>
                         </div>

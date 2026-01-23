@@ -2,14 +2,15 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Menu, X, User, ShoppingBag, Calendar, Lock, LogOut, Camera, Droplet } from "lucide-react";
+import { Menu, X, User, ShoppingBag, Calendar, Lock, LogOut, Camera, Droplet, Heart } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import {
   Appointments,
   Orders,
   PasswordManagement,
   PersonalInfo,
-  MyBloodRequests
+  MyBloodRequests,
+  MyDonations
 } from "@/Components/features/user";
 import PageHeaderWithBack from "@/Components/common/PageHeaderWithBack";
 import SidebarNav from "@/Components/common/SidebarNav";
@@ -52,6 +53,7 @@ export default function ProfilePage() {
     { id: "appointments", label: "Appointments", icon: Calendar },
     { id: "password", label: "Password management", icon: Lock },
     { id: "bloodRequests", label: "My blood requests", icon: Droplet },
+    { id: "donations", label: "My donations", icon: Heart },
   ];
 
   if (isLoading) {
@@ -147,6 +149,7 @@ export default function ProfilePage() {
             {activeTab === "appointments" && <Appointments />}
             {activeTab === "password" && <PasswordManagement />}
             {activeTab === "bloodRequests" && <MyBloodRequests />}
+            {activeTab === "donations" && <MyDonations />}
           </div>
         </main>
       </div>
