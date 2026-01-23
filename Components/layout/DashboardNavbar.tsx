@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import image from "@/assets/user-profile.webp";
 import { useUser } from "@/hooks/useUser";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { fetchUnreadCount } from "@/store/slices/notificationSlice";
 
 type Role = "doctor" | "pharmacy" | "admin";
 
@@ -18,9 +20,16 @@ export default function DashboardNavbar({ role }: DashboardNavbarProps) {
   const { logout } = useAuth();
   const {user} = useUser()
   const router = useRouter();
+  const dispatch = useAppDispatch();
+  const unreadCount = useAppSelector((state) => state.notification.unreadCount);
   const [searchQuery, setSearchQuery] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   
+  // Fetch unread notifications count on mount
+  React.useEffect(() => {
+    dispatch(fetchUnreadCount(role));
+  }, [dispatch, role]);
+
   // Get user name from auth context
   const userName = user?.userName;
   const userImage = image
@@ -88,8 +97,11 @@ export default function DashboardNavbar({ role }: DashboardNavbarProps) {
               onClick={() => router.push(notificationsHref)}
               className="p-2 hover:bg-gray-100 rounded-lg transition-colors relative">
               <Bell className="w-5 h-5 text-gray-600" />
-              {/* Notification badge - uncomment if needed */}
-              {/* <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span> */}
+              {unreadCount > 0 && (
+                <span className="absolute top-1 right-1 w-4 h-4 bg-orange-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center animate-in zoom-in duration-300">
+                  {unreadCount > 99 ? "99+" : unreadCount}
+                </span>
+              )}
             </button>
 
             {/* User Profile Dropdown */}

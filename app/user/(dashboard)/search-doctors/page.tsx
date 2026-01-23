@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useDoctors } from "@/hooks/useDoctors";
-import { FilterState } from "@/types/doctors";
+import { FilterState, Doctor } from "@/types/doctors";
 import LoadingSpinner from "@/Components/common/LoadingSpinner";
 import SearchInput from "@/Components/common/SearchInput";
 import DoctorCard from "@/Components/features/doctor/DoctorCard";
@@ -15,23 +15,29 @@ import { Checkbox } from "@/Components/ui/checkbox";
 import PageHeaderWithBack from "@/Components/common/PageHeaderWithBack";
 import { Filter } from "lucide-react";
 
-// Medical specialties list
-const specialties = [
-  "Cardiology",
-  "Dermatology",
-  "Endocrinology",
-  "Gastroenterology",
-  "Neurology",
-  "Oncology",
-  "Orthopedics",
-  "Pediatrics",
-  "Psychiatry",
-  "Radiology",
-  "Surgery",
-  "Urology",
-];
+// Medical specialties list will be defined inside the component
 
 export default function SearchDoctorsPage() {
+  const specialties = [
+    "Pediatrics",
+    "Cardiology",
+    "Neurology",
+    "Orthopedics",
+    "Dermatology",
+    "Ophthalmology",
+    "ENT",
+    "Psychiatry",
+    "Gynecology",
+    "Urology",
+    "Gastroenterology",
+    "Endocrinology",
+    "Nephrology",
+    "Rheumatology",
+    "Oncology",
+    "GeneralSurgery",
+    "Dentistry",
+  ];
+
   const { isAuthenticated, isLoading: authLoading } = useAuth();
   const { doctors, loading, error, refetch } = useDoctors();
 
@@ -53,7 +59,7 @@ export default function SearchDoctorsPage() {
 
   // Handle filter changes
   const handleFilterChange = (key: keyof FilterState, value: string | null) => {
-    setFilters((prev) => {
+    setFilters((prev: FilterState) => {
       // Handle sort field which is always a string
       if (key === "sort") {
         return {
@@ -83,7 +89,7 @@ export default function SearchDoctorsPage() {
   // Debounce search input
   useEffect(() => {
     const timer = setTimeout(() => {
-      setFilters((prev) => ({
+      setFilters((prev: FilterState) => ({
         ...prev,
         name: searchInput,
       }));
@@ -110,7 +116,7 @@ export default function SearchDoctorsPage() {
     <div className="min-h-screen bg-gray-50 pb-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="flex">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-8">
           <PageHeaderWithBack title="Doctors" />
           {/* Search Input */}
           <SearchInput onSearch={handleSearchChange} />
@@ -311,7 +317,7 @@ export default function SearchDoctorsPage() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                  {doctors.map((doctor) => (
+                  {doctors.map((doctor: Doctor) => (
                     <DoctorCard
                       key={doctor.id}
                       doctor={doctor}

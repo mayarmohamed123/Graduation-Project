@@ -10,6 +10,7 @@ import SearchInput from "@/Components/common/SearchInput";
 import PageHeaderWithBack from "@/Components/common/PageHeaderWithBack";
 
 import { useMedicineSearch } from "@/hooks/useMedicineSearch";
+import { Medicine } from "@/types";
 
 export default function SearchMedicinePage() {
   const {
@@ -87,7 +88,7 @@ export default function SearchMedicinePage() {
     <div className="min-h-screen bg-gray-50 pb-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="flex">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-8">
           <PageHeaderWithBack title="Medicine" />
           {/* Search Input */}
           <SearchInput onSearch={handleSearch} />
@@ -224,7 +225,7 @@ export default function SearchMedicinePage() {
 
                 {medicines.length > 0 && (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {medicines.map((medicine) => (
+                    {medicines.map((medicine: Medicine) => (
                       <MedicineCard key={medicine.id} medicine={medicine} />
                     ))}
                   </div>

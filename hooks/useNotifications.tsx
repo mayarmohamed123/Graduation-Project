@@ -7,9 +7,12 @@ import { doctorService } from "@/Services/doctorService";
 import { HubConnectionState } from "@microsoft/signalr";
 import toast from "react-hot-toast";
 import React from "react";
+import { useAppDispatch } from "@/store/hooks";
+import { incrementUnreadCount, decrementUnreadCount, setUnreadCount } from "@/store/slices/notificationSlice";
 
 export const useNotifications = () => {
   const { isAuthenticated } = useAuth();
+  const dispatch = useAppDispatch();
   const [appointments, setAppointments] = useState<Notification[]>([]);
   const [orders, setOrders] = useState<Notification[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -29,44 +32,76 @@ export const useNotifications = () => {
   }, []);
 
   const handleMarkAsRead = useCallback(async (id: number) => {
-    // We need to use functional updates to get the latest state without dependency
-    setAppointments((prevAppointments) => {
-      const appointmentNotif = prevAppointments.find((n) => n.id === id);
-      if (appointmentNotif && !appointmentNotif.isRead) {
-        // Optimistic update
-        const updatedAppointments = prevAppointments.map((n) => 
-          n.id === id ? { ...n, isRead: true } : n
-        );
-        
-        // Call API
-        doctorService.markNotificationAsRead(id).catch(err => {
-           console.error("Failed to mark notification as read:", err);
-           // Revert state if needed - but here we'd need to set state again
-           toast.error("Failed to update notification status");
-        });
-        
-        return updatedAppointments;
+    let type: "appointments" | "orders" | null = null;
+    let found = false;
+
+    setAppointments((prev) => {
+      const index = prev.findIndex((n) => n.id === id);
+      if (index !== -1 && !prev[index].isRead) {
+        type = "appointments";
+        found = true;
+        const next = [...prev];
+        next[index] = { ...next[index], isRead: true };
+        return next;
       }
-      return prevAppointments;
+      return prev;
     });
 
-    setOrders((prevOrders) => {
-      const orderNotif = prevOrders.find((n) => n.id === id);
-      if (orderNotif && !orderNotif.isRead) {
-        const updatedOrders = prevOrders.map((n) => 
-          n.id === id ? { ...n, isRead: true } : n
-        );
+    if (!found) {
+      setOrders((prev) => {
+        const index = prev.findIndex((n) => n.id === id);
+        if (index !== -1 && !prev[index].isRead) {
+          type = "orders";
+          found = true;
+          const next = [...prev];
+          next[index] = { ...next[index], isRead: true };
+          return next;
+        }
+        return prev;
+      });
+    }
+
+    if (found) {
+      try {
+        await doctorService.markNotificationAsRead(id);
+        dispatch(decrementUnreadCount());
+      } catch (err) {
+        console.error("Failed to mark notification as read:", err);
+        toast.error("Failed to update notification status");
         
-        doctorService.markNotificationAsRead(id).catch(err => {
-           console.error("Failed to mark notification as read:", err);
-           toast.error("Failed to update notification status");
-        });
-        
-        return updatedOrders;
+        // Revert on failure
+        if (type === "appointments") {
+          setAppointments(prev => prev.map(n => n.id === id ? { ...n, isRead: false } : n));
+        } else {
+          setOrders(prev => prev.map(n => n.id === id ? { ...n, isRead: false } : n));
+        }
       }
-      return prevOrders;
-    });
-  }, []);
+    }
+  }, [dispatch]);
+
+  const handleMarkAllAsRead = useCallback(async () => {
+    const hasUnread = appointments.some(n => !n.isRead) || orders.some(n => !n.isRead);
+    if (!hasUnread) return;
+
+    // Optimistic update
+    const prevAppointments = [...appointments];
+    const prevOrders = [...orders];
+    
+    setAppointments(prev => prev.map(n => ({ ...n, isRead: true })));
+    setOrders(prev => prev.map(n => ({ ...n, isRead: true })));
+
+    try {
+      await doctorService.markAllNotificationsAsRead();
+      dispatch(setUnreadCount(0));
+      toast.success("All notifications marked as read");
+    } catch (err) {
+      console.error("Failed to mark all as read:", err);
+      toast.error("Failed to mark all as read");
+      // Revert on failure
+      setAppointments(prevAppointments);
+      setOrders(prevOrders);
+    }
+  }, [appointments, orders, dispatch]);
 
   useEffect(() => {
     if (!isAuthenticated) return;
@@ -92,6 +127,8 @@ export const useNotifications = () => {
       } else if (data.category === "order") {
         setOrders((prev) => [data, ...prev]);
       }
+      
+      dispatch(incrementUnreadCount());
     };
 
     connection.on("ReceiveNotification", handleNotification);
@@ -113,13 +150,14 @@ export const useNotifications = () => {
     return () => {
       connection.off("ReceiveNotification", handleNotification);
     };
-  }, [isAuthenticated, fetchNotifications]);
+  }, [isAuthenticated, fetchNotifications, dispatch]);
 
   return {
     appointments,
     orders,
     isLoading,
     handleMarkAsRead,
+    handleMarkAllAsRead,
     refetch: fetchNotifications,
   };
 };

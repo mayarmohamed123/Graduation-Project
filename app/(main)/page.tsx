@@ -9,7 +9,7 @@ import WorkSection from "@/Components/features/sections/WorkSection";
 
 export default function Home() {
   return (
-    <div>
+    <div className="pt-16">
       <HeroSection />
       <AboutSection />
       <ServicesSection />

@@ -65,6 +65,12 @@ export default function DoctorCard({
 
 
 
+  const cleanName = (name: string) => {
+    if (!name) return "";
+    return name.split("_")[0];
+  };
+
+  const displayName = cleanName(doctor.username);
   const image = doctor.doctorImage || userProfileImage;
 
   return (
@@ -102,7 +108,7 @@ export default function DoctorCard({
         <div className="h-full w-full flex items-center justify-center p-4">
             <Image
               src={image}
-              alt={`Dr. ${doctor.username}`}
+              alt={`Dr. ${displayName}`}
               fill
               className="object-cover rounded-xl"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -115,7 +121,7 @@ export default function DoctorCard({
         {/* Doctor Name and Specialty */}
         <div className="mb-3">
           <h3 className="text-xl font-semibold text-gray-900 mb-1 line-clamp-1">
-            Dr. {doctor.username}
+            Dr. {displayName}
           </h3>
           <p className="text-sm text-gray-600 line-clamp-1">{doctor.specialty}</p>
         </div>

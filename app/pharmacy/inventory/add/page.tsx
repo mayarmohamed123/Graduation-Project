@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { pharmacyService } from "@/Services/pharmaciesServices";
 import { medicineService } from "@/Services/medicineServices";
@@ -16,7 +16,7 @@ import { AddMedicineFooter } from "@/Components/features/pharmacy/inventory/add-
 import { Card } from "@/Components/ui/card";
 import LoadingSpinner from "@/Components/common/LoadingSpinner";
 
-export default function AddMedicinePage() {
+function AddMedicineContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const editId = searchParams.get("id");
@@ -105,5 +105,17 @@ export default function AddMedicinePage() {
         </Card>
       </form>
     </div>
+  );
+}
+
+export default function AddMedicinePage() {
+  return (
+    <Suspense fallback={
+      <div className="flex h-[70vh] items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    }>
+      <AddMedicineContent />
+    </Suspense>
   );
 }
