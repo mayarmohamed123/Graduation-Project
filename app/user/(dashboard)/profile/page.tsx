@@ -2,12 +2,15 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Menu, X, User, ShoppingBag, Calendar, Lock, LogOut, Camera } from "lucide-react";
+import { Menu, X, User, ShoppingBag, Calendar, Lock, LogOut, Camera, Droplet } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
-import Appointments from "@/Components/features/user/Appointments";
-import Orders from "@/Components/features/user/Orders";
-import PasswordManagement from "@/Components/features/user/PasswordManagement";
-import PersonalInfo from "@/Components/features/user/PersonalInfo";
+import {
+  Appointments,
+  Orders,
+  PasswordManagement,
+  PersonalInfo,
+  MyBloodRequests
+} from "@/Components/features/user";
 import PageHeaderWithBack from "@/Components/common/PageHeaderWithBack";
 import SidebarNav from "@/Components/common/SidebarNav";
 import { useProfile } from "@/hooks/useProfile";
@@ -48,6 +51,7 @@ export default function ProfilePage() {
     { id: "orders", label: "Orders", icon: ShoppingBag },
     { id: "appointments", label: "Appointments", icon: Calendar },
     { id: "password", label: "Password management", icon: Lock },
+    { id: "bloodRequests", label: "My blood requests", icon: Droplet },
   ];
 
   if (isLoading) {
@@ -64,7 +68,7 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen max-w-7xl mx-auto px-4 md:px-6">
       <PageHeaderWithBack title="Profile" />
-      
+
       <button
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         className="lg:hidden fixed top-20 left-4 z-50 bg-primary text-white p-3 rounded-full shadow-lg hover:bg-primary/90 transition">
@@ -142,6 +146,7 @@ export default function ProfilePage() {
             {activeTab === "orders" && <Orders />}
             {activeTab === "appointments" && <Appointments />}
             {activeTab === "password" && <PasswordManagement />}
+            {activeTab === "bloodRequests" && <MyBloodRequests />}
           </div>
         </main>
       </div>

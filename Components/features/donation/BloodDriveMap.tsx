@@ -5,6 +5,7 @@ import "leaflet/dist/leaflet.css";
 import { MapPin, ExternalLink, Droplet } from "lucide-react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { BloodRequestWithPriority } from "@/types/blood";
+import { formatBloodType } from "@/lib/bloodUtils";
 
 interface BloodDriveMapProps {
     requests: BloodRequestWithPriority[];
@@ -109,7 +110,7 @@ export default function BloodDriveMap({ requests }: BloodDriveMapProps) {
                                             {request.hospitalName}
                                         </h3>
                                         <p className="text-xs font-medium" style={{ color: priorityColors[request.priority] }}>
-                                            Type: {request.requiredType.toUpperCase()}
+                                            Type: {formatBloodType(request.requiredType)}
                                         </p>
                                     </div>
                                 </div>

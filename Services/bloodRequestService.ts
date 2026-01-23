@@ -70,4 +70,77 @@ export const bloodRequestService = {
       throw error;
     }
   },
+
+  getMyRequests: async (): Promise<BloodRequest[]> => {
+    try {
+      return await apiRequest<BloodRequest[]>(
+        `${API_BASE_URL}/BloodRequest/my-requests`,
+        {
+          method: "GET",
+          requiresAuth: true,
+        },
+      );
+    } catch (error) {
+      console.error("Failed to fetch my blood requests:", error);
+      throw error;
+    }
+  },
+
+  getBloodRequestById: async (id: number): Promise<BloodRequest> => {
+    try {
+      return await apiRequest<BloodRequest>(
+        `${API_BASE_URL}/BloodRequest/${id}`,
+        {
+          method: "GET",
+          requiresAuth: true,
+        },
+      );
+    } catch (error) {
+      console.error(`Failed to fetch blood request ${id}:`, error);
+      throw error;
+    }
+  },
+
+  updateBloodRequest: async (
+    id: number,
+    data: {
+      RequiredType: number;
+      HospitalLatitude: number;
+      HospitalLongitude: number;
+      HospitalCity: string;
+      HospitalCountry: string;
+      HospitalName: string;
+      Units: number;
+      NeedWithin: string;
+    },
+  ): Promise<{ message: string }> => {
+    try {
+      return await apiRequest<{ message: string }>(
+        `${API_BASE_URL}/BloodRequest/${id}`,
+        {
+          method: "PUT",
+          data,
+          requiresAuth: true,
+        },
+      );
+    } catch (error) {
+      console.error(`Failed to update blood request ${id}:`, error);
+      throw error;
+    }
+  },
+
+  deleteBloodRequest: async (id: number): Promise<{ message: string }> => {
+    try {
+      return await apiRequest<{ message: string }>(
+        `${API_BASE_URL}/BloodRequest/${id}`,
+        {
+          method: "DELETE",
+          requiresAuth: true,
+        },
+      );
+    } catch (error) {
+      console.error(`Failed to delete blood request ${id}:`, error);
+      throw error;
+    }
+  },
 };

@@ -2,6 +2,7 @@ import { MapPin, Clock, ExternalLink } from "lucide-react";
 import { Button } from "@/Components/ui/button";
 import { BloodRequestWithPriority, PriorityLevel } from "@/types/blood";
 import { cn } from "@/lib/utils";
+import { formatBloodType } from "@/lib/bloodUtils";
 
 interface BloodRequestCardProps {
     request: BloodRequestWithPriority;
@@ -29,27 +30,6 @@ const priorityConfig: Record<PriorityLevel, { color: string; bg: string; text: s
     }
 };
 
-const formatBloodType = (type: string) => {
-    // aneg -> A-
-    // apos -> A+
-    // bpos -> B+
-    // bneg -> B-
-    // abpos -> AB+
-    // abneg -> AB-
-    // opos -> O+
-    // oneg -> O-
-    const map: Record<string, string> = {
-        aneg: "A-",
-        apos: "A+",
-        bpos: "B+",
-        bneg: "B-",
-        abpos: "AB+",
-        abneg: "AB-",
-        opos: "O+",
-        oneg: "O-"
-    };
-    return map[type.toLowerCase()] || type.toUpperCase();
-};
 
 export default function BloodRequestCard({ request, onDonate }: BloodRequestCardProps) {
     const config = priorityConfig[request.priority];

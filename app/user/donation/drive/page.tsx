@@ -14,6 +14,7 @@ import LoadingSpinner from "@/Components/common/LoadingSpinner";
 import toast from "react-hot-toast";
 import { ConfirmationDialog } from "@/Components/ui/confirmation-dialog";
 import PageHeaderWithBack from "@/Components/common/PageHeaderWithBack";
+import { formatBloodType } from "@/lib/bloodUtils";
 
 const BloodDriveMap = dynamic(() => import("@/Components/features/donation/BloodDriveMap"), {
     ssr: false,
@@ -271,7 +272,7 @@ export default function BloodDriveSearchPage() {
             >
                 <div className="space-y-4 py-4">
                     <p className="text-sm text-gray-500">
-                        Building a healthier community together! Please confirm your information to donate {selectedRequest?.requiredType} blood at {selectedRequest?.hospitalName}.
+                        Building a healthier community together! Please confirm your information to donate {formatBloodType(selectedRequest?.requiredType)} blood at {selectedRequest?.hospitalName}.
                     </p>
 
                     <div className="grid gap-4">
