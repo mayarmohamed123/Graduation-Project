@@ -1,5 +1,4 @@
 import { DashboardNavbar, DashboardSidebar } from "@/Components/layout";
-export const dynamic = "force-dynamic";
 import { ProtectedRoute } from "@/Components/auth";
 
 export default function DoctorLayout({

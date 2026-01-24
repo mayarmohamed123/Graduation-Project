@@ -32,17 +32,13 @@ export interface Message {
 }
 
 export async function fetchMyThreads(): Promise<Thread[]> {
-  return apiRequest<Thread[]>(`${API_BASE}/chat/my-threads`, {
-    cache: "no-store",
-  });
+  return apiRequest<Thread[]>(`${API_BASE}/chat/my-threads`, {});
 }
 
 export async function fetchMessagesOfThread(
   threadId: number
 ): Promise<Message[]> {
-  return apiRequest<Message[]>(`${API_BASE}/chat/${threadId}/messages`, {
-    cache: "no-store",
-  });
+  return apiRequest<Message[]>(`${API_BASE}/chat/${threadId}/messages`, {});
 }
 
 export async function sendMessageApi(

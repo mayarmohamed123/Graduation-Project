@@ -20,7 +20,6 @@ class PharmacistService {
   // Get all orders for the pharmacist
   async getOrders(): Promise<PharmacistOrder[]> {
     return await apiRequest<PharmacistOrder[]>(this.baseUrl, {
-      cache: "no-store",
       requiresAuth: true,
     });
   }
@@ -28,7 +27,6 @@ class PharmacistService {
   // Get a single order by ID
   async getOrderById(orderId: number): Promise<PharmacistOrder> {
     return await apiRequest<PharmacistOrder>(`${this.baseUrl}/${orderId}`, {
-      cache: "no-store",
       requiresAuth: true,
     });
   }
@@ -64,7 +62,7 @@ class PharmacistService {
   async getNotifications(): Promise<Notification[]> {
     const response = await apiRequest<{ notifications: Notification[] }>(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/notifications/user`,
-      { cache: "no-store", requiresAuth: true }
+      { requiresAuth: true }
     );
     return response.notifications;
   }
@@ -136,7 +134,6 @@ class PharmacistService {
     return await apiRequest<PharmacyProfile>(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/Pharmacy/GetPharmacyOfPharmacist`,
       {
-        cache: "no-store",
         requiresAuth: true,
       }
     );
@@ -168,7 +165,7 @@ class PharmacistService {
   async getOrdersDashboardStats(): Promise<OrdersDashboardResponse> {
     return await apiRequest<OrdersDashboardResponse>(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/Pharmacties/orders-dashboard`,
-      { requiresAuth: true, cache: "no-store" }
+      { requiresAuth: true }
     );
   }
 

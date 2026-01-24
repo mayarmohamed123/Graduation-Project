@@ -16,6 +16,7 @@ interface ApiRequestOptions extends Omit<RequestInit, "method" | "body"> {
   requiresAuth?: boolean;
   returnType?: "json" | "text" | "blob";
   credentials?: RequestCredentials;
+  revalidate?: number | false; // ISR revalidation in seconds, false to disable caching
 }
 
 export const apiRequest = async <T = unknown>(
@@ -29,8 +30,13 @@ export const apiRequest = async <T = unknown>(
     returnType = "json",
     headers: customHeaders = {},
     credentials = "include", // Default to include for cookies
+    revalidate,
     ...restOptions
   } = options;
+  
+  // Determine cache strategy: mutations should not be cached
+  const isMutation = method !== "GET";
+  const cacheRevalidate = isMutation ? 0 : (revalidate ?? 3);
 
   const headers: Record<string, string> = {
     ...(customHeaders as Record<string, string>),
@@ -57,7 +63,7 @@ export const apiRequest = async <T = unknown>(
       headers,
       body,
       credentials, // Use the passed or default credentials
-      cache: "no-store",
+      next: { revalidate: cacheRevalidate }, // ISR with configurable revalidation
       ...restOptions,
     });
   };

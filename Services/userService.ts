@@ -34,27 +34,21 @@ class UserService {
   async getUserOrders(): Promise<GetUserOrdersResponse> {
     return apiRequest<GetUserOrdersResponse>(
       `${API_BASE_URL}/order/user-orders`,
-      {
-        cache: "no-store",
-      }
+      {}
     );
   }
 
   async getUserAppointments(): Promise<GetUserAppointmentsResponse> {
     return apiRequest<GetUserAppointmentsResponse>(
       `${API_BASE_URL}/appointment/user`,
-      {
-        cache: "no-store",
-      }
+      {}
     );
   }
 
   async getUserNotifications(): Promise<GetUserNotificationsResponse> {
     return apiRequest<GetUserNotificationsResponse>(
       `${API_BASE_URL}/notifications/user`,
-      {
-        cache: "no-store",
-      }
+      {}
     );
   }
 

@@ -1,4 +1,3 @@
-export const dynamic = "force-dynamic";
 import { ProtectedRoute } from "@/Components/auth";
 
 export default function UserBaseLayout({

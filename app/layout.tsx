@@ -5,7 +5,7 @@ import "./globals.css";
 import ReduxProvider from "@/Components/auth/ReduxProvider";
 import { Toaster } from "react-hot-toast";
 
-export const dynamic = "force-dynamic";
+// ISR: Default 3-second revalidation applied via Services/api.ts
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

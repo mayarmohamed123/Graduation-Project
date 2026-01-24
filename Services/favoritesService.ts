@@ -13,9 +13,7 @@ export const favoritesService = {
   getFavoriteDoctors: async (): Promise<FavoriteDoctor[]> => {
     return await apiRequest<FavoriteDoctor[]>(
       `${baseUrl}/FavouriteDoctor/user`,
-      {
-        cache: "no-store", // Don't cache favorites
-      }
+      {}
     );
   },
 
@@ -23,9 +21,7 @@ export const favoritesService = {
   getFavoriteMedicines: async (): Promise<FavoriteMedicine[]> => {
     return await apiRequest<FavoriteMedicine[]>(
       `${baseUrl}/FavoriteMedication/favorites`,
-      {
-        cache: "no-store",
-      }
+      {}
     );
   },
 
@@ -33,9 +29,7 @@ export const favoritesService = {
   getFavoriteClinics: async (): Promise<FavoriteClinic[]> => {
     return await apiRequest<FavoriteClinic[]>(
       `${baseUrl}/FavoriteClinic/favorites`,
-      {
-        cache: "no-store",
-      }
+      {}
     );
   },
 

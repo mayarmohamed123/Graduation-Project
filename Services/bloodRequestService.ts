@@ -6,17 +6,12 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 export const bloodRequestService = {
   getUnfulfilledRequests: async (): Promise<BloodRequest[]> => {
     try {
-      const response = await fetch(`${API_BASE_URL}/BloodRequest/unfulfilled`, {
-        headers: {
-          "ngrok-skip-browser-warning": "true",
-          "Content-Type": "application/json",
-        },
-        cache: "no-store",
-      });
-      if (!response.ok) {
-        throw new Error(`Failed to fetch: ${response.status}`);
-      }
-      return await response.json();
+      return await apiRequest<BloodRequest[]>(
+        `${API_BASE_URL}/BloodRequest/unfulfilled`,
+        {
+          requiresAuth: false,
+        }
+      );
     } catch (error) {
       console.error("Failed to fetch unfulfilled blood requests:", error);
       throw error;

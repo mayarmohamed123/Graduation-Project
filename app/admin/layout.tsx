@@ -1,6 +1,5 @@
 import { ProtectedRoute } from "@/Components";
 import { DashboardNavbar, DashboardSidebar } from "@/Components/layout";
-export const dynamic = "force-dynamic";
 
 export default function AdminLayout({
   children,

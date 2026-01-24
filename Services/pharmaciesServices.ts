@@ -8,7 +8,6 @@ class PharmacyService {
     const res = await apiRequest<{ data: Pharmacy[] } | Pharmacy[]>(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/Pharmacy`,
       {
-        cache: "no-store", // ✅ Caching disabled
         requiresAuth: false,
       }
     );
@@ -21,7 +20,6 @@ class PharmacyService {
     const res = await apiRequest<{ data: Pharmacy[] } | Pharmacy[]>(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/pharmacy/top-pharmacies`,
       {
-        cache: "no-store",
         requiresAuth: false,
       }
     );
@@ -94,7 +92,6 @@ class PharmacyService {
     return await apiRequest<Medicine[]>(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/medicine/pharmacy`,
       {
-        cache: "no-store",
         requiresAuth: true,
       }
     );
@@ -105,7 +102,6 @@ class PharmacyService {
     return await apiRequest<InventoryAnalysis>(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/Pharmacties/dashboard/inventory`,
       {
-        cache: "no-store",
         requiresAuth: true,
       }
     );
@@ -116,7 +112,6 @@ class PharmacyService {
     return await apiRequest<CategoryDashboardResponse>(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/Pharmacties/categories-dashboard`,
       {
-        cache: "no-store",
         requiresAuth: true,
       }
     );
@@ -127,7 +122,6 @@ class PharmacyService {
     return await apiRequest<OrdersDashboardResponse>(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/Pharmacties/orders-dashboard`,
       {
-        cache: "no-store",
         requiresAuth: true,
       }
     );
@@ -138,7 +132,6 @@ class PharmacyService {
     return await apiRequest<PharmacyStatsResponse>(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/Pharmacties/my-stats`,
       {
-        cache: "no-store",
         requiresAuth: true,
       }
     );
@@ -149,7 +142,6 @@ class PharmacyService {
     return await apiRequest<BestSellingMedicine[]>(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/Pharmacties/best-selling`,
       {
-        cache: "no-store",
         requiresAuth: true,
       }
     );
@@ -160,7 +152,6 @@ class PharmacyService {
     return await apiRequest<TodaySalesByTime[]>(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/Pharmacties/today-sales-by-time`,
       {
-        cache: "no-store",
         requiresAuth: true,
       }
     );
@@ -206,7 +197,6 @@ class PharmacyService {
     return await apiRequest<Pharmacy>(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/Pharmacy/${id}`,
       {
-        cache: "no-store",
         requiresAuth: false,
       }
     );
@@ -217,7 +207,6 @@ class PharmacyService {
     return await apiRequest<Medicine[]>(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/medicine/pharmacy/${pharmacyId}`,
       {
-        cache: "no-store",
         requiresAuth: false,
       }
     );
@@ -228,7 +217,6 @@ class PharmacyService {
     return await apiRequest<Review[]>(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/Review/pharmacy/${pharmacyId}`,
       {
-        cache: "no-store",
         requiresAuth: true,
       }
     );
@@ -250,7 +238,6 @@ class PharmacyService {
     return await apiRequest<Review[]>(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/Review/medication/${medicineId}`,
       {
-        cache: "no-store",
         requiresAuth: true,
       }
     );

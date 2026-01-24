@@ -21,9 +21,7 @@ class MedicineService {
       queryParams.toString() ? `?${queryParams.toString()}` : ""
     }`;
 
-    return await apiRequest<Medicine[]>(url, {
-      cache: "no-store", // ✅ Caching disabled
-    });
+    return await apiRequest<Medicine[]>(url, {});
   }
 
   // Search Medicine by Name
@@ -32,9 +30,7 @@ class MedicineService {
       `${
         process.env.NEXT_PUBLIC_API_BASE_URL
       }/medicine/search/${encodeURIComponent(name)}`,
-      {
-        cache: "no-store", // ✅ Caching disabled
-      }
+      {}
     );
   }
 
@@ -42,9 +38,7 @@ class MedicineService {
   async getMedicineById(id: number): Promise<Medicine> {
     return await apiRequest<Medicine>(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/medicine/${id}`,
-      {
-        cache: "no-store", // ✅ Caching disabled
-      }
+      {}
     );
   }
 
@@ -54,9 +48,7 @@ class MedicineService {
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/medicine/${encodeURIComponent(
         name
       )}/alternatives`,
-      {
-        cache: "no-store", // ✅ Caching disabled
-      }
+      {}
     );
   }
 }

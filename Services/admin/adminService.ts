@@ -239,7 +239,7 @@ class AdminService {
   async getAdminProfile(): Promise<AdminProfile> {
     return await apiRequest<AdminProfile>(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/Admin/profile`,
-      { requiresAuth: true, cache: "no-store" }
+      { requiresAuth: true }
     );
   }
 
@@ -299,7 +299,7 @@ class AdminService {
   async getAdminThreads(): Promise<Thread[]> {
     return await apiRequest<Thread[]>(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/chat/my-threads`,
-      { requiresAuth: true, cache: "no-store" }
+      { requiresAuth: true }
     );
   }
 
@@ -329,7 +329,7 @@ class AdminService {
   async getThreadMessages(threadId: number): Promise<Message[]> {
     return await apiRequest<Message[]>(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/Admin/chat/${threadId}/messages`,
-      { requiresAuth: true, cache: "no-store" }
+      { requiresAuth: true }
     );
   }
 

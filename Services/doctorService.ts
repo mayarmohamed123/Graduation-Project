@@ -25,8 +25,7 @@ export const doctorService = {
   // Get all doctors
   getAllDoctors: async (): Promise<Doctor[]> => {
     return await apiRequest<Doctor[]>(
-      `${baseUrl}/doctors/allDoctorsShowToRegularUser`,
-      { cache: "no-store" }
+      `${baseUrl}/doctors/allDoctorsShowToRegularUser`
     );
   },
 
@@ -41,14 +40,12 @@ export const doctorService = {
     });
 
     const url = `${baseUrl}/doctors/filterDoctors?${queryParams.toString()}`;
-    return await apiRequest<Doctor[]>(url, { cache: "no-store" });
+    return await apiRequest<Doctor[]>(url);
   },
 
   // Get doctor by ID
   getDoctorById: async (id: number): Promise<Doctor> => {
-    return await apiRequest<Doctor>(`${baseUrl}/doctors/${id}`, {
-      cache: "no-store",
-    });
+    return await apiRequest<Doctor>(`${baseUrl}/doctors/${id}`);
   },
   // Get available slots for a doctor on a specific date
   getDoctorAvailableSlots: async (
@@ -79,9 +76,7 @@ export const doctorService = {
 
   // Get Doctor Reviews
   GetDoctorReviews: async (id: number): Promise<Review[]> => {
-    return await apiRequest<Review[]>(`${baseUrl}/Review/doctor/${id}`, {
-      cache: "no-store",
-    });
+    return await apiRequest<Review[]>(`${baseUrl}/Review/doctor/${id}`);
   },
 
   // add Review for Doctor
@@ -223,10 +218,7 @@ export const doctorService = {
     appointmentRequests: Notification[];
   }> => {
     return await apiRequest<{ appointmentRequests: Notification[] }>(
-      `${baseUrl}/notifications/user`,
-      {
-        cache: "no-store",
-      }
+      `${baseUrl}/notifications/user`
     );
   },
   // Update clinic information with FormData
@@ -269,7 +261,6 @@ export const doctorService = {
   // Get top rated doctors
   getTopRatedDoctors: async (): Promise<Doctor[]> => {
     return await apiRequest<Doctor[]>(`${baseUrl}/doctors/top-doctors`, {
-      cache: "no-store",
       credentials: "omit", // Don't send tokens
       requiresAuth: false,
     });
@@ -356,7 +347,6 @@ export const doctorService = {
   // Get clinic info of the logged-in doctor
   getClinicOfDoctor: async (): Promise<Clinic> => {
     return await apiRequest<Clinic>(`${baseUrl}/doctors/GetClinicOfDoctor`, {
-      cache: "no-store",
       requiresAuth: true,
     });
   },
