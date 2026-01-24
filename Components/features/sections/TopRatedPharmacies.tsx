@@ -1,46 +1,19 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import { Pharmacy } from "@/types";
 import { pharmacyService } from "@/Services/pharmaciesServices";
-import LoadingSpinner from "@/Components/common/LoadingSpinner";
 import { PharmacyCard } from "@/Components/common";
+import Link from "next/link";
 
-export default function TopRatedPharmacies() {
-  const [pharmacies, setPharmacies] = useState<Pharmacy[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [isShowingAll, setIsShowingAll] = useState(false);
+export default async function TopRatedPharmacies() {
+  let pharmacies: Pharmacy[] = [];
+  let error: string | null = null;
 
-  useEffect(() => {
-    const fetchPharmacies = async () => {
-      try {
-        const data = await pharmacyService.getTopRatedPharmacies();
-        setPharmacies(Array.isArray(data) ? data : []);
-      } catch (err) {
-        console.error("Error fetching top rated pharmacies:", err);
-        setError("Failed to load pharmacies");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPharmacies();
-  }, []);
-
-  const handleSeeAll = async () => {
-    setLoading(true);
-    try {
-      const data = await pharmacyService.getPharmacies();
-      setPharmacies(Array.isArray(data) ? data : []);
-      setIsShowingAll(true);
-    } catch (err) {
-      console.error("Error fetching all pharmacies:", err);
-      setError("Failed to load all pharmacies");
-    } finally {
-      setLoading(false);
-    }
-  };
+  try {
+    const data = await pharmacyService.getTopRatedPharmacies();
+    pharmacies = Array.isArray(data) ? data : [];
+  } catch (err) {
+    console.error("Error fetching top rated pharmacies:", err);
+    error = "Failed to load pharmacies";
+  }
 
   if (error) {
     return (
@@ -50,31 +23,22 @@ export default function TopRatedPharmacies() {
     );
   }
 
-  if (loading) {
-    return <LoadingSpinner />;
-  }
-
   return (
     <div className="w-full max-w-6xl mx-auto mt-10 md:mt-20 pb-10 px-4 md:px-6">
       {/* Header */}
       <div className="mb-4">
         <div className="flex items-center justify-between mb-2">
           <h3 className="text-2xl md:text-3xl font-semibold text-primary mb-2">
-            {isShowingAll ? "All Pharmacies" : "Top Pharmacies Near You"}
+            Top Pharmacies Near You
           </h3>
-          {!isShowingAll && (
-            <button
-              onClick={handleSeeAll}
-              className="text-sm text-primary hover:underline"
-            >
+          <Link href="/user/search-medicine">
+            <span className="text-sm text-primary hover:underline cursor-pointer">
               See All
-            </button>
-          )}
+            </span>
+          </Link>
         </div>
         <p className="text-lg text-gray-600 leading-relaxed ">
-          {isShowingAll
-            ? "Browse our full list of trusted pharmacies."
-            : "Find trusted pharmacies that offer quick delivery and quality service."}
+          Find trusted pharmacies that offer quick delivery and quality service.
         </p>
       </div>
 
@@ -87,3 +51,4 @@ export default function TopRatedPharmacies() {
     </div>
   );
 }
+

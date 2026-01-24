@@ -1,31 +1,36 @@
-"use client";
-import { useUser } from "@/hooks/useUser";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import Image from "next/image";
 import {
-  sliderDonate,
-  sliderDoctors,
-  sliderMedicine,
   doctorsCardImage,
   medicineCardImage,
   donateCardImage,
 } from "@/assets";
 
-// Import Swiper
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Autoplay } from "swiper/modules";
 import TopRatedDoctors from "@/Components/features/sections/TopRatedDoctors";
 import TopRatedPharmacies from "@/Components/features/sections/TopRatedPharmacies";
 import HomeMapSection from "@/Components/features/sections/HomeMapSection";
 import PrimaryButton from "@/Components/common/PrimaryButton";
-import { useLocation } from "@/hooks/useLocation";
+import UserLocationManager from "@/Components/features/sections/UserLocationManager";
+import UserWelcomeHeader from "@/Components/features/sections/UserWelcomeHeader";
+import UserHomeSlider from "@/Components/features/sections/UserHomeSlider";
+import { doctorService } from "@/Services/doctorService";
+import { pharmacyService } from "@/Services/pharmaciesServices";
+import { Doctor, Pharmacy } from "@/types";
 
-export default function Page() {
-  const { user, isLoading } = useUser();
-  const router = useRouter();
-  useLocation();
-
-  const userName = user?.userName;
+export default async function Page() {
+  // Fetch data for Map on the server
+  let doctors: Doctor[] = [];
+  let pharmacies: Pharmacy[] = [];
+  try {
+    const [doctorsData, pharmaciesData] = await Promise.all([
+      doctorService.getAllDoctors(),
+      pharmacyService.getPharmacies(),
+    ]);
+    doctors = doctorsData;
+    pharmacies = Array.isArray(pharmaciesData) ? pharmaciesData : [];
+  } catch (error) {
+    console.error("Dashboard server-side fetch failed:", error);
+  }
 
   const actionCards = [
     {
@@ -34,9 +39,8 @@ export default function Page() {
       description: "Search and book trusted specialists near you.",
       image: doctorsCardImage,
       alt: "Find a Doctor",
+      href: "/user/search-doctors",
       buttonText: "Find Now",
-      buttonBg: "#2BBBC5",
-      buttonHover: "#25a4ac",
     },
     {
       id: 2,
@@ -44,9 +48,8 @@ export default function Page() {
       description: "Get your prescriptions delivered fast and safely.",
       image: medicineCardImage,
       alt: "Order Medicine",
+      href: "/user/search-medicine",
       buttonText: "Order Now",
-      buttonBg: "#2BBBC5",
-      buttonHover: "#25a4ac",
     },
     {
       id: 3,
@@ -54,123 +57,34 @@ export default function Page() {
       description: "Save lives and support your community.",
       image: donateCardImage,
       alt: "Donate Blood",
+      href: "/user/donation",
       buttonText: "Donate Now",
-      buttonBg: "#2BBBC5",
-      buttonHover: "#25a4ac",
     },
   ];
 
   return (
     <div>
+      {/* Headless Location Manager */}
+      <UserLocationManager />
+
       {/* Hero Section */}
       <section className="min-h-screen bg-white flex flex-col items-center justify-center py-8 px-4">
         <div className="max-w-4xl w-full">
-          {/* Header with Logout */}
-
-          <h1 className="heading text-center">
-            Welcome back, {isLoading ? "..." : (userName || "User")}!👋
-          </h1>
+          <UserWelcomeHeader />
 
           <p className="text-[#8E8E8E] text-lg mb-10 text-center">
-            Take care of your health today ,explore trusted doctors, order
+            Take care of your health today, explore trusted doctors, order
             medicines, or help others by donating blood.
           </p>
         </div>
 
         {/* --- Slider Section --- */}
-        <div className="w-full max-w-6xl mt-10 min-h-[400px] md:min-h-[280px]">
-          <Swiper
-            modules={[Navigation, Autoplay]}
-            spaceBetween={30}
-            slidesPerView={1}
-            navigation
-            autoplay={{ delay: 4000 }}
-            loop
-            className="pb-10 !h-full">
-            {/* Slide 1 */}
-            <SwiperSlide className="h-full">
-              <div className="flex flex-col md:flex-row items-center justify-between bg-linear-to-r from-[#2BBBC5] to-[#D5F4F6] rounded-3xl shadow-md p-8 min-h-[350px] md:min-h-[240px]">
-                <div className="max-w-md py-5">
-                  <h2 className="text-2xl font-medium text-white mb-2">
-                    Find Trusted Doctors Near You
-                  </h2>
-                  <p className="font-normal text-white mb-4">
-                    Book appointments with verified specialists in just a few
-                    clicks.
-                  </p>
-                  <PrimaryButton variant="secondary" onClick={() => router.push("/user/search-doctors")}>
-                    Find a Doctor
-                  </PrimaryButton>
-                </div>
-                <Image
-                  src={sliderDoctors}
-                  alt="Doctors"
-                  width={300}
-                  height={300}
-                  className="mt-6 md:mt-0"
-                  priority
-                />
-              </div>
-            </SwiperSlide>
-
-            {/* Slide 2 */}
-            <SwiperSlide className="h-full">
-              <div className="flex flex-col md:flex-row items-center justify-between bg-linear-to-r from-primary to-white rounded-3xl shadow-md p-8 min-h-[350px] md:min-h-[240px]">
-                <Image
-                  src={sliderMedicine}
-                  alt="Medicines"
-                  width={200}
-                  height={200}
-                  className="mt-6 md:mt-0"
-                  priority
-                />
-
-                <div className="max-w-md">
-                  <h2 className="text-2xl font-medium text-[#259FA7] mb-2">
-                    Order Medicines Easily & Securely
-                  </h2>
-                  <p className="font-normal text-[#259FA7] mb-4">
-                    Fast delivery from verified pharmacies — your health, your
-                    convenience.
-                  </p>
-                  <PrimaryButton onClick={() => router.push("/user/search-medicine")}>
-                    Order Now
-                  </PrimaryButton>
-                </div>
-              </div>
-            </SwiperSlide>
-
-            {/* Slide 3 */}
-            <SwiperSlide className="h-full">
-              <div className="flex flex-col md:flex-row items-center justify-between  bg-linear-to-r from-[#2BBBC5] to-[#D5F4F6] rounded-3xl shadow-md p-8 min-h-[350px] md:min-h-[240px]">
-                <div className="max-w-md">
-                  <h2 className="text-2xl font-medium text-white mb-2">
-                    Save Lives. Donate Blood Today.
-                  </h2>
-                  <p className="font-normal text-white mb-4">
-                    Join the Sehha community and make a real difference.
-                  </p>
-                  <PrimaryButton variant="secondary" onClick={() => router.push("/user/donation")}  >
-                    Donate Now
-                  </PrimaryButton>
-                </div>
-                <Image
-                  src={sliderDonate}
-                  alt="Donate Blood"
-                  width={200}
-                  height={200}
-                  className="mt-6 md:mt-0"
-                  priority
-                />
-              </div>
-            </SwiperSlide>
-          </Swiper>
-        </div>
+        <UserHomeSlider />
       </section>
 
       {/* Card section */}
       <section className="w-full max-w-6xl mx-auto mt-10 pb-10 px-4 ">
-        <h3 className="text-2xl md:text-3xl font-semibold text-primary mb-10">
+        <h3 className="text-2xl md:text-3xl font-semibold text-primary mb-10 text-center sm:text-left">
           What Would You Like to Do Today?
         </h3>
 
@@ -192,18 +106,11 @@ export default function Page() {
                 <p className="text-[#8E8E8E] text-sm mb-4">
                   {card.description}
                 </p>
-                <PrimaryButton fullWidth
-                  onClick={() => {
-                    if (card.id === 1) {
-                      router.push("/user/search-doctors");
-                    } else if (card.id === 2) {
-                      router.push("/user/search-medicine");
-                    } else if (card.id === 3) {
-                      router.push("/user/donation");
-                    }
-                  }}>
-                  {card.buttonText}
-                </PrimaryButton>
+                <Link href={card.href} className="block w-full">
+                  <PrimaryButton fullWidth>
+                    {card.buttonText}
+                  </PrimaryButton>
+                </Link>
               </div>
             </div>
           ))}
@@ -217,7 +124,8 @@ export default function Page() {
       <TopRatedDoctors />
 
       {/* Map Section */}
-      <HomeMapSection />
+      <HomeMapSection doctors={doctors} pharmacies={pharmacies} />
     </div>
   );
 }
+

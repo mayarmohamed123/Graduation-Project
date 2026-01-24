@@ -1,10 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Doctor } from "@/types/doctors";
 import { Pharmacy } from "@/types";
-import { doctorService } from "@/Services/doctorService";
-import { pharmacyService } from "@/Services/pharmaciesServices";
 import { MapPin, ShieldCheck, Clock, Search, ArrowRight } from "lucide-react";
 import PrimaryButton from "@/Components/common/PrimaryButton";
 import Link from "next/link";
@@ -20,26 +17,12 @@ const MapWithNoSSR = dynamic(() => import("../../common/HomeProvidersMap"), {
     ),
 });
 
-export default function HomeMapSection() {
-    const [doctors, setDoctors] = useState<Doctor[]>([]);
-    const [pharmacies, setPharmacies] = useState<Pharmacy[]>([]);
+interface HomeMapSectionProps {
+    doctors: Doctor[];
+    pharmacies: Pharmacy[];
+}
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const [doctorsData, pharmaciesData] = await Promise.all([
-                    doctorService.getAllDoctors(),
-                    pharmacyService.getPharmacies(),
-                ]);
-                setDoctors(doctorsData);
-                setPharmacies(Array.isArray(pharmaciesData) ? pharmaciesData : []);
-            } catch (error) {
-                console.error("Failed to fetch map data:", error);
-            }
-        };
-
-        fetchData();
-    }, []);
+export default function HomeMapSection({ doctors, pharmacies }: HomeMapSectionProps) {
 
     const features = [
         {

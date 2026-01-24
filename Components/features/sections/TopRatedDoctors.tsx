@@ -1,32 +1,18 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import { Doctor } from "@/types";
 import Link from "next/link";
-import LoadingSpinner from "@/Components/common/LoadingSpinner";
 import { doctorService } from "@/Services/doctorService";
 import DoctorCard from "../doctor/DoctorCard";
 
-export default function TopRatedDoctors() {
-  const [doctors, setDoctors] = useState<Doctor[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+export default async function TopRatedDoctors() {
+  let doctors: Doctor[] = [];
+  let error: string | null = null;
 
-  useEffect(() => {
-    const fetchDoctors = async () => {
-      try {
-        const data = await doctorService.getTopRatedDoctors();
-        setDoctors(data);
-      } catch (err) {
-        console.error("Error fetching top rated doctors:", err);
-        setError("Failed to load doctors");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchDoctors();
-  }, []);
+  try {
+    doctors = await doctorService.getTopRatedDoctors();
+  } catch (err) {
+    console.error("Error fetching top rated doctors:", err);
+    error = "Failed to load doctors";
+  }
 
   if (error) {
     return (
@@ -34,10 +20,6 @@ export default function TopRatedDoctors() {
         <p className="text-center text-red-500">{error}</p>
       </div>
     );
-  }
-
-  if (loading) {
-    return <LoadingSpinner />;
   }
 
   return (
@@ -48,9 +30,9 @@ export default function TopRatedDoctors() {
           Top Rated Doctors
         </h2>
         <Link href="/user/search-doctors">
-          <button className="text-sm text-primary hover:underline">
+          <span className="text-sm text-primary hover:underline cursor-pointer">
             See All
-          </button>
+          </span>
         </Link>
       </div>
 
@@ -63,3 +45,4 @@ export default function TopRatedDoctors() {
     </div>
   );
 }
+
