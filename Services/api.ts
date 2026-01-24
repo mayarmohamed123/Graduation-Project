@@ -33,20 +33,19 @@ export const apiRequest = async <T = unknown>(
     revalidate,
     ...restOptions
   } = options;
-
+  // Server-side fix: absolute URL is required for fetch during SSR/Build
   let finalUrl = url;
-  
-  // Server-side fix: absolute URL is required for fetch
-  if (typeof window === "undefined" && url.startsWith("/api")) {
-    const internalBaseUrl = process.env.INTERNAL_API_BASE_URL || "https://webadd-avgnfdemdqcffecu.canadacentral-01.azurewebsites.net/api";
-    finalUrl = url.replace("/api", internalBaseUrl);
-  } else if (typeof window === "undefined" && !url.startsWith("http")) {
-      // Handle cases where the URL might not start with /api but is still relative
-      const internalBaseUrl = process.env.INTERNAL_API_BASE_URL || "https://webadd-avgnfdemdqcffecu.canadacentral-01.azurewebsites.net/api";
-      // If it doesn't start with /api, we assume it's relative to the base domain
-      finalUrl = `${internalBaseUrl}${url.startsWith("/") ? "" : "/"}${url}`;
+  if (typeof window === "undefined" && !url.startsWith("http")) {
+    const BACKEND_URL = "https://webadd-avgnfdemdqcffecu.canadacentral-01.azurewebsites.net";
+    if (url.startsWith("/api")) {
+      // Replace /api prefix with the full backend URL
+      finalUrl = BACKEND_URL + url;
+    } else {
+      // For other relative paths
+      finalUrl = BACKEND_URL + (url.startsWith("/") ? url : "/" + url);
+    }
   }
-  
+
   // Determine cache strategy: mutations should not be cached
   const isMutation = method !== "GET";
   const cacheRevalidate = isMutation ? 0 : (revalidate ?? 3);
