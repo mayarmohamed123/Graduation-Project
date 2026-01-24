@@ -33,6 +33,19 @@ export const apiRequest = async <T = unknown>(
     revalidate,
     ...restOptions
   } = options;
+
+  let finalUrl = url;
+  
+  // Server-side fix: absolute URL is required for fetch
+  if (typeof window === "undefined" && url.startsWith("/api")) {
+    const internalBaseUrl = process.env.INTERNAL_API_BASE_URL || "https://webadd-avgnfdemdqcffecu.canadacentral-01.azurewebsites.net/api";
+    finalUrl = url.replace("/api", internalBaseUrl);
+  } else if (typeof window === "undefined" && !url.startsWith("http")) {
+      // Handle cases where the URL might not start with /api but is still relative
+      const internalBaseUrl = process.env.INTERNAL_API_BASE_URL || "https://webadd-avgnfdemdqcffecu.canadacentral-01.azurewebsites.net/api";
+      // If it doesn't start with /api, we assume it's relative to the base domain
+      finalUrl = `${internalBaseUrl}${url.startsWith("/") ? "" : "/"}${url}`;
+  }
   
   // Determine cache strategy: mutations should not be cached
   const isMutation = method !== "GET";
@@ -58,7 +71,7 @@ export const apiRequest = async <T = unknown>(
   }
 
   const makeRequest = async () => {
-    return fetch(url, {
+    return fetch(finalUrl, {
       method,
       headers,
       body,
