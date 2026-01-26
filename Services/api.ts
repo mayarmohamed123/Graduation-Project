@@ -55,6 +55,20 @@ export const apiRequest = async <T = unknown>(
     "ngrok-skip-browser-warning": "true",
   };
 
+  // Server-side fix: forward cookies to the backend
+  if (typeof window === "undefined" && requiresAuth) {
+    try {
+      const { cookies } = await import("next/headers");
+      const cookieStore = await cookies();
+      const cookieHeader = cookieStore.toString();
+      if (cookieHeader) {
+        headers["Cookie"] = cookieHeader;
+      }
+    } catch (e) {
+      console.warn("[apiRequest] Could not forward cookies on server:", e);
+    }
+  }
+
   // Handle Body and Content-Type
   let body: BodyInit | null = null;
   if (data) {
@@ -92,6 +106,7 @@ export const apiRequest = async <T = unknown>(
     }
 
     if (!response.ok) {
+      console.error(`API request failed: ${method} ${finalUrl} - Status: ${response.status}`);
       let errorMessage = `API error: ${response.status} ${response.statusText}`;
       try {
         const errorText = await response.text();

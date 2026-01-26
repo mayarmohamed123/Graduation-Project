@@ -1,18 +1,39 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { Pharmacy } from "@/types";
 import { pharmacyService } from "@/Services/pharmaciesServices";
 import { PharmacyCard } from "@/Components/common";
 import Link from "next/link";
+import { Loader2 } from "lucide-react";
 
-export default async function TopRatedPharmacies() {
-  let pharmacies: Pharmacy[] = [];
-  let error: string | null = null;
+export default function TopRatedPharmacies() {
+  const [pharmacies, setPharmacies] = useState<Pharmacy[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  try {
-    const data = await pharmacyService.getTopRatedPharmacies();
-    pharmacies = Array.isArray(data) ? data : [];
-  } catch (err) {
-    console.error("Error fetching top rated pharmacies:", err);
-    error = "Failed to load pharmacies";
+  useEffect(() => {
+    const fetchPharmacies = async () => {
+      try {
+        const data = await pharmacyService.getTopRatedPharmacies();
+        setPharmacies(Array.isArray(data) ? data : []);
+      } catch (err) {
+        console.error("Error fetching top rated pharmacies:", err);
+        setError("Failed to load pharmacies");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPharmacies();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="w-full max-w-6xl mx-auto mt-20 pb-10 px-4 flex justify-center">
+        <Loader2 className="w-8 h-8 text-primary animate-spin" />
+      </div>
+    );
   }
 
   if (error) {
@@ -22,6 +43,8 @@ export default async function TopRatedPharmacies() {
       </div>
     );
   }
+
+  if (pharmacies.length === 0) return null;
 
   return (
     <div className="w-full max-w-6xl mx-auto mt-10 md:mt-20 pb-10 px-4 md:px-6">

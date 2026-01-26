@@ -1,17 +1,39 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { Doctor } from "@/types";
 import Link from "next/link";
 import { doctorService } from "@/Services/doctorService";
 import DoctorCard from "../doctor/DoctorCard";
+import { Loader2 } from "lucide-react";
 
-export default async function TopRatedDoctors() {
-  let doctors: Doctor[] = [];
-  let error: string | null = null;
+export default function TopRatedDoctors() {
+  const [doctors, setDoctors] = useState<Doctor[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  try {
-    doctors = await doctorService.getTopRatedDoctors();
-  } catch (err) {
-    console.error("Error fetching top rated doctors:", err);
-    error = "Failed to load doctors";
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      try {
+        const data = await doctorService.getTopRatedDoctors();
+        setDoctors(Array.isArray(data) ? data : []);
+      } catch (err) {
+        console.error("Error fetching top rated doctors:", err);
+        setError("Failed to load doctors");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchDoctors();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="w-full max-w-6xl mx-auto mt-20 pb-10 px-4 flex justify-center">
+        <Loader2 className="w-8 h-8 text-primary animate-spin" />
+      </div>
+    );
   }
 
   if (error) {
@@ -21,6 +43,8 @@ export default async function TopRatedDoctors() {
       </div>
     );
   }
+
+  if (doctors.length === 0) return null;
 
   return (
     <div className="w-full max-w-6xl mx-auto mt-10 md:mt-20 pb-10 px-4 md:px-6">

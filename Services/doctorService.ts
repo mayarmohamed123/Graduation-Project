@@ -260,10 +260,7 @@ export const doctorService = {
   },
   // Get top rated doctors
   getTopRatedDoctors: async (): Promise<Doctor[]> => {
-    return await apiRequest<Doctor[]>(`${baseUrl}/doctors/top-doctors`, {
-      credentials: "omit", // Don't send tokens
-      requiresAuth: false,
-    });
+    return await apiRequest<Doctor[]>(`${baseUrl}/doctors/top-doctors`);
   },
   // Analytics: Appointments
   getAnalyticsAppointments: async (): Promise<AnalyticsAppointments[]> => {

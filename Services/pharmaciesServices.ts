@@ -2,6 +2,17 @@ import { Pharmacy, PharmacyRegistrationResponse, InventoryAnalysis, CategoryDash
 import { Medicine } from "@/types/medicine";
 import { apiRequest } from "./api";
 
+export interface CreateReviewInput {
+  PharmacyId: number;
+  Rating: number;
+  Comment: string;
+}
+
+export interface UpdateReviewInput {
+  Rating: number;
+  Comment: string;
+}
+
 class PharmacyService {
   // Get The All pharmacies
   async getPharmacies(): Promise<Pharmacy[]> {
@@ -217,6 +228,33 @@ class PharmacyService {
     return await apiRequest<Review[]>(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/Review/pharmacy/${pharmacyId}`,
       {
+        requiresAuth: true,
+      }
+    );
+  }
+
+  // Add a new review
+  async addReview(reviewData: CreateReviewInput): Promise<{ message: string }> {
+    return await apiRequest<{ message: string }>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Review/add-review`,
+      {
+        method: "POST",
+        data: reviewData,
+        requiresAuth: true,
+      }
+    );
+  }
+
+  // Update an existing review
+  async updateReview(
+    reviewId: number,
+    reviewData: UpdateReviewInput
+  ): Promise<{ message: string }> {
+    return await apiRequest<{ message: string }>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/Review/${reviewId}`,
+      {
+        method: "PUT",
+        data: reviewData,
         requiresAuth: true,
       }
     );
