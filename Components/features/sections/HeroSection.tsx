@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { heroSectionImage } from "@/assets";
 import { Button } from "../../ui";
 export default function HeroSection() {
@@ -16,12 +17,29 @@ export default function HeroSection() {
           Find trusted doctors near you, order medicines with ease, and donate
           blood — all in one secure, easy-to-use platform.
         </p>
-
-        <Button
-          size="lg"
-          className="rounded-full bg-primary text-white px-8 py-6 text-lg hover:opacity-90 transition-all">
-          Get Started
-        </Button>
+        <div className="flex flex-wrap md:flex-nowrap gap-5 justify-center md:justify-start">
+          <Link href="/register/doctor" className="w-full md:w-auto">
+            <Button
+              size="lg"
+              className="w-full md:w-56 rounded-full bg-primary text-white px-8 py-6 text-lg hover:opacity-90 transition-all">
+              Join as Doctor
+            </Button>
+          </Link>
+          <Link href="/register/pharmacy" className="w-full md:w-auto">
+            <Button
+              size="lg"
+              className="w-full md:w-56 rounded-full bg-primary text-white px-8 py-6 text-lg hover:opacity-90 transition-all">
+              Join as Pharmacy
+            </Button>
+          </Link>
+          <Link href="/register" className="w-full md:w-auto">
+            <Button
+              size="lg"
+              className="w-full md:w-56 rounded-full bg-primary text-white px-8 py-6 text-lg hover:opacity-90 transition-all">
+              Join as User
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {/* Right Image Side */}

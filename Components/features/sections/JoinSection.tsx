@@ -1,6 +1,7 @@
 import React from "react";
 import { joinDoctorImage, joinPharmacyImage } from "@/assets";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function JoinSection() {
   const data = [
@@ -9,12 +10,14 @@ export default function JoinSection() {
       title: "Join as a Doctor",
       description:
         "Reach more patients and grow your practice with Sehha. Manage appointments, consultations, and communication in one secure platform.",
+      href: "/register/doctor",
     },
     {
       image: joinPharmacyImage,
       title: "Join as a Pharmacy",
       description:
         "Serve patients faster and expand your reach. Receive and fulfill medicine orders through Sehha’s verified network.",
+      href: "/register/pharmacy",
     },
   ];
 
@@ -60,9 +63,11 @@ export default function JoinSection() {
                   {item.title}
                 </h3>
                 <p className="text-white mb-6 max-w-md">{item.description}</p>
-                <button className="bg-white  text-[#2BBBC5] px-6 py-2 rounded-full font-semibold hover:bg-[#E0F9FA] transition-all">
-                  Join Us
-                </button>
+                <Link href={item.href}>
+                  <button className="bg-white  text-[#2BBBC5] px-6 py-2 rounded-full font-semibold hover:bg-[#E0F9FA] transition-all">
+                    Join Us
+                  </button>
+                </Link>
               </div>
             </div>
           </div>
