@@ -21,7 +21,7 @@ export default function PharmacySidebar({ pharmacy, onMessage }: PharmacySidebar
   };
 
   return (
-    <div className="w-full lg:w-80 flex-shrink-0 space-y-6">
+    <div className="w-full lg:w-80 shrink-0 space-y-6">
       <div className="bg-primary rounded-[32px] p-6 shadow-xl border border-primary/20 flex flex-col items-center text-white">
         {/* Pharmacy Logo/Image */}
         <div className="relative w-32 h-32 rounded-3xl overflow-hidden mb-6 shadow-lg border-4 border-white/20">

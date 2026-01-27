@@ -10,6 +10,7 @@ export interface UseMedicineSearchReturn {
   error: string | null;
   hasSearched: boolean;
   searchMedicines: (params: MedicineFilterParams) => Promise<void>;
+  fetchAllMedicines: () => Promise<void>;
   clearResults: () => void;
 }
 
@@ -19,26 +20,37 @@ export const useMedicineSearch = (): UseMedicineSearchReturn => {
   const [error, setError] = useState<string | null>(null);
   const [hasSearched, setHasSearched] = useState(false);
 
+  const fetchAllMedicines = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const results = await medicineService.getAllMedicines();
+      setMedicines(Array.isArray(results) ? results : []);
+    } catch (err) {
+      console.error("Error fetching all medicines:", err);
+      setError("Failed to load medicines. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   const searchMedicines = useCallback(async (params: MedicineFilterParams) => {
     try {
       setLoading(true);
       setError(null);
-      setHasSearched(true);
-
-      let results: Medicine[] = [];
-
-      // Determine if we should use filter or search
-      // The user wants name, dosageForm, strengthUnit, and category to be filterable.
-      // If any of these are present, we use the filter API.
+      
       const hasFilters = params.name || params.dosageForm || params.strengthUnit || params.category;
 
-      if (hasFilters) {
-        results = await medicineService.filterMedicines(params);
-      } else {
-        // Fallback or default behavior if no filters provided
-        setMedicines([]);
+      if (!hasFilters) {
+        setHasSearched(false);
+        const results = await medicineService.getAllMedicines();
+        setMedicines(Array.isArray(results) ? results : []);
+        setLoading(false);
         return;
       }
+
+      setHasSearched(true);
+      let results: Medicine[] = await medicineService.filterMedicines(params);
 
       // Logic for alternatives if no results found for a specific search
       if (results.length === 0 && params.name) {
@@ -82,10 +94,10 @@ export const useMedicineSearch = (): UseMedicineSearchReturn => {
   }, []);
 
   const clearResults = useCallback(() => {
-    setMedicines([]);
+    fetchAllMedicines();
     setHasSearched(false);
     setError(null);
-  }, []);
+  }, [fetchAllMedicines]);
 
   return {
     medicines,
@@ -93,6 +105,7 @@ export const useMedicineSearch = (): UseMedicineSearchReturn => {
     error,
     hasSearched,
     searchMedicines,
+    fetchAllMedicines,
     clearResults,
   };
 };

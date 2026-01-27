@@ -3,7 +3,8 @@ import { Medicine } from "@/types/medicine";
 import { apiRequest } from "./api";
 
 export interface CreateReviewInput {
-  PharmacyId: number;
+  PharmacyId?: number;
+  MedicationId?: number;
   Rating: number;
   Comment: string;
 }
@@ -279,6 +280,18 @@ class PharmacyService {
         requiresAuth: true,
       }
     );
+  }
+
+  // Search pharmacies by name
+  async searchPharmacies(name: string): Promise<Pharmacy[]> {
+    const res = await apiRequest<{ data: Pharmacy[] } | Pharmacy[]>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/pharmacy/search?name=${encodeURIComponent(name)}`,
+      {
+        requiresAuth: false,
+      }
+    );
+    if ("data" in res) return res.data;
+    return res;
   }
 }
 

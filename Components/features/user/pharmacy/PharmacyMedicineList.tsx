@@ -67,9 +67,6 @@ export default function PharmacyMedicineList({ medicines }: PharmacyMedicineList
             <option>Above 500 EGP</option>
           </select>
 
-          <select className="bg-white border border-gray-100 px-4 py-2.5 rounded-xl shadow-sm text-sm font-bold text-gray-600 outline-none focus:ring-2 focus:ring-primary/20 appearance-none cursor-pointer pr-10 relative" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%236b7280\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M19 9l-7 7-7-7\'%3E%3C/path%3E%3C/svg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 12px center', backgroundSize: '16px' }}>
-            <option>Brand</option>
-          </select>
 
           <button 
             onClick={() => setInStockOnly(!inStockOnly)}

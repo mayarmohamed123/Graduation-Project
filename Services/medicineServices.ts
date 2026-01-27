@@ -6,6 +6,14 @@ import {
 import { apiRequest } from "./api";
 
 class MedicineService {
+  // Get All Medicines
+  async getAllMedicines(): Promise<Medicine[]> {
+    return await apiRequest<Medicine[]>(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/medicine`,
+      {}
+    );
+  }
+
   // Filter Medicines
   async filterMedicines(filters: MedicineFilterParams): Promise<Medicine[]> {
     const queryParams = new URLSearchParams();

@@ -47,10 +47,13 @@ export default function PharmacyReviewsTab({
   };
 
   const [ratingFilter, setRatingFilter] = useState<number | "All">("All");
+  const [showAllReviews, setShowAllReviews] = useState(false);
 
   const filteredReviews = reviews.filter((r) => 
     ratingFilter === "All" || r.rating === ratingFilter
   );
+
+  const displayedReviews = showAllReviews ? filteredReviews : filteredReviews.slice(0, 2);
 
   return (
     <div className="space-y-8">
@@ -66,8 +69,8 @@ export default function PharmacyReviewsTab({
             <div className="flex items-center gap-1 mb-1">
               {[1, 2, 3, 4, 5].map((s) => (
                 <Star 
-                  key={s} 
-                  className={`w-5 h-5 ${s <= Math.round(totalRating) ? "text-yellow-400 fill-yellow-400" : "text-gray-200"}`} 
+                   key={s} 
+                   className={`w-5 h-5 ${s <= Math.round(totalRating) ? "text-yellow-400 fill-yellow-400" : "text-gray-200"}`} 
                 />
               ))}
             </div>
@@ -102,8 +105,8 @@ export default function PharmacyReviewsTab({
 
       {/* Reviews List */}
       <div className="space-y-4">
-        {filteredReviews.length > 0 ? (
-          filteredReviews.map((review) => {
+        {displayedReviews.length > 0 ? (
+          displayedReviews.map((review) => {
             const author = review.user;
             const reviewImageUrl = author?.profileImage || userProfileImage;
             const isAuthor = user?.id === author?.id;
@@ -158,10 +161,14 @@ export default function PharmacyReviewsTab({
           </div>
         )}
 
-        {reviews.length > 0 && (
+        {filteredReviews.length > 2 && (
           <div className="pt-4 flex justify-center">
-             <Button variant="outline" className="px-12 py-6 rounded-2xl border-gray-200 text-gray-700 font-bold hover:bg-gray-50">
-                See All Reviews
+             <Button 
+               variant="outline" 
+               onClick={() => setShowAllReviews(!showAllReviews)}
+               className="px-12 py-6 rounded-2xl border-gray-200 text-gray-700 font-bold hover:bg-gray-50"
+             >
+                {showAllReviews ? "Show Less" : "See All Reviews"}
              </Button>
           </div>
         )}

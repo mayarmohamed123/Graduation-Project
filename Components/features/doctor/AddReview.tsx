@@ -6,7 +6,7 @@ import Image from "next/image";
 import { filledStarIcon, emptyStarIcon } from "@/assets";
 import { doctorService } from "@/Services/doctorService";
 import { toast } from "react-hot-toast";
-import { Button, Dialog, DialogContent, DialogTrigger } from "@/Components/ui";
+import { Button, Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/Components/ui";
 
 export default function AddReviewDialog({
   trigger,
@@ -91,12 +91,15 @@ export default function AddReviewDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
 
-      <DialogContent
-        aria-describedby={undefined}
-        className="p-8 max-w-lg rounded-3xl shadow-xl">
-        <h2 className="text-xl font-semibold mb-4">{title}</h2>
+      <DialogContent className="p-8 max-w-lg rounded-3xl shadow-xl">
+        <DialogHeader>
+          <DialogTitle className="text-xl font-semibold mb-2">{title}</DialogTitle>
+          <DialogDescription className="text-sm font-medium text-gray-700">
+            Share your feedback about this doctor to help others.
+          </DialogDescription>
+        </DialogHeader>
 
-        <p className="text-sm mb-2">Add Your Rating</p>
+        <p className="text-sm mt-4 mb-2">Add Your Rating</p>
         <div className="flex items-center gap-2 mb-6">
           {[1, 2, 3, 4, 5].map((i) => (
             <Image
