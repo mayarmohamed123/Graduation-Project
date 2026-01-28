@@ -28,7 +28,7 @@ export default function UserHomeSlider() {
         navigation
         autoplay={{ delay: 4000, disableOnInteraction: false }}
         loop
-        className="pb-10 !h-full">
+        className="pb-10 h-full!">
         {/* Slide 1 */}
         <SwiperSlide className="h-full">
           <div className="flex flex-col md:flex-row items-center justify-between bg-linear-to-r from-[#2BBBC5] to-[#D5F4F6] rounded-3xl shadow-md p-8 min-h-[350px] md:min-h-[240px]">

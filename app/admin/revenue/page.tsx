@@ -6,7 +6,6 @@ import { AdminPayment } from "@/types/admin";
 import { PaymentsTable } from "@/Components/features/admin/revenue/PaymentsTable";
 import LoadingSpinner from "@/Components/common/LoadingSpinner";
 import {
-  DollarSign,
   ShoppingCart,
   Stethoscope,
   ShieldCheck,

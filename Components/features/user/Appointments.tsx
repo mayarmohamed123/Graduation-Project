@@ -118,7 +118,7 @@ export default function Appointments() {
     <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
       <div className="flex items-start gap-4">
         {/* Doctor Avatar */}
-        <div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-primary/40 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden">
+        <div className="w-16 h-16 bg-linear-to-br from-primary/20 to-primary/40 rounded-full flex items-center justify-center shrink-0 overflow-hidden">
           {appointment.doctorImage ? (
             <Image
               src={appointment.doctorImage}

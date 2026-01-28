@@ -53,7 +53,7 @@ export default function ChatThreadList({
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex-shrink-0 p-4 border-b border-gray-200">
+      <div className="shrink-0 p-4 border-b border-gray-200">
         <h2 className="text-xl font-bold text-gray-900">Messages</h2>
       </div>
       <div
@@ -73,7 +73,7 @@ export default function ChatThreadList({
                 }`}
             >
               {/* Avatar */}
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary/20 to-primary/40 flex items-center justify-center flex-shrink-0 overflow-hidden">
+              <div className="w-12 h-12 rounded-full bg-linear-to-br from-primary/20 to-primary/40 flex items-center justify-center shrink-0 overflow-hidden">
                 {otherParticipant?.profileImage ? (
                   <Image
                     src={otherParticipant.profileImage}
@@ -96,7 +96,7 @@ export default function ChatThreadList({
                     {otherParticipant?.userName || "Unknown User"}
                   </h3>
                   {thread.lastMessage && (
-                    <span className="text-xs text-gray-500 ml-2 flex-shrink-0">
+                    <span className="text-xs text-gray-500 ml-2 shrink-0">
                       {formatDistanceToNow(new Date(thread.lastMessage.sentAt), {
                         addSuffix: true,
                       })}

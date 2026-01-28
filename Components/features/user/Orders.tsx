@@ -102,7 +102,7 @@ export default function Orders() {
                 <div key={index} className="flex items-center gap-4">
                   {/* Medication image */}
                   {item.medicicationImage ? (
-                    <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
+                    <div className="w-16 h-16 rounded-lg overflow-hidden shrink-0">
                       <Image
                         src={item.medicicationImage}
                         alt={item.medicationName}
@@ -112,7 +112,7 @@ export default function Orders() {
                       />
                     </div>
                   ) : (
-                    <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <div className="w-16 h-16 bg-linear-to-br from-blue-400 to-blue-600 rounded-lg flex items-center justify-center shrink-0">
                       <span className="text-white font-bold text-xs">
                         {item.medicationName.substring(0, 2).toUpperCase()}
                       </span>

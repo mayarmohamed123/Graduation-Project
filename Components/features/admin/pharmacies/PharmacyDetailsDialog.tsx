@@ -67,7 +67,7 @@ export function PharmacyDetailsDialog({ pharmacist, isOpen, onClose, onUpdate }:
                 <div className="space-y-8 py-4">
                     {/* Header Info Section */}
                     <div className="flex flex-col md:flex-row gap-6 items-start">
-                        <div className="flex flex-col items-center gap-2 flex-shrink-0">
+                        <div className="flex flex-col items-center gap-2 shrink-0">
                             <Avatar className="h-24 w-24 border-2 border-primary/10">
                                 <AvatarImage src={pharmacist.pharmacistImage || ""} className="object-cover" />
                                 <AvatarFallback className="bg-primary/5 text-primary text-2xl font-bold">

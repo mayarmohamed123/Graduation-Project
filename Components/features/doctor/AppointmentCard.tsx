@@ -56,7 +56,7 @@ export default function AppointmentCard({
                 <div className="flex items-start justify-between">
                     <div className="flex items-center gap-3">
                         {/* Patient Avatar */}
-                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center flex-shrink-0">
+                        <div className="w-12 h-12 rounded-full bg-linear-to-br from-primary to-primary/70 flex items-center justify-center shrink-0">
                             <User className="w-6 h-6 text-white" />
                         </div>
 
@@ -87,7 +87,7 @@ export default function AppointmentCard({
                 <div className="grid grid-cols-1 gap-3">
                     {/* Date & Time */}
                     <div className="flex items-center gap-2 text-gray-600">
-                        <div className="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center flex-shrink-0">
+                        <div className="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center shrink-0">
                             <Calendar className="w-4 h-4 text-primary" />
                         </div>
                         <div className="flex items-center gap-2 flex-wrap">
@@ -106,7 +106,7 @@ export default function AppointmentCard({
 
                     {/* Phone Number */}
                     <div className="flex items-center gap-2 text-gray-600">
-                        <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0">
+                        <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center shrink-0">
                             <Phone className="w-4 h-4 text-blue-600" />
                         </div>
                         <span className="text-sm font-medium text-gray-700">

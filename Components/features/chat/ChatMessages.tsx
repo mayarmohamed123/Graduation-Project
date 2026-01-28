@@ -47,7 +47,7 @@ export default function ChatMessages({
   return (
     <div className="flex flex-col h-full bg-white rounded-2xl shadow-sm border border-gray-200">
       {/* Header */}
-      <div className="flex-shrink-0 p-4 border-b border-gray-200 flex items-center justify-between">
+      <div className="shrink-0 p-4 border-b border-gray-200 flex items-center justify-between">
         <div className="flex items-center gap-3">
           {onBack && (
             <button
@@ -101,7 +101,7 @@ export default function ChatMessages({
                 >
                   {/* Avatar for other user */}
                   {!isCurrentUser && (
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary/20 to-primary/40 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                    <div className="w-8 h-8 rounded-full bg-linear-to-br from-primary/20 to-primary/40 flex items-center justify-center shrink-0 overflow-hidden">
                       {sender?.profileImage ? (
                         <Image
                           src={sender.profileImage}
@@ -141,7 +141,7 @@ export default function ChatMessages({
       </div>
 
       {/* Input */}
-      <form onSubmit={handleSubmit} className="flex-shrink-0 p-4 border-t border-gray-200">
+      <form onSubmit={handleSubmit} className="shrink-0 p-4 border-t border-gray-200">
         <div className="flex items-center gap-2">
           <input
             ref={inputRef}
