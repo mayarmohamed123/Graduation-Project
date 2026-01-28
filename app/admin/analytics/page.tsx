@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { adminAnalyticsService } from "@/Services/admin/adminAnalyticsService";
 import AdminAnalyticsClient from "./AdminAnalyticsClient";
 import { 

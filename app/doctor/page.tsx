@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { appointmentService } from "@/Services/appointmentServices";
 import { doctorService } from "@/Services/doctorService";
 import { authService } from "@/Services/authService";

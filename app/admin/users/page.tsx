@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { adminService } from "@/Services/admin/adminService";
 import UsersManagementClient from "./UsersManagementClient";
 import { AdminUser } from "@/types/admin";

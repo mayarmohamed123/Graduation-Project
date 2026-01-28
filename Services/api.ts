@@ -36,14 +36,18 @@ export const apiRequest = async <T = unknown>(
   // Server-side fix: absolute URL is required for fetch during SSR/Build
   let finalUrl = url;
   if (typeof window === "undefined" && !url.startsWith("http")) {
-    const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "";
+    const BACKEND_URL = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
     if (url.startsWith("/api")) {
-      // Replace /api prefix with the full backend URL
-      finalUrl = BACKEND_URL + url;
+      // Replace /api prefix with the full backend URL if BACKEND_URL doesn't end with /api
+      const baseWithNoApi = BACKEND_URL.replace(/\/api$/, "");
+      finalUrl = baseWithNoApi + (url.startsWith("/") ? url : "/" + url);
     } else {
       // For other relative paths
       finalUrl = BACKEND_URL + (url.startsWith("/") ? url : "/" + url);
     }
+    
+    // Safety check: ensure no double slashes like http://localhost:5000//api
+    finalUrl = finalUrl.replace(/([^:]\/)\/+/g, "$1");
   }
 
   // Determine cache strategy: mutations should not be cached

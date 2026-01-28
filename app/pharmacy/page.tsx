@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { pharmacyService } from "@/Services/pharmaciesServices";
 import { pharmacistService } from "@/Services/pharmacistService";
 import { PharmacyStatsResponse, PharmacistOrder, BestSellingMedicine, TodaySalesByTime } from "@/types";
