@@ -10,12 +10,12 @@ import {
     DialogHeader,
     DialogTitle,
     DialogFooter,
-} from "@/Components/ui/dialog";
-import { Button } from "@/Components/ui/button";
-import { Input } from "@/Components/ui/input";
-import { Label } from "@/Components/ui/label";
-import { Avatar, AvatarFallback, AvatarImage } from "@/Components/ui/avatar";
-import { Badge } from "@/Components/ui/badge";
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 
 interface PharmacyDetailsDialogProps {
     pharmacist: AdminPharmacist | null;

@@ -5,15 +5,15 @@ import { bloodRequestService } from "@/Services/bloodRequestService";
 import { BloodRequest } from "@/types/blood";
 import { toast } from "react-hot-toast";
 import { MapPin, Clock, Edit2, Trash2, Droplet, Users } from "lucide-react";
-import { Button } from "@/Components/ui/button";
-import { ConfirmationDialog } from "@/Components/ui/confirmation-dialog";
-import { Input } from "@/Components/ui/input";
-import { Label } from "@/Components/ui/label";
+import { Button } from "@/components/ui/button";
+import { ConfirmationDialog } from "@/components/ui/confirmation-dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import dynamic from "next/dynamic";
 import { formatBloodType } from "@/lib/bloodUtils";
 import RequestDonorsList from "./RequestDonorsList";
 
-const LocationPickerMap = dynamic(() => import("@/Components/features/donation/LocationPickerMap"), {
+const LocationPickerMap = dynamic(() => import("@/components/features/donation/LocationPickerMap"), {
     ssr: false,
     loading: () => <div className="h-[200px] w-full bg-gray-100 animate-pulse rounded-xl" />
 });

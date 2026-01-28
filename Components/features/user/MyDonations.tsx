@@ -5,8 +5,8 @@ import { bloodDonorService } from "@/Services/bloodDonorService";
 import { BloodDonation } from "@/types/blood";
 import { toast } from "react-hot-toast";
 import { MapPin, Calendar, Trash2, Droplet, Phone } from "lucide-react";
-import { Button } from "@/Components/ui/button";
-import { ConfirmationDialog } from "@/Components/ui/confirmation-dialog";
+import { Button } from "@/components/ui/button";
+import { ConfirmationDialog } from "@/components/ui/confirmation-dialog";
 import { formatBloodType } from "@/lib/bloodUtils";
 
 export default function MyDonations() {

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Button } from "@/Components/ui";
+import { Button } from "@/components/ui";
 import { medicalErrorImage } from "@/assets";
 
 export default function NotFound() {

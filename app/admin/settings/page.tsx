@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { User, Lock, LogOut } from "lucide-react";
-import { SidebarNav } from "@/Components/common";
-import PersonalInformation from "@/Components/features/admin/settings/PersonalInformation";
-import PasswordManagement from "@/Components/features/admin/settings/PasswordManagement";
+import { SidebarNav } from "@/components/common";
+import PersonalInformation from "@/components/features/admin/settings/PersonalInformation";
+import PasswordManagement from "@/components/features/admin/settings/PasswordManagement";
 import { authService } from "@/Services/authService";
 
 export default function AdminSettingsPage() {

@@ -8,13 +8,13 @@ import { toast } from "react-hot-toast";
 import { Medicine } from "@/types/medicine";
 
 // Refactored Components
-import { AddMedicineHeader } from "@/Components/features/pharmacy/inventory/add-medicine/AddMedicineHeader";
-import { BasicInfoSection } from "@/Components/features/pharmacy/inventory/add-medicine/BasicInfoSection";
-import { ImageUploadSection } from "@/Components/features/pharmacy/inventory/add-medicine/ImageUploadSection";
-import { AdditionalDetailsSection } from "@/Components/features/pharmacy/inventory/add-medicine/AdditionalDetailsSection";
-import { AddMedicineFooter } from "@/Components/features/pharmacy/inventory/add-medicine/AddMedicineFooter";
-import { Card } from "@/Components/ui/card";
-import LoadingSpinner from "@/Components/common/LoadingSpinner";
+import { AddMedicineHeader } from "@/components/features/pharmacy/inventory/add-medicine/AddMedicineHeader";
+import { BasicInfoSection } from "@/components/features/pharmacy/inventory/add-medicine/BasicInfoSection";
+import { ImageUploadSection } from "@/components/features/pharmacy/inventory/add-medicine/ImageUploadSection";
+import { AdditionalDetailsSection } from "@/components/features/pharmacy/inventory/add-medicine/AdditionalDetailsSection";
+import { AddMedicineFooter } from "@/components/features/pharmacy/inventory/add-medicine/AddMedicineFooter";
+import { Card } from "@/components/ui/card";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 
 function AddMedicineContent() {
   const router = useRouter();

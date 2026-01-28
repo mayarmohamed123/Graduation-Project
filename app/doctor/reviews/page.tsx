@@ -1,9 +1,9 @@
 "use client";
 
 import { Review } from "@/types/doctors";
-import DoctorDashboardReviewsList from "@/Components/features/doctor/reviews/DoctorDashboardReviewsList";
-import LoadingSpinner from "@/Components/common/LoadingSpinner";
-import { ConfirmDialog } from "@/Components/common/ConfirmDialog";
+import DoctorDashboardReviewsList from "@/components/features/doctor/reviews/DoctorDashboardReviewsList";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
+import { ConfirmDialog } from "@/components/common/ConfirmDialog";
 import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
 import { doctorService } from "@/Services/doctorService";
@@ -28,7 +28,7 @@ export default function DoctorReviewsPage() {
 
       if (!doctorId) doctorId = 10; // Fallback to user's example ID
 
-      const reviewsData = await doctorService.GetDoctorReviews(doctorId);
+      const reviewsData = await doctorService.getDoctorReviews(doctorId);
       setReviews(reviewsData);
     } catch (error) {
       console.error("Failed to fetch doctor reviews:", error);

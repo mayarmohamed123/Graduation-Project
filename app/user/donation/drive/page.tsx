@@ -2,21 +2,21 @@
 
 import React, { useEffect, useState } from "react";
 import { Search, MapPin, List, Map as MapIcon, Loader2, Droplet } from "lucide-react";
-import { Button } from "@/Components/ui/button";
-import { Input } from "@/Components/ui/input";
-import { Label } from "@/Components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import dynamic from "next/dynamic";
 import { bloodRequestService } from "@/Services/bloodRequestService";
 import { authService } from "@/Services/authService";
 import { BloodRequestWithPriority, PriorityLevel } from "@/types/blood";
-import BloodRequestCard from "@/Components/features/donation/BloodRequestCard";
-import LoadingSpinner from "@/Components/common/LoadingSpinner";
+import BloodRequestCard from "@/components/features/donation/BloodRequestCard";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 import toast from "react-hot-toast";
-import { ConfirmationDialog } from "@/Components/ui/confirmation-dialog";
-import PageHeaderWithBack from "@/Components/common/PageHeaderWithBack";
+import { ConfirmationDialog } from "@/components/ui/confirmation-dialog";
+import PageHeaderWithBack from "@/components/common/PageHeaderWithBack";
 import { formatBloodType } from "@/lib/bloodUtils";
 
-const BloodDriveMap = dynamic(() => import("@/Components/features/donation/BloodDriveMap"), {
+const BloodDriveMap = dynamic(() => import("@/components/features/donation/BloodDriveMap"), {
     ssr: false,
     loading: () => <LoadingSpinner />,
 });

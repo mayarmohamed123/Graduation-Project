@@ -3,7 +3,7 @@
 import { Doctor } from "@/types/doctors";
 import { Pharmacy } from "@/types";
 import { MapPin, ShieldCheck, Clock, Search, ArrowRight } from "lucide-react";
-import PrimaryButton from "@/Components/common/PrimaryButton";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 
@@ -74,10 +74,10 @@ export default function HomeMapSection({ doctors, pharmacies }: HomeMapSectionPr
 
                     <div className="pt-4">
                         <Link href="/user/map">
-                            <PrimaryButton className="px-8 py-3 flex items-center gap-2 group">
+                            <Button shape="pill" className="px-8 py-3 flex items-center gap-2 group">
                                 Explore Map
                                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                            </PrimaryButton>
+                            </Button>
                         </Link>
                     </div>
                 </div>
@@ -87,7 +87,7 @@ export default function HomeMapSection({ doctors, pharmacies }: HomeMapSectionPr
                     <MapWithNoSSR doctors={doctors} pharmacies={pharmacies} />
 
                     {/* Legend Overlay */}
-                    <div className="absolute bottom-6 left-6 z-[400] bg-white/90 backdrop-blur-sm p-3 rounded-lg shadow-lg border border-gray-200 text-xs">
+                    <div className="absolute bottom-6 left-6 z-400 bg-white/90 backdrop-blur-sm p-3 rounded-lg shadow-lg border border-gray-200 text-xs">
                         <div className="flex items-center gap-2 mb-2">
                             <div className="w-3 h-3 rounded-full bg-primary border border-white shadow-sm"></div>
                             <span className="font-semibold text-gray-700">Doctors</span>

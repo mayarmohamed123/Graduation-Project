@@ -1,21 +1,21 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import LoadingSpinner from "@/Components/common/LoadingSpinner";
-import ConfirmDialog from "@/Components/features/cart/ConfirmDialog";
-import { Button } from "@/Components/ui/button";
-import { Card, CardContent } from "@/Components/ui/card";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
+import ConfirmDialog from "@/components/features/cart/ConfirmDialog";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "@/Components/ui/dialog";
+} from "@/components/ui/dialog";
 import { Plus, FileText, ChevronLeft } from "lucide-react";
 import { usePrescriptionManager } from "@/hooks/usePrescriptionManager";
-import { PrescriptionFormFields } from "@/Components/features/doctor/prescriptions/PrescriptionFormFields";
-import { PrescriptionCard } from "@/Components/features/doctor/prescriptions/PrescriptionCard";
+import { PrescriptionFormFields } from "@/components/features/doctor/prescriptions/PrescriptionFormFields";
+import { PrescriptionCard } from "@/components/features/doctor/prescriptions/PrescriptionCard";
 
 export default function PatientPrescriptionsPage() {
   const params = useParams();

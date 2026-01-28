@@ -1,7 +1,7 @@
 "use client";
 
-import LineChart from "@/Components/common/charts/LineChart";
-import PieChart from "@/Components/common/charts/PieChart";
+import LineChart from "@/components/common/charts/LineChart";
+import PieChart from "@/components/common/charts/PieChart";
 import { 
   DailyRevenueReport, 
   DailyRegistrationReport, 

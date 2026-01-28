@@ -6,7 +6,7 @@ export { default as MedicineCard } from "./MedicineCard";
 export { default as MessageTextarea } from "./MessageTextarea";
 export { default as NotificationCard } from "./NotificationCard";
 export { default as PageHeaderWithBack } from "./PageHeaderWithBack";
-export { default as PrimaryButton } from "./PrimaryButton";
+// removed
 export { default as SearchInput } from "./SearchInput";
 export { default as SpecialtyIcon } from "./SpecialtyIcon";
 export { default as Switch } from "./Switch";

@@ -3,12 +3,12 @@
 import { useState, useMemo } from "react";
 import { Review } from "@/types";
 import { Star, MessageCircle, Edit2, Trash2, ChevronDown, ChevronUp } from "lucide-react";
-import { Button } from "@/Components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/Components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useUser } from "@/hooks/useUser";
 import { pharmacyService } from "@/Services/pharmaciesServices";
 import { toast } from "react-hot-toast";
-import { ConfirmDialog } from "@/Components/common/ConfirmDialog";
+import { ConfirmDialog } from "@/components/common/ConfirmDialog";
 import MedicineReviewDialog from "./MedicineReviewDialog";
 // Touched to refresh IDE state
 

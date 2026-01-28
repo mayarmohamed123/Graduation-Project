@@ -8,17 +8,17 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "@/Components/ui/dialog";
-import { Button } from "@/Components/ui/button";
-import { Input } from "@/Components/ui/input";
-import { Label } from "@/Components/ui/label";
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { updatePharmacy } from "@/Services/admin/pharmacies";
 import { toast } from "react-hot-toast";
 import { Loader2, Camera, UploadCloud } from "lucide-react";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 
-const LocationMap = dynamic(() => import("@/Components/common/LocationMap"), {
+const LocationMap = dynamic(() => import("@/components/common/LocationMap"), {
   ssr: false,
   loading: () => (
     <div className="h-[400px] w-full flex items-center justify-center bg-gray-50 border rounded-lg">

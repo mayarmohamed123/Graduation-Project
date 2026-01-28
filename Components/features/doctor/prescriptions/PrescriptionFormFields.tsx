@@ -1,6 +1,6 @@
-import { Input } from "@/Components/ui/input";
-import { Label } from "@/Components/ui/label";
-import { Textarea } from "@/Components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { AddPrescriptionItemInput } from "@/types/prescription";
 
 interface PrescriptionFormFieldsProps {

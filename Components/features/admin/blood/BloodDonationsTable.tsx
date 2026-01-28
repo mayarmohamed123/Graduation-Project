@@ -2,7 +2,7 @@
 
 import { AdminBloodDonation } from "@/types/blood";
 import { MapPin, Calendar, Droplet, Phone, Trash2, CheckCircle } from "lucide-react";
-import { Button } from "@/Components/ui/button";
+import { Button } from "@/components/ui/button";
 import { formatBloodType } from "@/lib/bloodUtils";
 import { format } from "date-fns";
 

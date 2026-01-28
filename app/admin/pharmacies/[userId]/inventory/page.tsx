@@ -7,12 +7,12 @@ import {
     deleteMedicineAdmin 
 } from "@/Services/admin/pharmacies";
 import { AdminPharmacist, AdminMedicine } from "@/types/admin";
-import { MedicineTable } from "@/Components/features/pharmacy/inventory/MedicineTable";
+import { MedicineTable } from "@/components/features/pharmacy/inventory/MedicineTable";
 import { Activity, Plus, ArrowLeft } from "lucide-react";
-import { Button } from "@/Components/ui/button";
+import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
-import { ConfirmDialog } from "@/Components/common/ConfirmDialog";
+import { ConfirmDialog } from "@/components/common/ConfirmDialog";
 import { Medicine } from "@/types/medicine";
 
 export default function AdminPharmacyInventoryPage({ params }: { params: Promise<{ userId: string }> }) {

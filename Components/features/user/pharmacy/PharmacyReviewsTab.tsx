@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Star, MessageSquare } from "lucide-react";
 import { Review } from "@/types";
 import { userProfileImage } from "@/assets";
-import { Button } from "@/Components/ui";
+import { Button } from "@/components/ui";
 import PharmacyReviewDialog from "./PharmacyReviewDialog";
 import { useUser } from "@/hooks/useUser";
 import { pharmacyService } from "@/Services/pharmaciesServices";

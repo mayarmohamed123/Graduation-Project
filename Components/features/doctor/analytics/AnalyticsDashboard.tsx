@@ -8,9 +8,9 @@ import {
 } from "@/types/doctors";
 import { AppointmentStats } from "@/types/appointments";
 import { Calendar, DollarSign, Users } from "lucide-react";
-import { AreaChart, BarChart, PieChart, LineChart } from "@/Components/common/charts";
-import StatisticsCard from "@/Components/features/doctor/StatisticsCard";
-import SmartChartWrapper from "@/Components/common/analytics/SmartChartWrapper";
+import { AreaChart, BarChart, PieChart, LineChart } from "@/components/common/charts";
+import StatisticsCard from "@/components/features/doctor/StatisticsCard";
+import SmartChartWrapper from "@/components/common/analytics/SmartChartWrapper";
 import { doctorService } from "@/Services/doctorService";
 
 interface AnalyticsDashboardProps {

@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Package, AlertTriangle, XCircle } from "lucide-react";
-import { StatisticsCard } from "@/Components/features/doctor";
+import { StatisticsCard } from "@/components/features/doctor";
 
 interface InventoryStatsProps {
   totalProducts: number | string;

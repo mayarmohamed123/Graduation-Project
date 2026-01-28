@@ -8,9 +8,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from "@/Components/ui/dialog";
-import { Button } from "@/Components/ui/button";
-import { Textarea } from "@/Components/ui/textarea";
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { Star, Loader2, MessageSquare } from "lucide-react";
 import { pharmacyService } from "@/Services/pharmaciesServices";
 import { Review } from "@/types";

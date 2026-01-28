@@ -4,9 +4,9 @@ import { useState, useEffect } from "react";
 import { Review, PharmacyProfile } from "@/types";
 import { pharmacyService } from "@/Services/pharmaciesServices";
 import { pharmacistService } from "@/Services/pharmacistService";
-import PharmacyReviewsList from "@/Components/features/pharmacy/reviews/PharmacyReviewsList";
-import LoadingSpinner from "@/Components/common/LoadingSpinner";
-import { ConfirmDialog } from "@/Components/common/ConfirmDialog";
+import PharmacyReviewsList from "@/components/features/pharmacy/reviews/PharmacyReviewsList";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
+import { ConfirmDialog } from "@/components/common/ConfirmDialog";
 import toast from "react-hot-toast";
 
 export default function PharmacyReviewsPage() {

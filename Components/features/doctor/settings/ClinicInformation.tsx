@@ -4,20 +4,20 @@ import Image from "next/image";
 import dynamic from "next/dynamic";
 import { useState, useRef, useEffect } from "react";
 import { Building, Phone, MapPin, DollarSign, Link as LinkIcon, Loader2, Map as MapIcon } from "lucide-react";
-import { Button } from "@/Components/ui/button";
-import { Input } from "@/Components/ui/input";
-import { Avatar, AvatarFallback, AvatarImage } from "@/Components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/Components/ui/dialog";
+} from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { doctorService } from "@/Services/doctorService";
 import toast from "react-hot-toast";
 
-const LocationMap = dynamic(() => import("@/Components/common/LocationMap"), {
+const LocationMap = dynamic(() => import("@/components/common/LocationMap"), {
   ssr: false,
   loading: () => <div className="h-[400px] w-full flex items-center justify-center bg-gray-100 rounded-lg">Loading Map...</div>
 });

@@ -1,8 +1,8 @@
 import { Mail, Phone, MapPin, User as UserIcon, Pencil } from "lucide-react";
 import { AdminPharmacist } from "@/types/admin";
-import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/Components/ui/avatar";
-import { Button } from "@/Components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { EditPharmacistProfileDialog } from "./EditPharmacistProfileDialog";
 

@@ -2,17 +2,17 @@
 
 import React, { useEffect, useState } from "react";
 import { Search, MapPin, List, Map as MapIcon, Building2 } from "lucide-react";
-import { Button } from "@/Components/ui/button";
-import { Input } from "@/Components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import dynamic from "next/dynamic";
 import { pharmacyService } from "@/Services/pharmaciesServices";
 import { Pharmacy } from "@/types";
-import { PharmacyCard } from "@/Components/common";
-import LoadingSpinner from "@/Components/common/LoadingSpinner";
+import { PharmacyCard } from "@/components/common";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 import toast from "react-hot-toast";
-import PageHeaderWithBack from "@/Components/common/PageHeaderWithBack";
+import PageHeaderWithBack from "@/components/common/PageHeaderWithBack";
 
-const PharmacySearchMap = dynamic(() => import("@/Components/features/user/pharmacy/PharmacySearchMap"), {
+const PharmacySearchMap = dynamic(() => import("@/components/features/user/pharmacy/PharmacySearchMap"), {
     ssr: false,
     loading: () => <LoadingSpinner />,
 });

@@ -8,10 +8,10 @@ import { pharmacyService } from "@/Services/pharmaciesServices";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { ArrowLeft, Stethoscope, Pill, Search } from "lucide-react";
-import LoadingSpinner from "@/Components/common/LoadingSpinner";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 
 // Dynamically import the map
-const HomeProvidersMap = dynamic(() => import("@/Components/common/HomeProvidersMap"), {
+const HomeProvidersMap = dynamic(() => import("@/components/common/HomeProvidersMap"), {
     ssr: false,
     loading: () => <LoadingSpinner />,
 });

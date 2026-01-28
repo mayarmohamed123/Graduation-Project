@@ -6,12 +6,13 @@ import Link from "next/link";
 import { Medicine } from "@/types";
 import { FavoriteMedicine } from "@/types/favorites";
 import { Heart, Plus, Loader2, Star, MapPin } from "lucide-react";
-import PrimaryButton from "./PrimaryButton";
+import { Button } from "@/components/ui/button";
 import { cartService } from "@/Services/cartService";
 import { favoritesService } from "@/Services/favoritesService";
 import { useAppDispatch } from "@/store/hooks";
 import { fetchUserCart } from "@/store/slices/cartSlice";
 import { toast } from "react-hot-toast";
+import { cn } from "@/lib/utils";
 
 interface MedicineCardProps {
   medicine: Medicine | FavoriteMedicine;
@@ -30,7 +31,6 @@ export default function MedicineCard({
   const [isFavorite, setIsFavorite] = useState(initialFavoriteState);
   const [isTogglingFavorite, setIsTogglingFavorite] = useState(false);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
-  const [isCheckingFavorite, setIsCheckingFavorite] = useState(true);
 
   // Check if medicine is in favorites on mount
   useEffect(() => {
@@ -43,8 +43,6 @@ export default function MedicineCard({
         console.error("Failed to check favorite status:", error);
         // If error, fall back to initialFavoriteState
         setIsFavorite(initialFavoriteState);
-      } finally {
-        setIsCheckingFavorite(false);
       }
     };
 
@@ -53,7 +51,6 @@ export default function MedicineCard({
       checkFavoriteStatus();
     } else {
       setIsFavorite(initialFavoriteState);
-      setIsCheckingFavorite(false);
     }
   }, [medicine.id, variant, initialFavoriteState]);
 
@@ -121,7 +118,7 @@ export default function MedicineCard({
   return (
     <div className="bg-white rounded-2xl border-2 border-primary overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 h-full flex flex-col">
       {/* Image Section */}
-      <div className="relative h-40 bg-gradient-to-br from-blue-50 to-white p-4">
+      <div className="relative h-40 bg-linear-to-br from-blue-50 to-white p-4">
         {/* Out of Stock Overlay */}
         {isOutOfStock && (
           <div className="absolute inset-0 bg-gray-900/50 backdrop-blur-sm flex items-center justify-center z-20">
@@ -245,13 +242,13 @@ export default function MedicineCard({
 
         {/* View Details Button */}
         <Link href={`/user/search-medicine/${medicine.id}`} className="block mt-auto">
-          <PrimaryButton
+          <Button
             disabled={isOutOfStock}
-            fullWidth
-            className={isOutOfStock ? "!bg-gray-300 !text-gray-500 hover:!bg-gray-300" : ""}
+            shape="pill"
+            className={cn("w-full", isOutOfStock ? "bg-gray-300! text-gray-500! hover:bg-gray-300!" : "")}
           >
             {isOutOfStock ? "Unavailable" : "View Details"}
-          </PrimaryButton>
+          </Button>
         </Link>
       </div>
     </div>

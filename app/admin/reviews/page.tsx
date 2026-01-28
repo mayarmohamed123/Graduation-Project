@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import EntityReviewManager from "@/Components/features/admin/reviews/EntityReviewManager";
+import EntityReviewManager from "@/components/features/admin/reviews/EntityReviewManager";
 import { adminService } from "@/Services/admin/adminService";
 import { doctorService } from "@/Services/doctorService";
 import { pharmacyService } from "@/Services/pharmaciesServices";
@@ -82,7 +82,7 @@ export default function AdminReviewsPage() {
           <EntityReviewManager
             type="doctor"
             fetchEntities={fetchDoctorEntities}
-            fetchReviews={doctorService.GetDoctorReviews}
+            fetchReviews={doctorService.getDoctorReviews}
             deleteReview={pharmacyService.deleteReview}
           />
         )}

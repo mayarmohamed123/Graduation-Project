@@ -6,7 +6,7 @@ import {
   Users, 
   Building2 
 } from "lucide-react";
-import StatisticsCard from "@/Components/features/doctor/StatisticsCard";
+import StatisticsCard from "@/components/features/doctor/StatisticsCard";
 import { AdminOverviewResponse } from "@/types";
 
 interface AnalyticsStatsGridProps {

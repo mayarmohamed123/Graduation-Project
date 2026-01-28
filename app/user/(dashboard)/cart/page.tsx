@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import PharmacyCartCard from "@/Components/features/cart/PharmacyCartCard";
-import ConfirmDialog from "@/Components/features/cart/ConfirmDialog";
-import CheckoutDialog, { CheckoutFormData } from "@/Components/features/cart/CheckoutDialog";
-import PageHeaderWithBack from "@/Components/common/PageHeaderWithBack";
-import { Button } from "@/Components/ui/button";
+import PharmacyCartCard from "@/components/features/cart/PharmacyCartCard";
+import ConfirmDialog from "@/components/features/cart/ConfirmDialog";
+import CheckoutDialog, { CheckoutFormData } from "@/components/features/cart/CheckoutDialog";
+import PageHeaderWithBack from "@/components/common/PageHeaderWithBack";
+import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { useCart } from "@/hooks/useCart";

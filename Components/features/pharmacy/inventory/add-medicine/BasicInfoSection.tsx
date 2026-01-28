@@ -1,7 +1,7 @@
 import React from "react";
-import { Input } from "@/Components/ui/input";
-import { Label } from "@/Components/ui/label";
-import { CardHeader, CardTitle, CardDescription, CardContent } from "@/Components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Medicine } from "@/types/medicine";
 
 interface BasicInfoSectionProps {

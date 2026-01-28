@@ -1,6 +1,6 @@
 "use client";
 
-import Chat from "@/Components/features/chat/Chat";
+import Chat from "@/components/features/chat/Chat";
 import { Suspense } from "react";
 
 export default function ChatPage() {

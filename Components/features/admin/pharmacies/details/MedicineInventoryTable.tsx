@@ -8,9 +8,9 @@ import {
     TableHead, 
     TableHeader, 
     TableRow 
-} from "@/Components/ui";
-import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
-import { Badge } from "@/Components/ui/badge";
+} from "@/components/ui";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 interface MedicineInventoryTableProps {
     medicines: AdminMedicine[];

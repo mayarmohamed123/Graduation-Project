@@ -3,9 +3,9 @@
 import { useEffect, useState } from "react";
 import { doctorService } from "@/Services/doctorService";
 import { appointmentService } from "@/Services/appointmentServices";
-import AnalyticsDashboard from "@/Components/features/doctor/analytics/AnalyticsDashboard";
+import AnalyticsDashboard from "@/components/features/doctor/analytics/AnalyticsDashboard";
 import { AppointmentStats } from "@/types/appointments";
-import LoadingSpinner from "@/Components/common/LoadingSpinner";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 import {
     AnalyticsAge,
     AnalyticsGender,

@@ -7,12 +7,12 @@ import {
     DialogHeader,
     DialogTitle,
     DialogFooter,
-} from "@/Components/ui/dialog";
+} from "@/components/ui/dialog";
 import { AdminDoctor, DoctorProfileData, ClinicInfoData } from "@/types/admin";
-import { Button } from "@/Components/ui/button";
-import { Input } from "@/Components/ui/input";
-import { Label } from "@/Components/ui/label";
-import { Badge } from "@/Components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
 import { MapPin, Phone, Building, Star, Users, DollarSign } from "lucide-react";
 
 interface DoctorDetailsDialogProps {

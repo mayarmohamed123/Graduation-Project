@@ -1,8 +1,8 @@
 import React from "react";
-import { Input } from "@/Components/ui/input";
-import { Label } from "@/Components/ui/label";
-import { Textarea } from "@/Components/ui/textarea";
-import { CardHeader, CardTitle, CardDescription, CardContent } from "@/Components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Medicine } from "@/types/medicine";
 
 interface AdditionalDetailsSectionProps {

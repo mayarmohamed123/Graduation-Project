@@ -2,7 +2,7 @@
 
 import React from "react";
 import { TrendingUp } from "lucide-react";
-import { Card } from "@/Components/ui/card";
+import { Card } from "@/components/ui/card";
 
 interface CategoryStat {
   title: string;

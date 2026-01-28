@@ -1,9 +1,9 @@
 import React from "react";
 import { Upload } from "lucide-react";
-import { Button } from "@/Components/ui/button";
-import { Input } from "@/Components/ui/input";
-import { Label } from "@/Components/ui/label";
-import { CardContent } from "@/Components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import { Medicine } from "@/types/medicine";
 

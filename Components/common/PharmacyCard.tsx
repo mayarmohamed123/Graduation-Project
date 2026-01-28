@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Star, MapPin, Clock } from "lucide-react";
 import { Pharmacy } from "@/types";
-import PrimaryButton from "./PrimaryButton";
+import { Button } from "@/components/ui/button";
 
 interface PharmacyCardProps {
   pharmacy: Pharmacy;
@@ -51,7 +51,7 @@ export default function PharmacyCard({ pharmacy }: PharmacyCardProps) {
 
         {/* Location */}
         <div className="flex items-start gap-2 mb-2 text-gray-600">
-          <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0 text-primary" />
+          <MapPin className="w-4 h-4 mt-0.5 shrink-0 text-primary" />
           <p className="text-sm line-clamp-2">
             {pharmacy.city}, {pharmacy.street}
           </p>
@@ -59,7 +59,7 @@ export default function PharmacyCard({ pharmacy }: PharmacyCardProps) {
 
         {/* Opening Hours */}
         <div className="flex items-center gap-2 mb-2 text-gray-600">
-          <Clock className="w-4 h-4 flex-shrink-0 text-primary" />
+          <Clock className="w-4 h-4 shrink-0 text-primary" />
           <p className="text-sm">Open: 8:00 AM - 12:00 AM</p>
         </div>
 
@@ -77,9 +77,9 @@ export default function PharmacyCard({ pharmacy }: PharmacyCardProps) {
 
         {/* Visit Button */}
         <Link href={`/user/pharmacy/${pharmacy.id}`} className="block">
-          <PrimaryButton fullWidth>
+          <Button shape="pill" className="w-full">
             Visit Pharmacy
-          </PrimaryButton>
+          </Button>
         </Link>
       </div>
     </div>

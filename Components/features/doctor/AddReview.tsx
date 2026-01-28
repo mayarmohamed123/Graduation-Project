@@ -6,7 +6,7 @@ import Image from "next/image";
 import { filledStarIcon, emptyStarIcon } from "@/assets";
 import { doctorService } from "@/Services/doctorService";
 import { toast } from "react-hot-toast";
-import { Button, Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/Components/ui";
+import { Button, Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui";
 
 export default function AddReviewDialog({
   trigger,

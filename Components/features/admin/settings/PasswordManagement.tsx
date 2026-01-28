@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { Eye, EyeOff, Lock, Loader2 } from "lucide-react";
-import { Button } from "@/Components/ui/button";
-import { Input } from "@/Components/ui/input";
-import { Label } from "@/Components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { adminService } from "@/Services/admin/adminService";
 import { toast } from "react-hot-toast";
 

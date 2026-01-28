@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import { Search } from "lucide-react";
 import { Medicine } from "@/types";
-import MedicineCard from "@/Components/common/MedicineCard";
+import MedicineCard from "@/components/common/MedicineCard";
 
 interface PharmacyMedicineListProps {
   medicines: Medicine[];

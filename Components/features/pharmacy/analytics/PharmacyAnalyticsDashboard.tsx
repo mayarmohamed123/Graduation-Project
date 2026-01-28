@@ -4,9 +4,9 @@ import { useState, useEffect } from "react";
 import { Users, ShoppingBag, DollarSign, Package } from "lucide-react";
 import { pharmacistService } from "@/Services/pharmacistService";
 import { PharmacyDailyRevenue, SalesByCategory, OutOfStockData, InventoryReportData, PharmacyAnalyticsStats } from "@/types/pharmacist";
-import { AreaChart, PieChart } from "@/Components/common/charts";
-import SmartChartWrapper from "@/Components/common/analytics/SmartChartWrapper";
-import StatisticsCard from "@/Components/features/doctor/StatisticsCard";
+import { AreaChart, PieChart } from "@/components/common/charts";
+import SmartChartWrapper from "@/components/common/analytics/SmartChartWrapper";
+import StatisticsCard from "@/components/features/doctor/StatisticsCard";
 
 export default function PharmacyAnalyticsDashboard() {
     const [stats, setStats] = useState<PharmacyAnalyticsStats | null>(null);

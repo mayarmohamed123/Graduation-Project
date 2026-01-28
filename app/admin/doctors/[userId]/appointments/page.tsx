@@ -3,10 +3,10 @@
 import { Suspense, useEffect, useState, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { DoctorAppointment } from "@/types/appointments";
-import { DoctorInfoCard } from "@/Components/features/admin/appointments/DoctorInfoCard";
-import { AppointmentsTable } from "@/Components/features/admin/appointments/AppointmentsTable";
-import { AppointmentsHeader } from "@/Components/features/admin/appointments/AppointmentsHeader";
-import LoadingSpinner from "@/Components/common/LoadingSpinner";
+import { DoctorInfoCard } from "@/components/features/admin/appointments/DoctorInfoCard";
+import { AppointmentsTable } from "@/components/features/admin/appointments/AppointmentsTable";
+import { AppointmentsHeader } from "@/components/features/admin/appointments/AppointmentsHeader";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 import { adminService } from "@/Services/admin/adminService";
 import { toast } from "react-hot-toast";
 

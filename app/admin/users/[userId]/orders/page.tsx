@@ -4,8 +4,8 @@ import { useEffect, useState, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { UserOrder } from "@/types/admin";
 import { adminService } from "@/Services/admin/adminService";
-import { OrdersTable } from "@/Components/features/admin/users/OrdersTable";
-import LoadingSpinner from "@/Components/common/LoadingSpinner";
+import { OrdersTable } from "@/components/features/admin/users/OrdersTable";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 import { ArrowLeft, RefreshCw, AlertCircle, ShoppingBag } from "lucide-react";
 import { toast } from "react-hot-toast";
 

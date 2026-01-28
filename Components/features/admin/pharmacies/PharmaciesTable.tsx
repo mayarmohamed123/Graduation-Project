@@ -1,9 +1,9 @@
 import Image from "next/image";
 import { Check, X, Trash2, Eye, Building2, Phone, MapPin, Package, ClipboardList, MessageCircle } from "lucide-react";
 import { AdminPharmacist } from "@/types/admin";
-import { Avatar, AvatarFallback, AvatarImage } from "@/Components/ui/avatar";
-import { Badge } from "@/Components/ui/badge";
-import { Button } from "@/Components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 interface PharmaciesTableProps {
     pharmacists: AdminPharmacist[];

@@ -1,7 +1,7 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/Components/ui/avatar"
-import { Badge } from "@/Components/ui/badge"
-import { Button } from "@/Components/ui/button"
-import { Card, CardContent } from "@/Components/ui/card"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
 import { CalendarDays, Link as LinkIcon, MessageSquare, Phone } from "lucide-react"
 import Link from "next/link"
 

@@ -29,7 +29,7 @@ export default function DoctorReviews({
   const currentUserId = user?.id;
 
   const refreshReviews = async () => {
-    const reviewData = await doctorService.GetDoctorReviews(doctorId);
+    const reviewData = await doctorService.getDoctorReviews(doctorId);
     setReviews(Array.isArray(reviewData) ? reviewData : []);
   };
 

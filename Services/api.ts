@@ -36,7 +36,7 @@ export const apiRequest = async <T = unknown>(
   // Server-side fix: absolute URL is required for fetch during SSR/Build
   let finalUrl = url;
   if (typeof window === "undefined" && !url.startsWith("http")) {
-    const BACKEND_URL = "https://webadd-avgnfdemdqcffecu.canadacentral-01.azurewebsites.net";
+    const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "";
     if (url.startsWith("/api")) {
       // Replace /api prefix with the full backend URL
       finalUrl = BACKEND_URL + url;

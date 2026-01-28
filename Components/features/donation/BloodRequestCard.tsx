@@ -1,5 +1,5 @@
 import { MapPin, Clock, ExternalLink } from "lucide-react";
-import { Button } from "@/Components/ui/button";
+import { Button } from "@/components/ui/button";
 import { BloodRequestWithPriority, PriorityLevel } from "@/types/blood";
 import { cn } from "@/lib/utils";
 import { formatBloodType } from "@/lib/bloodUtils";

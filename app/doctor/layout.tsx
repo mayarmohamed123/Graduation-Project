@@ -1,5 +1,4 @@
-import { DashboardNavbar, DashboardSidebar } from "@/Components/layout";
-import { ProtectedRoute } from "@/Components/auth";
+import { DashboardNavbar, DashboardSidebar } from "@/components/layout";
 
 export default function DoctorLayout({
   children,
@@ -7,17 +6,15 @@ export default function DoctorLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ProtectedRoute allowedRoles={["Doctor"]}>
-      <div className="flex h-screen bg-gray-50 overflow-hidden">
-        {/* Sidebar */}
-        <DashboardSidebar role="doctor" />
+    <div className="flex h-screen bg-gray-50 overflow-hidden">
+      {/* Sidebar */}
+      <DashboardSidebar role="doctor" />
 
-        {/* Main Content Area */}
-        <div className="flex-1 flex flex-col h-full overflow-hidden">
-          <DashboardNavbar role="doctor" />
-          <main className="flex-1 overflow-y-auto p-6">{children}</main>
-        </div>
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col h-full overflow-hidden">
+        <DashboardNavbar role="doctor" />
+        <main className="flex-1 overflow-y-auto p-6">{children}</main>
       </div>
-    </ProtectedRoute>
+    </div>
   );
 }

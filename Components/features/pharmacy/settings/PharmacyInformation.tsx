@@ -3,19 +3,19 @@
 import dynamic from "next/dynamic";
 import { useState, useRef, useEffect } from "react";
 import { Camera, Building2, MapPin, DollarSign, Award, Loader2, Phone, Hash, Map as MapIcon, Link as LinkIcon } from "lucide-react";
-import { Button } from "@/Components/ui/button";
-import { Input } from "@/Components/ui/input";
-import { Avatar, AvatarFallback, AvatarImage } from "@/Components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
     Dialog,
     DialogContent,
     DialogHeader,
     DialogTitle,
-} from "@/Components/ui/dialog";
+} from "@/components/ui/dialog";
 import { pharmacistService } from "@/Services/pharmacistService";
 import toast from "react-hot-toast";
 
-const LocationMap = dynamic(() => import("@/Components/common/LocationMap"), {
+const LocationMap = dynamic(() => import("@/components/common/LocationMap"), {
     ssr: false,
     loading: () => <div className="h-[400px] w-full flex items-center justify-center bg-gray-100 rounded-lg">Loading Map...</div>
 });

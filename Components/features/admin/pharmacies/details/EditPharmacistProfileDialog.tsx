@@ -8,14 +8,14 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "@/Components/ui/dialog";
-import { Button } from "@/Components/ui/button";
-import { Input } from "@/Components/ui/input";
-import { Label } from "@/Components/ui/label";
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { updatePharmacistProfile } from "@/Services/admin/pharmacies";
 import { toast } from "react-hot-toast";
 import { Loader2, Camera } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/Components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface EditPharmacistProfileDialogProps {
   open: boolean;

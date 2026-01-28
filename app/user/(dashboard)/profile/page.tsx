@@ -11,9 +11,9 @@ import {
   PersonalInfo,
   MyBloodRequests,
   MyDonations
-} from "@/Components/features/user";
-import PageHeaderWithBack from "@/Components/common/PageHeaderWithBack";
-import SidebarNav from "@/Components/common/SidebarNav";
+} from "@/components/features/user";
+import PageHeaderWithBack from "@/components/common/PageHeaderWithBack";
+import SidebarNav from "@/components/common/SidebarNav";
 import { useProfile } from "@/hooks/useProfile";
 import { toast } from "react-hot-toast";
 

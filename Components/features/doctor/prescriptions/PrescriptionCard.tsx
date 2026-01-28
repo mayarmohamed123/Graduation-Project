@@ -1,6 +1,6 @@
 import { Calendar, Plus, Trash2 } from "lucide-react";
-import { Button } from "@/Components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/Components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Prescription, PrescriptionItem } from "@/types/prescription";
 import { PrescriptionItemTable } from "./PrescriptionItemTable";
 

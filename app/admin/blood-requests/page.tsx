@@ -5,12 +5,12 @@ import { Droplet, Activity, CheckCircle, AlertCircle, Users, RefreshCw } from "l
 import { adminBloodService, UpdateBloodRequestData } from "@/Services/admin/adminBloodService";
 import { BloodRequest, AdminBloodDonation } from "@/types/blood";
 import { toast } from "react-hot-toast";
-import StatisticsCard from "@/Components/features/doctor/StatisticsCard";
-import { BloodRequestsTable } from "@/Components/features/admin/blood/BloodRequestsTable";
-import { BloodDonationsTable } from "@/Components/features/admin/blood/BloodDonationsTable";
-import { ConfirmationDialog } from "@/Components/ui/confirmation-dialog";
-import { EditRequestDialog } from "@/Components/features/admin/blood/EditRequestDialog";
-import { Skeleton, Button } from "@/Components/ui";
+import StatisticsCard from "@/components/features/doctor/StatisticsCard";
+import { BloodRequestsTable } from "@/components/features/admin/blood/BloodRequestsTable";
+import { BloodDonationsTable } from "@/components/features/admin/blood/BloodDonationsTable";
+import { ConfirmationDialog } from "@/components/ui/confirmation-dialog";
+import { EditRequestDialog } from "@/components/features/admin/blood/EditRequestDialog";
+import { Skeleton, Button } from "@/components/ui";
 
 type TabType = "requests" | "donations";
 

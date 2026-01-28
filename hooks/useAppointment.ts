@@ -43,7 +43,7 @@ export const useAppointment = (id: string) => {
 
       const [doctorData, reviewData] = await Promise.all([
         doctorService.getDoctorById(doctorId),
-        doctorService.GetDoctorReviews(doctorId),
+        doctorService.getDoctorReviews(doctorId),
       ]);
 
       setDoctor(doctorData);

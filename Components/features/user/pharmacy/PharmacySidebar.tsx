@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { Star, MapPin, Phone, MessageCircle, Navigation } from "lucide-react";
 import { Pharmacy } from "@/types";
-import { Button } from "@/Components/ui";
+import { Button } from "@/components/ui";
 
 interface PharmacySidebarProps {
   pharmacy: Pharmacy;

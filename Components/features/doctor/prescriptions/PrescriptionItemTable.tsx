@@ -1,5 +1,5 @@
 import { Pill, Edit2, Trash2 } from "lucide-react";
-import { Button } from "@/Components/ui/button";
+import { Button } from "@/components/ui/button";
 import { PrescriptionItem } from "@/types/prescription";
 
 interface PrescriptionItemTableProps {

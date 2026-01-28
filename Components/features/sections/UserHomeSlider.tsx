@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
-import PrimaryButton from "@/Components/common/PrimaryButton";
+import { Button } from "@/components/ui/button";
 import {
   sliderDonate,
   sliderDoctors,
@@ -40,9 +40,9 @@ export default function UserHomeSlider() {
                 Book appointments with verified specialists in just a few
                 clicks.
               </p>
-              <PrimaryButton variant="secondary" onClick={() => router.push("/user/search-doctors")}>
+              <Button variant="secondary" shape="pill" onClick={() => router.push("/user/search-doctors")}>
                 Find a Doctor
-              </PrimaryButton>
+              </Button>
             </div>
             <Image
               src={sliderDoctors}
@@ -75,9 +75,9 @@ export default function UserHomeSlider() {
                 Fast delivery from verified pharmacies — your health, your
                 convenience.
               </p>
-              <PrimaryButton onClick={() => router.push("/user/search-medicine")}>
+              <Button shape="pill" onClick={() => router.push("/user/search-medicine")}>
                 Order Now
-              </PrimaryButton>
+              </Button>
             </div>
           </div>
         </SwiperSlide>
@@ -92,9 +92,9 @@ export default function UserHomeSlider() {
               <p className="font-normal text-white mb-4">
                 Join the Sehha community and make a real difference.
               </p>
-              <PrimaryButton variant="secondary" onClick={() => router.push("/user/donation")}  >
+              <Button variant="secondary" shape="pill" onClick={() => router.push("/user/donation")}  >
                 Donate Now
-              </PrimaryButton>
+              </Button>
             </div>
             <Image
               src={sliderDonate}

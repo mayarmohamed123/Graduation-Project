@@ -1,59 +1,46 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { PharmacistOrder, PharmacistOrderStatus, OrdersDashboardResponse } from "@/types";
 import { pharmacistService } from "@/Services/pharmacistService";
-import OrdersStats from "./OrdersStats";
-import OrdersTabs from "./OrdersTabs";
-import OrdersTable from "./OrdersTable";
-import { useOrderFilters } from "./useOrderFilters";
-import { useOrderActions } from "./useOrderActions";
+import OrdersStats from "@/components/features/pharmacy/orders/OrdersStats";
+import OrdersTabs from "@/components/features/pharmacy/orders/OrdersTabs";
+import OrdersTable from "@/components/features/pharmacy/orders/OrdersTable";
+import { useOrderFilters } from "@/components/features/pharmacy/orders/useOrderFilters";
+import { useOrderActions } from "@/components/features/pharmacy/orders/useOrderActions";
+import { useRouter } from "next/navigation";
 
 type OrderStatusFilter = "All" | PharmacistOrderStatus;
 
-export default function OrdersContent() {
-    const [orders, setOrders] = useState<PharmacistOrder[]>([]);
-    const [stats, setStats] = useState<OrdersDashboardResponse | null>(null);
-    const [loading, setLoading] = useState(true);
+interface OrdersContentProps {
+    initialData: {
+        orders: PharmacistOrder[];
+        stats: OrdersDashboardResponse | null;
+    };
+}
+
+export default function OrdersContent({ initialData }: OrdersContentProps) {
+    const router = useRouter();
+    const [orders, setOrders] = useState<PharmacistOrder[]>(initialData.orders);
+    const [stats] = useState<OrdersDashboardResponse | null>(initialData.stats);
     const [activeTab, setActiveTab] = useState<OrderStatusFilter>("All");
 
-    const fetchData = async () => {
-        try {
-            setLoading(true);
-            const [ordersData, statsData] = await Promise.all([
-                pharmacistService.getOrders(),
-                pharmacistService.getOrdersDashboardStats()
-            ]);
-            setOrders(ordersData);
-            setStats(statsData);
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        } finally {
-            setLoading(false);
-        }
+    const refreshData = async () => {
+        router.refresh();
+        // Also update local state to reflect changes immediately if needed, 
+        // or just rely on router.refresh() if the server component re-renders with fresh data.
+        const freshOrders = await pharmacistService.getOrders();
+        setOrders(freshOrders);
     };
-
-    const fetchOrders = async () => {
-        try {
-            const data = await pharmacistService.getOrders();
-            setOrders(data);
-        } catch (error) {
-            console.error("Error fetching orders:", error);
-        }
-    };
-
-    useEffect(() => {
-        fetchData();
-    }, []);
 
     const { filteredOrders } = useOrderFilters(orders, activeTab);
     const { actionLoading, handleAcceptOrder, handleCancelOrder, handleMarkAsDelivered } =
-        useOrderActions(fetchOrders);
+        useOrderActions(refreshData);
 
-    if (loading || !stats) {
+    if (!stats) {
         return (
-            <div className="flex items-center justify-center h-64">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+            <div className="flex items-center justify-center p-12">
+                <p className="text-gray-500">No statistics available</p>
             </div>
         );
     }

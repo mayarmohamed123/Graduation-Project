@@ -1,6 +1,6 @@
 import { Suspense } from "react";
-import AnalyticsContent from "@/Components/features/doctor/analytics/AnalyticsContent";
-import LoadingSpinner from "@/Components/common/LoadingSpinner";
+import AnalyticsContent from "@/components/features/doctor/analytics/AnalyticsContent";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 
 export default function AnalyticsPage() {
     return (

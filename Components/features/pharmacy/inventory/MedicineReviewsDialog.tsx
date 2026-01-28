@@ -7,12 +7,12 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from "@/Components/ui/dialog";
+} from "@/components/ui/dialog";
 import { Review, Medicine } from "@/types";
 import { pharmacyService } from "@/Services/pharmaciesServices";
-import PharmacyReviewsList from "@/Components/features/pharmacy/reviews/PharmacyReviewsList";
-import LoadingSpinner from "@/Components/common/LoadingSpinner";
-import { ConfirmDialog } from "@/Components/common/ConfirmDialog";
+import PharmacyReviewsList from "@/components/features/pharmacy/reviews/PharmacyReviewsList";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
+import { ConfirmDialog } from "@/components/common/ConfirmDialog";
 import toast from "react-hot-toast";
 import { MessageSquare } from "lucide-react";
 

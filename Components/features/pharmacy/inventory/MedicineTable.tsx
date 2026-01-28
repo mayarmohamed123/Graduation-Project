@@ -9,9 +9,9 @@ import {
   CardHeader, 
   CardTitle, 
   CardDescription 
-} from "@/Components/ui/card";
-import { Input } from "@/Components/ui/input";
-import { Badge } from "@/Components/ui/badge";
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import { Medicine } from "@/types/medicine";
 
 interface MedicineTableProps {

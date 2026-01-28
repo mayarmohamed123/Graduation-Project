@@ -1,8 +1,8 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, Save } from "lucide-react";
-import { Button } from "@/Components/ui/button";
-import { CardFooter } from "@/Components/ui/card";
+import { Button } from "@/components/ui/button";
+import { CardFooter } from "@/components/ui/card";
 
 interface AddMedicineFooterProps {
   isSubmitting: boolean;

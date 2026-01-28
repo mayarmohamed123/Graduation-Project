@@ -1,8 +1,26 @@
-import { Suspense } from "react";
-import OrdersContent from "@/Components/features/pharmacy/orders/OrdersContent";
-import { LoadingSpinner } from "@/Components";
+export const dynamic = "force-dynamic";
 
-export default function OrdersPage() {
+import { Suspense } from "react";
+import OrdersContent from "@/components/features/pharmacy/orders/OrdersContent";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
+import { pharmacistService } from "@/Services/pharmacistService";
+import { PharmacistOrder, OrdersDashboardResponse } from "@/types";
+
+export default async function OrdersPage() {
+  let orders: PharmacistOrder[] = [];
+  let stats: OrdersDashboardResponse | null = null;
+
+  try {
+    const [ordersData, statsData] = await Promise.all([
+      pharmacistService.getOrders(),
+      pharmacistService.getOrdersDashboardStats()
+    ]);
+    orders = ordersData;
+    stats = statsData;
+  } catch (error) {
+    console.error("Error fetching pharmacy orders page data:", error);
+  }
+
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-6">
       <div>
@@ -11,7 +29,12 @@ export default function OrdersPage() {
       </div>
 
       <Suspense fallback={<LoadingSpinner />}>
-        <OrdersContent />
+        <OrdersContent
+          initialData={{
+            orders,
+            stats
+          }}
+        />
       </Suspense>
     </div>
   );

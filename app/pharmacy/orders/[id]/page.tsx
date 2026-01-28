@@ -1,6 +1,6 @@
 import { Suspense } from "react";
-import OrderDetailsContent from "@/Components/features/pharmacy/orders/details/OrderDetailsContent";
-import { LoadingSpinner } from "@/Components";
+import OrderDetailsContent from "@/components/features/pharmacy/orders/details/OrderDetailsContent";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 
 interface OrderDetailsPageProps {
     params: Promise<{

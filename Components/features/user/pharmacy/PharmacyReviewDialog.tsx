@@ -5,7 +5,7 @@ import Image from "next/image";
 import { filledStarIcon, emptyStarIcon } from "@/assets";
 import { pharmacyService, CreateReviewInput, UpdateReviewInput } from "@/Services/pharmaciesServices";
 import { toast } from "react-hot-toast";
-import { Button, Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/Components/ui";
+import { Button, Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui";
 
 interface PharmacyReviewDialogProps {
   trigger?: React.ReactNode;

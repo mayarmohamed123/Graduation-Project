@@ -3,12 +3,12 @@
 import { useState, useEffect } from "react";
 import { Star, Search, Trash2, User, Building2, Pill, Loader2 } from "lucide-react";
 import Image from "next/image";
-import { Button } from "@/Components/ui/button";
-import { Input } from "@/Components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Review } from "@/types";
 import { userProfileImage } from "@/assets";
 import { toast } from "react-hot-toast";
-import { ConfirmDialog } from "@/Components/common/ConfirmDialog";
+import { ConfirmDialog } from "@/components/common/ConfirmDialog";
 
 interface Entity {
   id: number;

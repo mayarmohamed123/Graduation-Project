@@ -2,9 +2,9 @@
 
 import { useState, useRef, useEffect } from "react";
 import { Camera, Building, User, Mail, Loader2 } from "lucide-react";
-import { Button } from "@/Components/ui/button";
-import { Input } from "@/Components/ui/input";
-import { Avatar, AvatarFallback, AvatarImage } from "@/Components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { doctorService } from "@/Services/doctorService";
 import { authService } from "@/Services/authService";

@@ -8,7 +8,7 @@ import { FavoriteDoctor } from "@/types/favorites";
 import { Heart, MapPin, Phone, DollarSign, Star } from "lucide-react";
 import { favoritesService } from "@/Services/favoritesService";
 import { toast } from "react-hot-toast";
-import PrimaryButton from "../../common/PrimaryButton";
+import { Button } from "@/components/ui/button";
 import { userProfileImage } from "@/assets";
 
 interface DoctorCardProps {
@@ -76,7 +76,7 @@ export default function DoctorCard({
   return (
     <div className="rounded-2xl border border-primary bg-white overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
       {/* Doctor Image */}
-      <div className="relative h-56 bg-gradient-to-br from-blue-50 to-white">
+      <div className="relative h-56 bg-linear-to-br from-blue-50 to-white">
         {/* Favorite Button */}
         <button
           onClick={toggleFavorite}
@@ -153,9 +153,9 @@ export default function DoctorCard({
         {/* Action Buttons */}
         <div className="flex gap-2">
           <Link href={`/user/appointment/${doctor.id}`} className="flex-1">
-            <PrimaryButton fullWidth>
+            <Button shape="pill" className="w-full">
               Book Appointment
-            </PrimaryButton>
+            </Button>
           </Link>
         </div>
       </div>

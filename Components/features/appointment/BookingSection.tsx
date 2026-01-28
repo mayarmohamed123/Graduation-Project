@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "@/Components/ui/button";
-import { Calendar } from "@/Components/ui/calendar";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { MessageCircle, Loader2 } from "lucide-react";
 import { AppointmentSlot } from "@/types/doctors";

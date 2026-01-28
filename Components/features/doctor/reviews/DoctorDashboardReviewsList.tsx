@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Review } from "@/types/doctors";
 import { userProfileImage } from "@/assets";
 import { Trash2, Star } from "lucide-react";
-import { Button } from "@/Components/ui/button";
+import { Button } from "@/components/ui/button";
 
 interface DoctorDashboardReviewsListProps {
   reviews: Review[];

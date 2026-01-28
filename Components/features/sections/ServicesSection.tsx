@@ -6,7 +6,7 @@ import {
   secureServiceIcon,
 } from "@/assets";
 import Image from "next/image";
-import WaveLines from "@/Components/features/WaveLines";
+import WaveLines from "@/components/features/WaveLines";
 
 export default function ServicesSection() {
   const services = [

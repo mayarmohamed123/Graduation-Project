@@ -1,4 +1,4 @@
-import StatisticsCard from "@/Components/features/doctor/StatisticsCard";
+import StatisticsCard from "@/components/features/doctor/StatisticsCard";
 import { Package, CheckCircle, Clock, Ban, Truck, DollarSign } from "lucide-react";
 import { OrdersDashboardResponse } from "@/types";
 

@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import Switch from "@/Components/common/Switch";
-import DoctorCard from "@/Components/features/doctor/DoctorCard";
-import MedicineCard from "@/Components/common/MedicineCard";
-import PageHeaderWithBack from "@/Components/common/PageHeaderWithBack";
+import Switch from "@/components/common/Switch";
+import DoctorCard from "@/components/features/doctor/DoctorCard";
+import MedicineCard from "@/components/common/MedicineCard";
+import PageHeaderWithBack from "@/components/common/PageHeaderWithBack";
 import noFavorites from "@/assets/noFavorites.png";
 import { useFavorites } from "@/hooks/useFavorites";
 
