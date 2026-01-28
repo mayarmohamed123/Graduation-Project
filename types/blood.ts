@@ -43,3 +43,16 @@ export interface RequestDonor {
   isAvailable: boolean;
   lastDonationDate: string;
 }
+
+// Admin-specific type for blood donations (without bloodRequest field)
+export interface AdminBloodDonation {
+  id: number;
+  bloodType: string;
+  city: string;
+  country: string;
+  latitude: number;
+  longitude: number;
+  donorTelephone: string;
+  isAvailable: boolean;
+  lastDonationDate: string;
+}
