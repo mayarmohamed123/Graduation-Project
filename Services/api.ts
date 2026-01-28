@@ -36,7 +36,7 @@ export const apiRequest = async <T = unknown>(
   // Server-side fix: absolute URL is required for fetch during SSR/Build
   let finalUrl = url;
   if (typeof window === "undefined" && !url.startsWith("http")) {
-    const BACKEND_URL = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
+    const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000";
     if (url.startsWith("/api")) {
       // Replace /api prefix with the full backend URL if BACKEND_URL doesn't end with /api
       const baseWithNoApi = BACKEND_URL.replace(/\/api$/, "");
@@ -48,6 +48,10 @@ export const apiRequest = async <T = unknown>(
     
     // Safety check: ensure no double slashes like http://localhost:5000//api
     finalUrl = finalUrl.replace(/([^:]\/)\/+/g, "$1");
+    // Only log if it's still relative (which shouldn't happen if BACKEND_URL is absolute)
+    if (!finalUrl.startsWith("http")) {
+      console.warn(`[apiRequest] WARNING: Final URL is still relative on server: ${finalUrl}. BACKEND_URL was: ${BACKEND_URL}`);
+    }
   }
 
   // Determine cache strategy: mutations should not be cached
@@ -60,7 +64,8 @@ export const apiRequest = async <T = unknown>(
   };
 
   // Server-side fix: forward cookies to the backend
-  if (typeof window === "undefined" && requiresAuth) {
+  // Always forward cookies if we have them on the server, especially for refresh calls
+  if (typeof window === "undefined") {
     try {
       const { cookies } = await import("next/headers");
       const cookieStore = await cookies();
@@ -69,7 +74,9 @@ export const apiRequest = async <T = unknown>(
         headers["Cookie"] = cookieHeader;
       }
     } catch (e) {
-      console.warn("[apiRequest] Could not forward cookies on server:", e);
+      if (requiresAuth) {
+        console.warn("[apiRequest] Could not forward cookies on server:", e);
+      }
     }
   }
 
