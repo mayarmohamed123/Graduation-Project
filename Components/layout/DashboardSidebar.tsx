@@ -85,7 +85,7 @@ export default function DashboardSidebar({ role }: DashboardSidebarProps) {
   return (
     <aside className={`${role === "admin" ? "w-70" : "w-64"} bg-[#2BBBC5] text-white min-h-screen flex flex-col`}>
       {/* Logo Section */}
-      <div className="p-6 flex items-center gap-3">
+      <div className="p-2 flex items-center gap-3">
         <Image
           src={sehhaLogo}
           alt="Sehha Logo"
@@ -97,7 +97,7 @@ export default function DashboardSidebar({ role }: DashboardSidebarProps) {
       </div>
 
       {/* Navigation Menu */}
-      <nav className="flex-1 px-4 py-6">
+      <nav className="flex-1 px-4 py-4">
         <ul className="space-y-2">
           {menuItems.map((item) => {
             const Icon = item.icon;
