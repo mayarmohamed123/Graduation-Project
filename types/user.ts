@@ -1,13 +1,19 @@
 import { StaticImageData } from "next/image";
 
 /**
+ * User roles
+ */
+export type UserRole = "RegularUser" | "Admin" | "Doctor" | "Pharmacist";
+
+/**
  * User entity from the API
  */
 export interface User {
   id: string;
   email: string;
   userName: string;
-  roles?: string[];
+  role?: UserRole;
+  roles?: string[]; // Keep for backward compatibility
   phoneNumber?: string;
   profileImage?: string;
   address?: string;

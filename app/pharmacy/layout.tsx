@@ -7,7 +7,7 @@ export default function PharmacyLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ProtectedRoute>
+    <ProtectedRoute allowedRoles={["Pharmacist"]}>
       <div className="flex h-screen bg-gray-50 overflow-hidden">
         {/* Sidebar */}
         <DashboardSidebar role="pharmacy" />

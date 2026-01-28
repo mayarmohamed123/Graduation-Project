@@ -37,12 +37,14 @@ export const loginUser = createAsyncThunk(
     try {
       const response = await authService.login(credentials);
       
-      // Fetch full user profile - don't let this fail the login if it fails
-      // as we already have basic user data in the response
+      // Fetch full user profile - this is critical for getting the role field
+      // Wait for it to complete before returning
       try {
-        await dispatch(fetchUserData());
+        const profileResult = await dispatch(fetchUserData()).unwrap();
+        console.log("[loginUser] Profile fetched successfully:", profileResult?.role || profileResult?.roles);
       } catch (profileError) {
         console.error("Failed to fetch full profile during login:", profileError);
+        // Don't fail login if profile fetch fails, but log it
       }
 
       return response;
@@ -167,9 +169,14 @@ const userSlice = createSlice({
       })
       .addCase(fetchUserData.fulfilled, (state, action) => {
         state.user = action.payload;
+        state.isAuthenticated = true; // User is authenticated if profile fetch succeeds
       })
       .addCase(fetchUserData.rejected, (state, action) => {
         state.error = action.payload as string;
+        if (action.payload === "Unauthorized") {
+          state.isAuthenticated = false;
+          state.user = null;
+        }
       });
   },
 });

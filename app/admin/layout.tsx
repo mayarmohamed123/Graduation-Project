@@ -7,7 +7,7 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ProtectedRoute>
+    <ProtectedRoute allowedRoles={["Admin"]}>
       <div className="flex h-screen bg-gray-50 overflow-hidden">
         {/* Sidebar */}
         <DashboardSidebar role="admin" />

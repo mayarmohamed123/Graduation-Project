@@ -6,7 +6,7 @@ export default function UserBaseLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ProtectedRoute>
+    <ProtectedRoute allowedRoles={["RegularUser"]}>
       {children}
     </ProtectedRoute>
   );
