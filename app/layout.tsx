@@ -5,6 +5,7 @@ import "./globals.css";
 import ReduxProvider from "@/components/auth/ReduxProvider";
 import QueryProvider from "@/components/providers/QueryProvider";
 import { Toaster } from "react-hot-toast";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 // ISR: Default 3-second revalidation applied via Services/api.ts
 
@@ -45,6 +46,7 @@ export default function RootLayout({
             <Toaster />
           </QueryProvider>
         </ReduxProvider>
+        <SpeedInsights />
 
       </body>
     </html>
