@@ -5,8 +5,8 @@ import Image from "next/image";
 import { Lock, Mail, User, Phone, MapPin, Building, DollarSign, Camera } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Input } from "@/Components/ui/input";
-import { Button } from "@/Components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import {
   vector37,
   doctorsIllustration,

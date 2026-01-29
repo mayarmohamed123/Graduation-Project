@@ -1,13 +1,13 @@
 "use client"
 
-import { Input } from "@/Components/ui/input"
+import { Input } from "@/components/ui/input"
 import { Search } from "lucide-react"
-import { PatientCard } from "@/Components/features/doctor/PatientCard"
+import { PatientCard } from "@/components/features/doctor/PatientCard"
 import { useEffect, useState } from "react"
 import { doctorService } from "@/Services/doctorService"
 import { PatientAppointment } from "@/types/doctors"
 import { toast } from "react-hot-toast"
-import LoadingSpinner from "@/Components/common/LoadingSpinner"
+import LoadingSpinner from "@/components/common/LoadingSpinner"
 
 export default function PatientsPage() {
   const [patients, setPatients] = useState<PatientAppointment[]>([])

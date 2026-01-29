@@ -75,7 +75,7 @@ export const doctorService = {
   },
 
   // Get Doctor Reviews
-  GetDoctorReviews: async (id: number): Promise<Review[]> => {
+  getDoctorReviews: async (id: number): Promise<Review[]> => {
     return await apiRequest<Review[]>(`${baseUrl}/Review/doctor/${id}`);
   },
 

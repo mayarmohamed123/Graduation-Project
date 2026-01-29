@@ -3,15 +3,15 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Send, Hospital, Droplet, ClipboardList } from "lucide-react";
-import { Button } from "@/Components/ui/button";
-import { Input } from "@/Components/ui/input";
-import { Label } from "@/Components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import dynamic from "next/dynamic";
 import { bloodRequestService } from "@/Services/bloodRequestService";
-import PageHeaderWithBack from "@/Components/common/PageHeaderWithBack";
+import PageHeaderWithBack from "@/components/common/PageHeaderWithBack";
 import toast from "react-hot-toast";
 
-const LocationPickerMap = dynamic(() => import("@/Components/features/donation/LocationPickerMap"), {
+const LocationPickerMap = dynamic(() => import("@/components/features/donation/LocationPickerMap"), {
     ssr: false,
     loading: () => (
         <div className="h-[300px] w-full bg-gray-50 animate-pulse rounded-2xl flex items-center justify-center border border-gray-100 italic text-gray-400">

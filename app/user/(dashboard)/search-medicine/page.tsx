@@ -2,10 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 import { SlidersHorizontal } from "lucide-react";
-import LoadingSpinner from "@/Components/common/LoadingSpinner";
-import MedicineCard from "@/Components/common/MedicineCard";
-import SearchInput from "@/Components/common/SearchInput";
-import PageHeaderWithBack from "@/Components/common/PageHeaderWithBack";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
+import MedicineCard from "@/components/common/MedicineCard";
+import SearchInput from "@/components/common/SearchInput";
+import PageHeaderWithBack from "@/components/common/PageHeaderWithBack";
 
 import { useMedicineSearch } from "@/hooks/useMedicineSearch";
 import { Medicine } from "@/types";

@@ -71,6 +71,7 @@ The goal is to provide a "Single Source of Truth" for medical data, appointments
 
 ### 5.2 State Management & Performance
 - **Redux Toolkit**: Used for global persistence (Auth, User Profile, Chat threads, Cart).
+- **TanStack React Query**: Manages server state, providing efficient caching, background refetching, and simplified data synchronization.
 - **Custom Hooks**: Centralized logic for `useAuth`, `useCart`, `useNotifications`.
 - **Optimization**: Server-side rendering (SSR) for SEO-critical pages (Doctor profiles); Client-side hydration for interactive boards.
 
@@ -107,8 +108,10 @@ The goal is to provide a "Single Source of Truth" for medical data, appointments
 - **Verification**: Strict document approval process for Doctors and Pharmacists.
 
 ### 7.2 Performance
-- **Caching Strategy**: `no-store` for real-time critical data; Static generation for informational pages.
-- **Image Optimization**: `next/image` for responsive, fast-loading assets.
+- **Server-Side Optimization**: Dashboards (Admin, Doctor, Pharmacy) leverage Server Components to fetch initial data, reducing client-side waterfalls and improving Largest Contentful Paint (LCP).
+- **Caching Strategy**: `no-store` for real-time critical data; Static generation for informational pages; Explicit `force-dynamic` for authenticated server-side routes.
+- **Image Optimization**: `next/image` with strict `remotePatterns` for responsive, fast-loading, and secure assets.
+- **Absolute Fetching**: Standardized absolute URL construction in the `apiRequest` utility to support robust server-side data fetching during both runtime and build-time (SSR/SSG).
 
 ---
 

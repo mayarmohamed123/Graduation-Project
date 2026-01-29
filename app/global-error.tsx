@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/Components/ui";
+import { Button } from "@/components/ui";
 import { Geist, Geist_Mono } from "next/font/google";
 
 const geistSans = Geist({

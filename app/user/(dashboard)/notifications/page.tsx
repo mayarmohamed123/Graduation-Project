@@ -3,9 +3,9 @@
 import { useState } from "react";
 import Image from "next/image";
 import { notificationEmptyImage } from "@/assets";
-import PageHeaderWithBack from "@/Components/common/PageHeaderWithBack";
-import Switch from "@/Components/common/Switch";
-import NotificationCard from "@/Components/common/NotificationCard";
+import PageHeaderWithBack from "@/components/common/PageHeaderWithBack";
+import Switch from "@/components/common/Switch";
+import NotificationCard from "@/components/common/NotificationCard";
 import { useNotifications } from "@/hooks/useNotifications";
 import { CheckCheck } from "lucide-react";
 import { Notification } from "@/types";

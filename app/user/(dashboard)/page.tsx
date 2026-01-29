@@ -1,33 +1,43 @@
 import Link from "next/link";
 import Image from "next/image";
+
+export const dynamic = "force-dynamic";
+
 import {
   doctorsCardImage,
   medicineCardImage,
   donateCardImage,
 } from "@/assets";
 
-import TopRatedDoctors from "@/Components/features/sections/TopRatedDoctors";
-import TopRatedPharmacies from "@/Components/features/sections/TopRatedPharmacies";
-import HomeMapSection from "@/Components/features/sections/HomeMapSection";
-import PrimaryButton from "@/Components/common/PrimaryButton";
-import UserLocationManager from "@/Components/features/sections/UserLocationManager";
-import UserWelcomeHeader from "@/Components/features/sections/UserWelcomeHeader";
-import UserHomeSlider from "@/Components/features/sections/UserHomeSlider";
+import TopRatedDoctors from "@/components/features/sections/TopRatedDoctors";
+import TopRatedPharmacies from "@/components/features/sections/TopRatedPharmacies";
+import HomeMapSection from "@/components/features/sections/HomeMapSection";
+import { Button } from "@/components/ui/button";
+import UserLocationManager from "@/components/features/sections/UserLocationManager";
+import UserWelcomeHeader from "@/components/features/sections/UserWelcomeHeader";
+import UserHomeSlider from "@/components/features/sections/UserHomeSlider";
 import { doctorService } from "@/Services/doctorService";
 import { pharmacyService } from "@/Services/pharmaciesServices";
 import { Doctor, Pharmacy } from "@/types";
 
 export default async function Page() {
-  // Fetch data for Map on the server
+  // Fetch data for Dashboard on the server
   let doctors: Doctor[] = [];
   let pharmacies: Pharmacy[] = [];
+  let topRatedDoctors: Doctor[] = [];
+  let topRatedPharmacies: Pharmacy[] = [];
+
   try {
-    const [doctorsData, pharmaciesData] = await Promise.all([
+    const [doctorsData, pharmaciesData, topDoctorsData, topPharmaciesData] = await Promise.all([
       doctorService.getAllDoctors(),
       pharmacyService.getPharmacies(),
+      doctorService.getTopRatedDoctors(),
+      pharmacyService.getTopRatedPharmacies(),
     ]);
     doctors = doctorsData;
     pharmacies = Array.isArray(pharmaciesData) ? pharmaciesData : [];
+    topRatedDoctors = Array.isArray(topDoctorsData) ? topDoctorsData : [];
+    topRatedPharmacies = Array.isArray(topPharmaciesData) ? topPharmaciesData : [];
   } catch (error) {
     console.error("Dashboard server-side fetch failed:", error);
   }
@@ -107,9 +117,9 @@ export default async function Page() {
                   {card.description}
                 </p>
                 <Link href={card.href} className="block w-full">
-                  <PrimaryButton fullWidth>
+                  <Button shape="pill" className="w-full">
                     {card.buttonText}
-                  </PrimaryButton>
+                  </Button>
                 </Link>
               </div>
             </div>
@@ -118,14 +128,13 @@ export default async function Page() {
       </section>
 
       {/* Top Pharmacies */}
-      <TopRatedPharmacies />
+      <TopRatedPharmacies pharmacies={topRatedPharmacies} />
 
       {/* Top Rated Doctors */}
-      <TopRatedDoctors />
+      <TopRatedDoctors doctors={topRatedDoctors} />
 
       {/* Map Section */}
       <HomeMapSection doctors={doctors} pharmacies={pharmacies} />
     </div>
   );
 }
-

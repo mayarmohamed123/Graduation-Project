@@ -1,6 +1,6 @@
 import "../globals.css";
-import LandingNavbar from "@/Components/layout/LandingNavbar";
-import Footer from "@/Components/layout/footer";
+import LandingNavbar from "@/components/layout/LandingNavbar";
+import Footer from "@/components/layout/footer";
 
 
 export default function RootLayout({

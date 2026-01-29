@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "@/Components/ui";
+import { Button } from "@/components/ui";
 import { medicalErrorImage } from "@/assets";
 
 export default function Error({

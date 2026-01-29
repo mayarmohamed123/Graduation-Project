@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-import ReduxProvider from "@/Components/auth/ReduxProvider";
+import ReduxProvider from "@/components/auth/ReduxProvider";
+import QueryProvider from "@/components/providers/QueryProvider";
 import { Toaster } from "react-hot-toast";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 // ISR: Default 3-second revalidation applied via Services/api.ts
 
@@ -39,9 +41,12 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased `}>
 
         <ReduxProvider>
-          {children}
-          <Toaster />
+          <QueryProvider>
+            {children}
+            <Toaster />
+          </QueryProvider>
         </ReduxProvider>
+        <SpeedInsights />
 
       </body>
     </html>

@@ -1,44 +1,38 @@
 "use client";
 
-import { useEffect, useCallback } from "react";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { fetchUserData } from "@/store/slices/userSlice";
-import { useAuth } from "@/hooks/useAuth";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { authService } from "@/Services/authService";
+import { useCallback } from "react";
 
 export const useUser = () => {
-  const dispatch = useAppDispatch();
-  const { user, isLoading, error } = useAppSelector((state) => state.user);
-  const { isAuthenticated } = useAuth();
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    const loadUserData = async () => {
-      if (isAuthenticated && !user) {
-        try {
-          await dispatch(fetchUserData()).unwrap();
-        } catch (error) {
-          console.error("Failed to load user data:", error);
-        }
-      }
-    };
-
-    loadUserData();
-  }, [dispatch, isAuthenticated, user]);
+  const {
+    data: user,
+    isLoading,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: ["user-profile"],
+    queryFn: () => authService.getProfile(),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    retry: 1,
+  });
 
   const refetchUser = useCallback(async () => {
-    if (isAuthenticated) {
-      try {
-        await dispatch(fetchUserData()).unwrap();
-      } catch (error) {
-        console.error("Failed to refetch user data:", error);
-      }
-    }
-  }, [dispatch, isAuthenticated]);
+    return await refetch();
+  }, [refetch]);
+
+  const clearUserData = useCallback(() => {
+    queryClient.setQueryData(["user-profile"], null);
+  }, [queryClient]);
 
   return {
     user,
-    isLoading: isLoading || false,
+    isLoading,
     error,
     refetchUser,
-    isAuthenticated: !!user && isAuthenticated,
+    clearUserData,
+    isAuthenticated: !!user,
   };
 };

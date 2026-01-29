@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { User, Building2, Lock, LogOut } from "lucide-react";
-import { SidebarNav } from "@/Components/common";
-import PharmacistInformation from "@/Components/features/pharmacy/settings/PharmacistInformation";
-import PharmacyInformation from "@/Components/features/pharmacy/settings/PharmacyInformation";
-import PasswordManagement from "@/Components/features/user/PasswordManagement";
+import { SidebarNav } from "@/components/common";
+import PharmacistInformation from "@/components/features/pharmacy/settings/PharmacistInformation";
+import PharmacyInformation from "@/components/features/pharmacy/settings/PharmacyInformation";
+import PasswordManagement from "@/components/features/user/PasswordManagement";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function PharmacySettingsPage() {

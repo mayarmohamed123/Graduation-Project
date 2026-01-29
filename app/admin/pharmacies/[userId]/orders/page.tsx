@@ -10,9 +10,9 @@ import {
 } from "@/Services/admin/pharmacies";
 import { AdminPharmacist } from "@/types/admin";
 import { PharmacistOrder } from "@/types/pharmacist";
-import OrdersTable from "@/Components/features/pharmacy/orders/OrdersTable";
+import OrdersTable from "@/components/features/pharmacy/orders/OrdersTable";
 import { Activity, ArrowLeft } from "lucide-react";
-import { Button } from "@/Components/ui/button";
+import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 

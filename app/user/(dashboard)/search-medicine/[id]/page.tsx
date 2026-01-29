@@ -7,14 +7,14 @@ import { Medicine, Review } from "@/types";
 import { medicineService } from "@/Services/medicineServices";
 import { pharmacyService } from "@/Services/pharmaciesServices";
 import { cartService } from "@/Services/cartService";
-import LoadingSpinner from "@/Components/common/LoadingSpinner";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 import { Heart, Minus, Plus, ShoppingCart, Zap, ShieldCheck, Truck, Lock, ChevronRight, Star } from "lucide-react";
 import { useAppDispatch } from "@/store/hooks";
 import { fetchUserCart } from "@/store/slices/cartSlice";
-import { Button } from "@/Components/ui/button";
-import { Badge } from "@/Components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { toast } from "react-hot-toast";
-import MedicineReviewsTab from "@/Components/features/user/medicine/MedicineReviewsTab";
+import MedicineReviewsTab from "@/components/features/user/medicine/MedicineReviewsTab";
 import Link from "next/link";
 
 type TabType = "Description" | "How to Use" | "Side Effects" | "Reviews";

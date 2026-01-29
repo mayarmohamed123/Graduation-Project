@@ -1,166 +1,43 @@
-"use client";
+export const dynamic = "force-dynamic";
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import { AppointmentCard, StatisticsCard } from "@/Components/features/doctor";
-import NotificationCard from "@/Components/common/NotificationCard";
-import { AppointmentInfo, AppointmentStats } from "@/types/appointments";
-import { Notification } from "@/types";
-import { Calendar, DollarSign, MessageSquare } from "lucide-react";
 import { appointmentService } from "@/Services/appointmentServices";
 import { doctorService } from "@/Services/doctorService";
-import LoadingSpinner from "@/Components/common/LoadingSpinner";
-import toast from "react-hot-toast";
-import { useUser } from "@/hooks/useUser";
-import { useAppointmentActions } from "@/hooks/useAppointmentActions";
+import { authService } from "@/Services/authService";
+import { AppointmentInfo, AppointmentStats } from "@/types/appointments";
+import { Notification, User } from "@/types";
+import DoctorDashboardClient from "./DoctorDashboardClient";
 
-export default function DoctorDashboardPage() {
-  const { user } = useUser();
-  const [appointments, setAppointments] = useState<AppointmentInfo[]>([]);
-  const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [stats, setStats] = useState<AppointmentStats | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+export default async function DoctorDashboardPage() {
+  let stats: AppointmentStats | null = null;
+  let appointments: AppointmentInfo[] = [];
+  let notifications: Notification[] = [];
+  let user: User | null = null;
 
-  const fetchData = async () => {
-    try {
-      setIsLoading(true);
-      const [statsData, appointmentsData, notificationsData] = await Promise.all([
-        appointmentService.getAppointmentStats(),
-        appointmentService.getDoctorAppointments(),
-        doctorService.getDoctorNotifications(),
-      ]);
+  try {
+    const [statsData, appointmentsData, notificationsData, userData] = await Promise.all([
+      appointmentService.getAppointmentStats(),
+      appointmentService.getDoctorAppointments(),
+      doctorService.getDoctorNotifications(),
+      authService.getProfile(),
+    ]);
 
-      setStats(statsData);
-      setAppointments(appointmentsData);
-      // Assuming notificationsData.appointmentRequests contains the notifications
-      setNotifications(notificationsData.appointmentRequests);
-    } catch (error) {
-      console.error("Error fetching dashboard data:", error);
-      toast.error("Failed to load dashboard data");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const { handleAccept, handleReject, handleComplete } = useAppointmentActions(fetchData);
-
-  if (isLoading) {
-    return (
-      <div className="flex h-96 items-center justify-center">
-        <LoadingSpinner />
-      </div>
-    );
+    stats = statsData;
+    appointments = appointmentsData;
+    notifications = notificationsData.appointmentRequests;
+    user = userData;
+  } catch (error) {
+    console.error("Error fetching dashboard data on server:", error);
+    // You might want to redirect or show an error state here
   }
 
-  // Calculate trend percentage
-  const calculateTrend = (current: number, previous: number) => {
-    if (previous === 0) return current > 0 ? 100 : 0;
-    return Math.round(((current - previous) / previous) * 100);
-  };
-
-  const appointmentsTrend = stats
-    ? calculateTrend(stats.todayAppointmentsCount, stats.yesterdayAppointmentsCount)
-    : 0;
-
-  const revenueTrend = stats
-    ? calculateTrend(stats.todayRevenue, stats.yesterdayRevenue)
-    : 0;
-
   return (
-    <div className="max-w-7xl mx-auto space-y-8 pb-8">
-      {/* Search Header - Optional based on image */}
-      <div className="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm md:hidden">
-        <h1 className="text-xl font-bold text-gray-800">Sehha</h1>
-      </div>
-
-      <div className="mt-4 mb-4">
-        <h1 className="text-2xl font-bold text-gray-800">Welcome, Dr. {user?.userName}</h1>
-        <p className="text-gray-500">Here is your daily activity overview</p>
-      </div>
-
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Today's Appointments */}
-        <StatisticsCard
-          title="Today's Appointments"
-          value={stats?.todayAppointmentsCount || 0}
-          icon={<Calendar className="w-6 h-6 text-[#2BBBC5]" />}
-          bgColor="bg-teal-50"
-          trend={`${Math.abs(appointmentsTrend)}%`}
-          trendDirection={appointmentsTrend >= 0 ? "up" : "down"}
-        />
-
-        {/* Revenue */}
-        <StatisticsCard
-          title="Today's Revenue"
-          value={`$${stats?.todayRevenue || 0}`}
-          icon={<DollarSign className="w-6 h-6 text-green-600" />}
-          bgColor="bg-green-50"
-          trend={`${Math.abs(revenueTrend)}%`}
-          trendDirection={revenueTrend >= 0 ? "up" : "down"}
-        />
-
-        {/* Unread Messages/Notifications (Using total patients for now or any other avail stat) */}
-        <StatisticsCard
-          title="Total Patients"
-          value={stats?.totalPatientsCount || 0}
-          icon={<MessageSquare className="w-6 h-6 text-purple-600" />}
-          bgColor="bg-purple-50"
-        />
-      </div>
-
-      {/* Today's Appointments Section */}
-      <section>
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold text-gray-900">Latest Appointments</h2>
-          <Link href="/doctor/appointments" className="text-[#2BBBC5] hover:text-[#25a0a9] font-medium">
-            See All
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {appointments.length > 0 ? (
-            appointments.slice(0, 3).map((appointment) => (
-              <AppointmentCard
-                key={appointment.id}
-                appointment={appointment}
-                onAccept={handleAccept}
-                onReject={handleReject}
-                onComplete={handleComplete}
-              />
-            ))
-          ) : (
-            <p className="text-gray-500 col-span-2 text-center py-8">No appointments found.</p>
-          )}
-        </div>
-      </section>
-
-      {/* Recent Activity Timeline Section */}
-      <section>
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold text-gray-900">Recent Activity Timeline</h2>
-          <Link href="/doctor/notifications" className="text-[#2BBBC5] hover:text-[#25a0a9] font-medium">
-            See All
-          </Link>
-        </div>
-
-        <div className="flex flex-col gap-4 bg-white/50 rounded-2xl">
-          {notifications.length > 0 ? (
-            notifications.slice(0, 4).map((notification) => (
-              <NotificationCard
-                key={notification.id}
-                notification={notification}
-              />
-            ))
-          ) : (
-            <p className="text-gray-500 text-center py-8">No recent notifications.</p>
-          )}
-        </div>
-      </section>
-    </div>
+    <DoctorDashboardClient 
+      initialData={{
+        stats,
+        appointments,
+        notifications,
+        user
+      }} 
+    />
   );
 }

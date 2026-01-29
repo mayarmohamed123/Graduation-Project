@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Button } from "@/Components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Heart,
   CheckCircle2,
@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 
 import { useRouter } from "next/navigation";
-import PageHeaderWithBack from "@/Components/common/PageHeaderWithBack";
+import PageHeaderWithBack from "@/components/common/PageHeaderWithBack";
 
 export default function DonationPage() {
   const router = useRouter();

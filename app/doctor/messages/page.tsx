@@ -1,9 +1,9 @@
 "use client";
 
 
-import Chat from "@/Components/features/chat/Chat";
+import Chat from "@/components/features/chat/Chat";
 import { Suspense } from "react";
-import { Button } from "@/Components/ui/button"; // Assuming you have a Button component
+import { Button } from "@/components/ui/button"; // Assuming you have a Button component
 import { MessageSquarePlus } from "lucide-react";
 import { startConversationWithAdmin } from "@/Services/chatServices";
 import { useRouter, usePathname } from "next/navigation"; // Changed context to navigation for app dir

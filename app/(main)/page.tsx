@@ -1,9 +1,9 @@
-import AboutSection from "@/Components/features/sections/AboutSection";
-import ContactSection from "@/Components/features/sections/ContactSection";
-import HeroSection from "@/Components/features/sections/HeroSection";
-import JoinSection from "@/Components/features/sections/JoinSection";
-import ServicesSection from "@/Components/features/sections/ServicesSection";
-import WorkSection from "@/Components/features/sections/WorkSection";
+import AboutSection from "@/components/features/sections/AboutSection";
+import ContactSection from "@/components/features/sections/ContactSection";
+import HeroSection from "@/components/features/sections/HeroSection";
+import JoinSection from "@/components/features/sections/JoinSection";
+import ServicesSection from "@/components/features/sections/ServicesSection";
+import WorkSection from "@/components/features/sections/WorkSection";
 
 
 

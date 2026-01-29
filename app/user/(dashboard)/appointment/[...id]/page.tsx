@@ -1,12 +1,12 @@
 "use client";
 
 import { use, useState, Suspense } from "react";
-import DoctorReviews from "@/Components/features/doctor/DoctorReviews";
-import LoadingSpinner from "@/Components/common/LoadingSpinner";
-import PrvButton from "@/Components/common/prvButton";
-import PatientInfoDialog from "@/Components/features/appointment/PatientInfoDialog";
-import DoctorInfoCard from "@/Components/features/appointment/DoctorInfoCard";
-import BookingSection from "@/Components/features/appointment/BookingSection";
+import DoctorReviews from "@/components/features/doctor/DoctorReviews";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
+import PrvButton from "@/components/common/prvButton";
+import PatientInfoDialog from "@/components/features/appointment/PatientInfoDialog";
+import DoctorInfoCard from "@/components/features/appointment/DoctorInfoCard";
+import BookingSection from "@/components/features/appointment/BookingSection";
 import { useAppointment } from "@/hooks/useAppointment";
 
 function AppointmentContent({

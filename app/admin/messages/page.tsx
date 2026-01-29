@@ -1,9 +1,9 @@
 "use client";
 
 import { Suspense } from "react";
-import Chat from "@/Components/features/chat/Chat";
+import Chat from "@/components/features/chat/Chat";
 import { adminService } from "@/Services/admin/adminService";
-import LoadingSpinner from "@/Components/common/LoadingSpinner";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 
 export default function AdminMessagesPage() {
   return (

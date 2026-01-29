@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { User, Building2, Lock, LogOut } from "lucide-react";
-import { SidebarNav } from "@/Components/common";
-import PersonalInformation from "@/Components/features/doctor/settings/PersonalInformation";
-import ClinicInformation from "@/Components/features/doctor/settings/ClinicInformation";
-import PasswordManagement from "@/Components/features/user/PasswordManagement";
+import { SidebarNav } from "@/components/common";
+import PersonalInformation from "@/components/features/doctor/settings/PersonalInformation";
+import ClinicInformation from "@/components/features/doctor/settings/ClinicInformation";
+import PasswordManagement from "@/components/features/user/PasswordManagement";
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("personal");

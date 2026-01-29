@@ -6,11 +6,11 @@ import {
     getPharmacyOfPharmacist, 
 } from "@/Services/admin/pharmacies";
 import { AdminPharmacist, AdminPharmacyDetails } from "@/types/admin";
-import { DetailPageHeader } from "@/Components/features/admin/pharmacies/details/DetailPageHeader";
-import { PharmacistProfileCard } from "@/Components/features/admin/pharmacies/details/PharmacistProfileCard";
-import { PharmacyInfoCard } from "@/Components/features/admin/pharmacies/details/PharmacyInfoCard";
+import { DetailPageHeader } from "@/components/features/admin/pharmacies/details/DetailPageHeader";
+import { PharmacistProfileCard } from "@/components/features/admin/pharmacies/details/PharmacistProfileCard";
+import { PharmacyInfoCard } from "@/components/features/admin/pharmacies/details/PharmacyInfoCard";
 import { Activity } from "lucide-react";
-import { Button } from "@/Components/ui/button";
+import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 

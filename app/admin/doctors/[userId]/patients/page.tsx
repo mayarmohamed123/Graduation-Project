@@ -4,8 +4,8 @@ import { useEffect, useState, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { DoctorPatient } from "@/types/admin";
 import { adminService } from "@/Services/admin/adminService";
-import { DoctorPatientsTable } from "@/Components/features/admin/doctors/DoctorPatientsTable";
-import LoadingSpinner from "@/Components/common/LoadingSpinner";
+import { DoctorPatientsTable } from "@/components/features/admin/doctors/DoctorPatientsTable";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 import { ArrowLeft, RefreshCw, AlertCircle, Users } from "lucide-react";
 import { toast } from "react-hot-toast";
 

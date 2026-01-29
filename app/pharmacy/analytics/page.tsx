@@ -1,6 +1,8 @@
+export const dynamic = "force-dynamic";
+
 import { Suspense } from "react";
-import PharmacyAnalyticsDashboard from "@/Components/features/pharmacy/analytics/PharmacyAnalyticsDashboard";
-import { LoadingSpinner } from "@/Components/common";
+import PharmacyAnalyticsDashboard from "@/components/features/pharmacy/analytics/PharmacyAnalyticsDashboard";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 
 export default function PharmacyAnalyticsPage() {
   return (
