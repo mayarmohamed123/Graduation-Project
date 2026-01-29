@@ -42,8 +42,8 @@ export default function BloodRequestPage() {
         HospitalName: "",
         HospitalCity: "",
         HospitalCountry: "Egypt",
-        HospitalLatitude: 30.764,
-        HospitalLongitude: 32.954,
+        HospitalLatitude: 0,
+        HospitalLongitude: 0,
         Units: 1,
         NeedWithin: "24 hours",
     });
@@ -219,11 +219,11 @@ export default function BloodRequestPage() {
                         <div className="grid grid-cols-2 gap-4">
                             <div className="bg-gray-50 rounded-xl px-4 py-2 border border-gray-100">
                                 <span className="text-[10px] text-gray-400 block">Latitude</span>
-                                <span className="text-sm font-mono text-gray-600">{formData.HospitalLatitude.toFixed(6)}</span>
+                                <span className="text-sm font-mono text-gray-600">{formData.HospitalLatitude !== 0 ? formData.HospitalLatitude.toFixed(6) : "Not Selected"}</span>
                             </div>
                             <div className="bg-gray-50 rounded-xl px-4 py-2 border border-gray-100">
                                 <span className="text-[10px] text-gray-400 block">Longitude</span>
-                                <span className="text-sm font-mono text-gray-600">{formData.HospitalLongitude.toFixed(6)}</span>
+                                <span className="text-sm font-mono text-gray-600">{formData.HospitalLongitude !== 0 ? formData.HospitalLongitude.toFixed(6) : "Not Selected"}</span>
                             </div>
                         </div>
                     </div>
