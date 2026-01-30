@@ -9,3 +9,4 @@ export * from "./skeleton";
 export * from "./calendar";
 export * from "./dialog";
 export * from "./table";
+export * from "./tabs";

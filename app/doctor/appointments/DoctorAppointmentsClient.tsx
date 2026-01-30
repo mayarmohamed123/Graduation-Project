@@ -1,7 +1,7 @@
 "use client";
 
-import StatisticsCard from "@/components/features/doctor/StatisticsCard";
-import AppointmentCard from "@/components/features/doctor/AppointmentCard";
+import StatisticsCard from "@/Components/features/doctor/StatisticsCard";
+import AppointmentCard from "@/Components/features/doctor/AppointmentCard";
 import React, { useState } from "react";
 import {
     Search,
@@ -14,24 +14,24 @@ import {
     Plus,
     Loader2,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/Components/ui/button";
 import { AppointmentInfo, AppointmentStats } from "@/types/appointments";
 import { useAppointmentActions } from "@/hooks/useAppointmentActions";
 import { useRouter } from "next/navigation";
 import { useEffect, useCallback } from "react";
 import { doctorService } from "@/Services/doctorService";
 import { DoctorAvailability, CreateAvailabilityData, UpdateAvailabilityData } from "@/types/doctors";
-import { AvailabilityList } from "@/components/features/doctor/appointments/AvailabilityList";
-import { AvailabilityForm } from "@/components/features/doctor/appointments/AvailabilityForm";
+import { AvailabilityList } from "@/Components/features/doctor/appointments/AvailabilityList";
+import { AvailabilityForm } from "@/Components/features/doctor/appointments/AvailabilityForm";
 import { toast } from "react-hot-toast";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ConfirmDialog } from "@/components/common/ConfirmDialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/Components/ui";
+import { ConfirmDialog } from "@/Components/common/ConfirmDialog";
 
 interface DoctorAppointmentsClientProps {
-  initialData: {
-    stats: AppointmentStats | null;
-    appointments: AppointmentInfo[];
-  };
+    initialData: {
+        stats: AppointmentStats | null;
+        appointments: AppointmentInfo[];
+    };
 }
 
 export default function DoctorAppointmentsClient({ initialData }: DoctorAppointmentsClientProps) {
@@ -177,14 +177,14 @@ export default function DoctorAppointmentsClient({ initialData }: DoctorAppointm
             {/* Dashboard Tabs */}
             <Tabs defaultValue="appointments" className="space-y-6">
                 <TabsList className="bg-white p-1 rounded-2xl border border-gray-100 shadow-sm inline-flex h-auto">
-                    <TabsTrigger 
-                        value="appointments" 
+                    <TabsTrigger
+                        value="appointments"
                         className="rounded-xl px-6 py-2.5 data-[state=active]:bg-[#2BBBC5] data-[state=active]:text-white font-bold transition-all text-gray-500"
                     >
                         Medical Appointments
                     </TabsTrigger>
-                    <TabsTrigger 
-                        value="availability" 
+                    <TabsTrigger
+                        value="availability"
                         className="rounded-xl px-6 py-2.5 data-[state=active]:bg-[#2BBBC5] data-[state=active]:text-white font-bold transition-all text-gray-500"
                     >
                         Working Hours
@@ -291,9 +291,9 @@ export default function DoctorAppointmentsClient({ initialData }: DoctorAppointm
                             <h2 className="text-3xl font-black font-outfit text-gray-900 tracking-tight">Working Hours</h2>
                             <p className="text-gray-500 font-medium mt-1">Set the timings when patients can book appointments</p>
                         </div>
-                        
+
                         {!isFormOpen && (
-                            <Button 
+                            <Button
                                 onClick={() => setIsFormOpen(true)}
                                 className="bg-[#2BBBC5] hover:bg-[#25A0A9] text-white rounded-2xl px-8 h-12 font-bold shadow-lg shadow-[#2BBBC5]/20 transition-all active:scale-95 flex items-center gap-2"
                             >
@@ -305,7 +305,7 @@ export default function DoctorAppointmentsClient({ initialData }: DoctorAppointm
 
                     {isFormOpen && (
                         <div className="animate-in zoom-in-95 duration-200">
-                            <AvailabilityForm 
+                            <AvailabilityForm
                                 onSubmit={handleFormSubmit}
                                 onCancel={() => {
                                     setIsFormOpen(false);
@@ -334,7 +334,7 @@ export default function DoctorAppointmentsClient({ initialData }: DoctorAppointm
                                 <p className="text-gray-400 font-bold uppercase tracking-widest text-[10px]">Syncing Schedule...</p>
                             </div>
                         ) : (
-                            <AvailabilityList 
+                            <AvailabilityList
                                 availabilities={availabilities}
                                 onEdit={handleEditClick}
                                 onDelete={handleDeleteClick}
