@@ -20,7 +20,7 @@ export default function UserHomeSlider() {
   const router = useRouter();
 
   return (
-    <div className="w-full max-w-6xl mt-10 min-h-[400px] md:min-h-[280px]">
+    <div className="w-full max-w-6xl mt-10 min-h-[500px] md:min-h-[380px]">
       <Swiper
         modules={[Navigation, Autoplay]}
         spaceBetween={30}
@@ -31,7 +31,7 @@ export default function UserHomeSlider() {
         className="pb-10 h-full!">
         {/* Slide 1 */}
         <SwiperSlide className="h-full">
-          <div className="flex flex-col md:flex-row items-center justify-between bg-linear-to-r from-[#2BBBC5] to-[#D5F4F6] rounded-3xl shadow-md p-8 min-h-[350px] md:min-h-[240px]">
+          <div className="flex flex-col md:flex-row items-center justify-between bg-linear-to-r from-[#2BBBC5] to-[#D5F4F6] rounded-3xl shadow-md p-8 px-16 min-h-[400px] md:min-h-[340px]">
             <div className="max-w-md py-5">
               <h2 className="text-2xl font-medium text-white mb-2">
                 Find Trusted Doctors Near You
@@ -40,7 +40,7 @@ export default function UserHomeSlider() {
                 Book appointments with verified specialists in just a few
                 clicks.
               </p>
-              <Button variant="secondary" shape="pill" onClick={() => router.push("/user/search-doctors")}>
+              <Button shape="pill" className="bg-white text-[#2BBBC5] hover:bg-gray-100 font-semibold shadow-md" onClick={() => router.push("/user/search-doctors")}>
                 Find a Doctor
               </Button>
             </div>
@@ -57,7 +57,7 @@ export default function UserHomeSlider() {
 
         {/* Slide 2 */}
         <SwiperSlide className="h-full">
-          <div className="flex flex-col md:flex-row items-center justify-between bg-linear-to-r from-primary to-white rounded-3xl shadow-md p-8 min-h-[350px] md:min-h-[240px]">
+          <div className="flex flex-col md:flex-row items-center justify-between bg-linear-to-r from-primary to-white rounded-3xl shadow-md p-8 px-16 min-h-[450px] md:min-h-[340px]">
             <Image
               src={sliderMedicine}
               alt="Medicines"
@@ -75,7 +75,7 @@ export default function UserHomeSlider() {
                 Fast delivery from verified pharmacies — your health, your
                 convenience.
               </p>
-              <Button shape="pill" onClick={() => router.push("/user/search-medicine")}>
+              <Button shape="pill" className="bg-[#2BBBC5] text-white hover:bg-[#25A0A9] font-semibold shadow-md" onClick={() => router.push("/user/search-medicine")}>
                 Order Now
               </Button>
             </div>
@@ -84,7 +84,7 @@ export default function UserHomeSlider() {
 
         {/* Slide 3 */}
         <SwiperSlide className="h-full">
-          <div className="flex flex-col md:flex-row items-center justify-between  bg-linear-to-r from-[#2BBBC5] to-[#D5F4F6] rounded-3xl shadow-md p-8 min-h-[350px] md:min-h-[240px]">
+          <div className="flex flex-col md:flex-row items-center justify-between  bg-linear-to-r from-[#2BBBC5] to-[#D5F4F6] rounded-3xl shadow-md p-8 px-16 min-h-[450px] md:min-h-[340px]">
             <div className="max-w-md">
               <h2 className="text-2xl font-medium text-white mb-2">
                 Save Lives. Donate Blood Today.
@@ -92,7 +92,7 @@ export default function UserHomeSlider() {
               <p className="font-normal text-white mb-4">
                 Join the Sehha community and make a real difference.
               </p>
-              <Button variant="secondary" shape="pill" onClick={() => router.push("/user/donation")}  >
+              <Button shape="pill" className="bg-white text-[#2BBBC5] hover:bg-gray-100 font-semibold shadow-md" onClick={() => router.push("/user/donation")}>
                 Donate Now
               </Button>
             </div>
