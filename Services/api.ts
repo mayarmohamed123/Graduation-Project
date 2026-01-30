@@ -110,10 +110,22 @@ export const apiRequest = async <T = unknown>(
 
     // Handle 401 Unauthorized - attempt to refresh token
     if (response.status === 401 && requiresAuth) {
-        // Attempt to refresh the token
-        await authService.refreshToken();
-        // If refresh succeeded, retry the original request
-        response = await makeRequest();
+      // On client-side, check if refresh token cookie exists before attempting refresh
+      // This prevents unnecessary 401 errors on public pages (like login) when user is not authenticated
+      const hasRefreshToken = typeof window !== "undefined" 
+        ? document.cookie.includes("refresh_token")
+        : true; // On server-side, always try refresh (cookies are forwarded)
+      
+      if (hasRefreshToken) {
+        try {
+          // Attempt to refresh the token
+          await authService.refreshToken();
+          // If refresh succeeded, retry the original request
+          response = await makeRequest();
+        } catch {
+          // Refresh failed, continue with original 401 response
+        }
+      }
     }
 
     if (!response.ok) {
