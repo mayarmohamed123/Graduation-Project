@@ -151,7 +151,7 @@ export interface Notification {
   title: string;
   message: string;
   type: NotificationType;
-  category?: "appointment" | "order";
+  category?: "appointment" | "order" | "blood";
   user: User | null;
   isRead: boolean;
   createdAt: string; // ISO datetime string
@@ -171,7 +171,9 @@ export type NotificationType =
   | "newOrderForPharmacist"
   | "inventoryOutOfStock"
   | "newDoctorRegisteration"
-  | "newPharmacistRegisteration";
+  | "newPharmacistRegisteration"
+  | "bloodRequest"
+  | "bloodDonation";
 
 /**
  * Get user notifications API response
@@ -179,4 +181,5 @@ export type NotificationType =
 export interface GetUserNotificationsResponse {
   orders: Notification[];
   appointments: Notification[];
+  userBlood: Notification[];
 }

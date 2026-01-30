@@ -10,13 +10,17 @@ import { useNotifications } from "@/hooks/useNotifications";
 import { CheckCheck } from "lucide-react";
 import { Notification } from "@/types";
 
-type TabType = "appointments" | "orders";
+type TabType = "appointments" | "orders" | "blood";
 
 export default function NotificationsPage() {
   const [activeTab, setActiveTab] = useState<TabType>("appointments");
-  const { appointments, orders, isLoading, handleMarkAsRead, handleMarkAllAsRead } = useNotifications();
+  const { appointments, orders, userBlood, isLoading, handleMarkAsRead, handleMarkAllAsRead } = useNotifications();
 
-  const currentNotifications = activeTab === "appointments" ? appointments : orders;
+  const currentNotifications = 
+    activeTab === "appointments" ? appointments : 
+    activeTab === "orders" ? orders : 
+    userBlood;
+    
   const hasNotifications = currentNotifications.length > 0;
   const hasUnread = currentNotifications.some((n: Notification) => !n.isRead);
 
@@ -42,6 +46,7 @@ export default function NotificationsPage() {
             tabs={[
               { id: "appointments", label: "Appointments" },
               { id: "orders", label: "Medicine Order" },
+              { id: "blood", label: "Blood Donation" },
             ]}
             activeTab={activeTab}
             onTabChange={(id: string) => setActiveTab(id as TabType)}

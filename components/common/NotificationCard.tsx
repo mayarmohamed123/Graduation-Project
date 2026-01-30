@@ -1,5 +1,5 @@
 import { Notification, NotificationType } from "@/types";
-import { Calendar, CheckCircle, XCircle, Clock, Package, AlertTriangle, PackageX, User } from "lucide-react";
+import { Calendar, CheckCircle, XCircle, Clock, Package, AlertTriangle, PackageX, User, Droplet, Heart } from "lucide-react";
 import { formatDistanceToNow, differenceInDays } from "date-fns";
 
 interface NotificationCardProps {
@@ -41,6 +41,10 @@ export default function NotificationCard({ notification, onClick }: Notification
         return { icon: User, bg: "bg-indigo-100", color: "text-indigo-600" };
       case "newPharmacistRegisteration":
         return { icon: User, bg: "bg-teal-100", color: "text-teal-600" };
+      case "bloodRequest":
+        return { icon: Droplet, bg: "bg-red-100", color: "text-red-600" };
+      case "bloodDonation":
+        return { icon: Heart, bg: "bg-rose-100", color: "text-rose-600" };
       default:
         return { icon: Calendar, bg: "bg-gray-100", color: "text-gray-600" };
     }
@@ -70,6 +74,10 @@ export default function NotificationCard({ notification, onClick }: Notification
         return "bg-indigo-50";
       case "newPharmacistRegisteration":
         return "bg-teal-50";
+      case "bloodRequest":
+        return "bg-red-50";
+      case "bloodDonation":
+        return "bg-rose-50";
       default:
         return "bg-gray-50";
     }
@@ -99,7 +107,7 @@ export default function NotificationCard({ notification, onClick }: Notification
       className={`${bgClass} rounded-xl p-4 flex gap-4 items-start hover:shadow-md transition-shadow cursor-pointer`}
     >
       {/* Icon */}
-      <div className={`${bg} rounded-full p-3 flex-shrink-0`}>
+      <div className={`${bg} rounded-full p-3 shrink-0`}>
         <Icon className={`w-6 h-6 ${color}`} />
       </div>
 
@@ -120,7 +128,7 @@ export default function NotificationCard({ notification, onClick }: Notification
 
       {/* Unread indicator */}
       {!notification.isRead && (
-        <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0 mt-2"></div>
+        <div className="w-2 h-2 bg-primary rounded-full shrink-0 mt-2"></div>
       )}
     </div>
   );

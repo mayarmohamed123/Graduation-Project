@@ -15,24 +15,33 @@ export const useNotifications = () => {
   const dispatch = useAppDispatch();
   const [appointments, setAppointments] = useState<Notification[]>([]);
   const [orders, setOrders] = useState<Notification[]>([]);
+  const [userBlood, setUserBlood] = useState<Notification[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchNotifications = useCallback(async () => {
     try {
       setIsLoading(true);
       const data = await userService.getUserNotifications();
-      setAppointments(data.appointments);
-      setOrders(data.orders);
+      setAppointments(data.appointments || []);
+      setOrders(data.orders || []);
+      setUserBlood(data.userBlood || []);
+      
+      // Sync Redux unread count
+      const count = 
+        (data.appointments || []).filter(n => !n.isRead).length +
+        (data.orders || []).filter(n => !n.isRead).length +
+        (data.userBlood || []).filter(n => !n.isRead).length;
+      dispatch(setUnreadCount(count));
     } catch (error) {
       console.error("Failed to fetch notifications:", error);
       toast.error("Failed to fetch notifications");
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [dispatch]);
 
   const handleMarkAsRead = useCallback(async (id: number) => {
-    let type: "appointments" | "orders" | null = null;
+    let type: "appointments" | "orders" | "userBlood" | null = null;
     let found = false;
 
     setAppointments((prev) => {
@@ -46,12 +55,26 @@ export const useNotifications = () => {
       }
       return prev;
     });
-
+    
     if (!found) {
       setOrders((prev) => {
         const index = prev.findIndex((n) => n.id === id);
         if (index !== -1 && !prev[index].isRead) {
           type = "orders";
+          found = true;
+          const next = [...prev];
+          next[index] = { ...next[index], isRead: true };
+          return next;
+        }
+        return prev;
+      });
+    }
+
+    if (!found) {
+      setUserBlood((prev) => {
+        const index = prev.findIndex((n) => n.id === id);
+        if (index !== -1 && !prev[index].isRead) {
+          type = "userBlood";
           found = true;
           const next = [...prev];
           next[index] = { ...next[index], isRead: true };
@@ -72,23 +95,27 @@ export const useNotifications = () => {
         // Revert on failure
         if (type === "appointments") {
           setAppointments(prev => prev.map(n => n.id === id ? { ...n, isRead: false } : n));
-        } else {
+        } else if (type === "orders") {
           setOrders(prev => prev.map(n => n.id === id ? { ...n, isRead: false } : n));
+        } else if (type === "userBlood") {
+          setUserBlood(prev => prev.map(n => n.id === id ? { ...n, isRead: false } : n));
         }
       }
     }
   }, [dispatch]);
 
   const handleMarkAllAsRead = useCallback(async () => {
-    const hasUnread = appointments.some(n => !n.isRead) || orders.some(n => !n.isRead);
+    const hasUnread = appointments.some(n => !n.isRead) || orders.some(n => !n.isRead) || userBlood.some(n => !n.isRead);
     if (!hasUnread) return;
 
     // Optimistic update
     const prevAppointments = [...appointments];
     const prevOrders = [...orders];
+    const prevUserBlood = [...userBlood];
     
     setAppointments(prev => prev.map(n => ({ ...n, isRead: true })));
     setOrders(prev => prev.map(n => ({ ...n, isRead: true })));
+    setUserBlood(prev => prev.map(n => ({ ...n, isRead: true })));
 
     try {
       await doctorService.markAllNotificationsAsRead();
@@ -100,8 +127,9 @@ export const useNotifications = () => {
       // Revert on failure
       setAppointments(prevAppointments);
       setOrders(prevOrders);
+      setUserBlood(prevUserBlood);
     }
-  }, [appointments, orders, dispatch]);
+  }, [appointments, orders, userBlood, dispatch]);
 
   useEffect(() => {
     if (!isAuthenticated) return;
@@ -126,6 +154,8 @@ export const useNotifications = () => {
         setAppointments((prev) => [data, ...prev]);
       } else if (data.category === "order") {
         setOrders((prev) => [data, ...prev]);
+      } else if (data.category === "blood") {
+        setUserBlood((prev) => [data, ...prev]);
       }
       
       dispatch(incrementUnreadCount());
@@ -155,6 +185,7 @@ export const useNotifications = () => {
   return {
     appointments,
     orders,
+    userBlood,
     isLoading,
     handleMarkAsRead,
     handleMarkAllAsRead,

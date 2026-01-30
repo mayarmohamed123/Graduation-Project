@@ -20,6 +20,7 @@ interface NotificationResponse {
   appointmentRequests?: Notification[];
   orders?: Notification[];
   appointments?: Notification[];
+  userBlood?: Notification[];
 }
 
 export const fetchUnreadCount = createAsyncThunk(
@@ -49,9 +50,12 @@ export const fetchUnreadCount = createAsyncThunk(
       } else if (response.appointmentRequests) {
         // Doctor often uses this
         unreadCount = getUnreadCountHelper(response.appointmentRequests);
-      } else if (response.orders || response.appointments) {
+      } else if (response.orders || response.appointments || response.userBlood) {
         // Regular user uses this
-        unreadCount = getUnreadCountHelper(response.orders) + getUnreadCountHelper(response.appointments);
+        unreadCount = 
+          getUnreadCountHelper(response.orders) + 
+          getUnreadCountHelper(response.appointments) +
+          getUnreadCountHelper(response.userBlood);
       }
 
       console.log(`[NotificationSlice] Calculated ${role} unread count: ${unreadCount}`);
