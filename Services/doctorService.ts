@@ -15,6 +15,9 @@ import {
   AnalyticsStatus,
   AnalyticsPatientRetention,
   Clinic,
+  DoctorAvailability,
+  CreateAvailabilityData,
+  UpdateAvailabilityData,
 } from "@/types/doctors";
 import { Notification } from "@/types";
 import { FilterParams, apiRequest } from "./api";
@@ -346,5 +349,48 @@ export const doctorService = {
     return await apiRequest<Clinic>(`${baseUrl}/doctors/GetClinicOfDoctor`, {
       requiresAuth: true,
     });
+  },
+
+  // Availability Management
+  getMyAvailabilities: async (): Promise<DoctorAvailability[]> => {
+    return await apiRequest<DoctorAvailability[]>(
+      `${baseUrl}/doctors/my-availabilities`,
+      { requiresAuth: true }
+    );
+  },
+
+  addAvailability: async (data: CreateAvailabilityData): Promise<{ message: string }> => {
+    return await apiRequest<{ message: string }>(
+      `${baseUrl}/doctors/availability`,
+      {
+        method: "POST",
+        data,
+        requiresAuth: true,
+      }
+    );
+  },
+
+  updateAvailability: async (
+    id: number,
+    data: UpdateAvailabilityData
+  ): Promise<{ message: string }> => {
+    return await apiRequest<{ message: string }>(
+      `${baseUrl}/doctors/availability/${id}`,
+      {
+        method: "PUT",
+        data,
+        requiresAuth: true,
+      }
+    );
+  },
+
+  deleteAvailability: async (id: number): Promise<{ message: string }> => {
+    return await apiRequest<{ message: string }>(
+      `${baseUrl}/doctors/availability/${id}`,
+      {
+        method: "DELETE",
+        requiresAuth: true,
+      }
+    );
   },
 };

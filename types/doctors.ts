@@ -156,3 +156,23 @@ export interface Clinic {
   latitude: number;
   longitude: number;
 }
+
+export interface DoctorAvailability {
+  id: number;
+  dayOfWeek: string | number;
+  startTime: string;
+  endTime: string;
+  slotDurationInMinutes: number;
+}
+
+export interface CreateAvailabilityData {
+  DayOfWeek: number;
+  StartTime: string;
+  EndTime: string;
+}
+
+export interface UpdateAvailabilityData {
+  DayOfWeek: number;
+  StartTime: string;
+  EndTime: string;
+}

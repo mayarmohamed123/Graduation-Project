@@ -146,6 +146,25 @@ export default function SearchDoctorsPage() {
                 </button>
               </div>
 
+              {/* Specialty */}
+              <div className="mb-6">
+                <h3 className="text-sm font-medium text-gray-700 mb-3">
+                  Specialty
+                </h3>
+                <select
+                  value={filters.specialty || ""}
+                  onChange={(e) => handleFilterChange("specialty", e.target.value || null)}
+                  className="w-full px-3 py-2.5 text-sm border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                >
+                  <option value="">All Specialties</option>
+                  {specialties.map((specialty) => (
+                    <option key={specialty} value={specialty}>
+                      {specialty}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               {/* Gender */}
               <div className="mb-6">
                 <h3 className="text-sm font-medium text-gray-700 mb-3">
@@ -240,62 +259,6 @@ export default function SearchDoctorsPage() {
 
           {/* Doctor Cards Grid */}
           <div className="lg:w-3/4">
-            {/* Specialty Filter */}
-            <div className="mb-6">
-              <h3 className="text-xl md:text-2xl font-medium text-black mb-3">
-                Choose Specialties
-              </h3>
-
-              <div className="flex flex-wrap gap-2">
-                {/* All Specialties Button */}
-                <Button
-                  variant={!filters.specialty === null ? "outline" : "default"}
-                  size="lg"
-                  onClick={() => handleFilterChange("specialty", null)}
-                  className={`
-                             flex items-center gap-2 border border-[#B2B2B2]
-                            ${!filters.specialty === null
-                      ? "text-[#4D4D4D]"
-                      : "text-white"
-                    }
-                            `}>
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 6h16M4 12h16M4 18h16"
-                    />
-                  </svg>
-                  All Specialties
-                </Button>
-
-                {/* Other Specialties */}
-                {specialties.map((specialty) => {
-                  const isActive = filters.specialty !== specialty;
-
-                  return (
-                    <Button
-                      key={specialty}
-                      variant={isActive ? "outline" : "default"}
-                      size="lg"
-                      onClick={() => handleFilterChange("specialty", specialty)}
-                      className={`
-                                flex items-center gap-2 border border-[#B2B2B2]
-                                ${isActive ? "text-[#4D4D4D]" : "text-white"}
-                                `}>
-                      <SpecialtyIcon specialty={specialty} />
-                      {specialty}
-                    </Button>
-                  );
-                })}
-              </div>
-            </div>
-
             {loading ? (
               <LoadingSpinner />
             ) : error ? (
