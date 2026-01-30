@@ -8,6 +8,7 @@ import {
 } from "@/Services/admin/pharmacies";
 import { AdminPharmacist, AdminMedicine } from "@/types/admin";
 import { MedicineTable } from "@/components/features/pharmacy/inventory/MedicineTable";
+import { MedicineReviewDialog } from "@/components/features/admin/pharmacies/inventory/MedicineReviewDialog";
 import { Activity, Plus, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
@@ -27,6 +28,10 @@ export default function AdminPharmacyInventoryPage({ params }: { params: Promise
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [medicineToDelete, setMedicineToDelete] = useState<AdminMedicine | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
+
+    // Review Dialog State
+    const [selectedReviewMedicine, setSelectedReviewMedicine] = useState<AdminMedicine | null>(null);
+    const [isReviewOpen, setIsReviewOpen] = useState(false);
 
     const fetchData = useCallback(async () => {
         try {
@@ -71,6 +76,11 @@ export default function AdminPharmacyInventoryPage({ params }: { params: Promise
         } finally {
             setIsDeleting(false);
         }
+    };
+
+    const handleViewReviews = (medicine: AdminMedicine) => {
+        setSelectedReviewMedicine(medicine);
+        setIsReviewOpen(true);
     };
 
     const filteredMedicines = medicines.filter((m) => 
@@ -126,8 +136,15 @@ export default function AdminPharmacyInventoryPage({ params }: { params: Promise
                     onSearchChange={setSearchQuery}
                     onEdit={(medicine) => router.push(`/admin/pharmacies/${userId}/add-medicine?id=${medicine.id}`)}
                     onDelete={(medicine) => handleDelete(medicine as unknown as AdminMedicine)}
+                    onViewReviews={(medicine) => handleViewReviews(medicine as unknown as AdminMedicine)}
                 />
             </div>
+
+            <MedicineReviewDialog 
+                medicine={selectedReviewMedicine}
+                isOpen={isReviewOpen}
+                onClose={() => setIsReviewOpen(false)}
+            />
 
             <ConfirmDialog
                 isOpen={deleteDialogOpen}

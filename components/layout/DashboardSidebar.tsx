@@ -76,7 +76,6 @@ export default function DashboardSidebar({ role }: DashboardSidebarProps) {
     { name: "Analytics", icon: BarChart3, href: "/admin/analytics" },
     { name: "Messages", icon: MessageSquare, href: "/admin/messages" },
     { name: "Notifications", icon: Bell, href: "/admin/notifications" },
-    { name: "Reviews", icon: Star, href: "/admin/reviews" },
     { name: "Settings", icon: Settings, href: "/admin/settings" },
   ];
 

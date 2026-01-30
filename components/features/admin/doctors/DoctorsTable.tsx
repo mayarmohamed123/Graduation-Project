@@ -46,7 +46,7 @@ export function DoctorsTable({ doctors, loading, onApprove, onReject, onDelete, 
                                 <tr key={doctor.id} className="hover:bg-gray-50 transition-colors">
                                     <td className="px-6 py-4">
                                         <div className="flex items-center gap-3">
-                                            <div className="relative h-10 w-10 rounded-full overflow-hidden bg-gray-100 flex-shrink-0">
+                                            <div className="relative h-10 w-10 rounded-full overflow-hidden bg-gray-100 shrink-0">
                                                 {doctor.doctorImage ? (
                                                     <Image
                                                         src={doctor.doctorImage}
@@ -100,19 +100,24 @@ export function DoctorsTable({ doctors, loading, onApprove, onReject, onDelete, 
                                         <div className="flex items-center justify-center gap-2">
                                             <Link
                                                 href={`/admin/doctors/${doctor.userId}/appointments`}
-                                                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
-                                                title="Show Appointments"
+                                                className="p-2 text-blue-600 bg-blue-50 rounded-xl hover:bg-blue-100 transition-all active:scale-95"
+                                                title="Appointments"
                                             >
-                                                <Calendar className="w-3.5 h-3.5" />
-                                                <span>Appts</span>
+                                                <Calendar className="w-4 h-4" />
                                             </Link>
                                             <Link
                                                 href={`/admin/doctors/${doctor.userId}/patients`}
-                                                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-purple-600 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors"
-                                                title="Show Patients"
+                                                className="p-2 text-purple-600 bg-purple-50 rounded-xl hover:bg-purple-100 transition-all active:scale-95"
+                                                title="Patients"
                                             >
-                                                <Users className="w-3.5 h-3.5" />
-                                                <span>Patients</span>
+                                                <Users className="w-4 h-4" />
+                                            </Link>
+                                            <Link
+                                                href={`/admin/doctors/${doctor.userId}/reviews`}
+                                                className="p-2 text-amber-600 bg-amber-50 rounded-xl hover:bg-amber-100 transition-all active:scale-95"
+                                                title="Reviews"
+                                            >
+                                                <Star className="w-4 h-4" />
                                             </Link>
                                         </div>
                                     </td>

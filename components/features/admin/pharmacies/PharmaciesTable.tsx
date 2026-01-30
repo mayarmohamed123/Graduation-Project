@@ -1,9 +1,10 @@
 import Image from "next/image";
-import { Check, X, Trash2, Eye, Building2, Phone, MapPin, Package, ClipboardList, MessageCircle } from "lucide-react";
+import { Check, X, Trash2, Eye, Building2, Phone, MapPin, Package, ClipboardList, MessageCircle, Star } from "lucide-react";
 import { AdminPharmacist } from "@/types/admin";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 interface PharmaciesTableProps {
     pharmacists: AdminPharmacist[];
@@ -28,6 +29,7 @@ export function PharmaciesTable({
     onOrdersClick,
     onStartChat
 }: PharmaciesTableProps) {
+    const router = useRouter();
     return (
         <div className="bg-white rounded-xl shadow-sm border overflow-hidden">
             <div className="overflow-x-auto">
@@ -63,7 +65,7 @@ export function PharmaciesTable({
                                 <tr key={pharmacist.id} className="hover:bg-gray-50/50 transition-colors">
                                     <td className="px-6 py-4">
                                         <div className="flex items-center gap-3">
-                                            <Avatar className="h-10 w-10 border border-gray-100 flex-shrink-0">
+                                            <Avatar className="h-10 w-10 border border-gray-100 shrink-0">
                                                 <AvatarImage src={pharmacist.pharmacistImage || ""} alt={pharmacist.email} className="object-cover" />
                                                 <AvatarFallback className="bg-primary/5 text-primary text-xs font-bold uppercase">
                                                     {pharmacist.email.substring(0, 2)}
@@ -77,7 +79,7 @@ export function PharmaciesTable({
                                     </td>
                                     <td className="px-6 py-4">
                                         <div className="flex items-center gap-3">
-                                            <div className="relative h-10 w-10 rounded-lg overflow-hidden bg-gray-50 border border-gray-100 flex-shrink-0">
+                                            <div className="relative h-10 w-10 rounded-lg overflow-hidden bg-gray-50 border border-gray-100 shrink-0">
                                                 {pharmacist.pharmacyImagePath ? (
                                                     <Image
                                                         src={pharmacist.pharmacyImagePath}
@@ -131,19 +133,30 @@ export function PharmaciesTable({
                                         <div className="flex items-center justify-center gap-2">
                                             <Button
                                                 variant="ghost"
-                                                className="h-9 px-3 text-teal-600 hover:text-teal-700 hover:bg-teal-50 rounded-lg transition-all flex items-center gap-2"
+                                                size="icon"
+                                                className="h-9 w-9 text-teal-600 bg-teal-50 hover:text-teal-700 hover:bg-teal-100 rounded-xl transition-all active:scale-95"
                                                 onClick={() => onInventoryClick?.(pharmacist)}
+                                                title="Inventory"
                                             >
                                                 <Package className="w-4 h-4" />
-                                                <span className="text-xs font-semibold">Inventory</span>
                                             </Button>
                                             <Button
                                                 variant="ghost"
-                                                className="h-9 px-3 text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-lg transition-all flex items-center gap-2"
+                                                size="icon"
+                                                className="h-9 w-9 text-purple-600 bg-purple-50 hover:text-purple-700 hover:bg-purple-100 rounded-xl transition-all active:scale-95"
                                                 onClick={() => onOrdersClick?.(pharmacist)}
+                                                title="Orders"
                                             >
                                                 <ClipboardList className="w-4 h-4" />
-                                                <span className="text-xs font-semibold">Orders</span>
+                                            </Button>
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                className="h-9 w-9 text-amber-600 bg-amber-50 hover:text-amber-700 hover:bg-amber-100 rounded-xl transition-all active:scale-95"
+                                                onClick={() => router.push(`/admin/pharmacies/${pharmacist.userId}/reviews`)}
+                                                title="Reviews"
+                                            >
+                                                <Star className="w-4 h-4" />
                                             </Button>
                                         </div>
                                     </td>
