@@ -2,16 +2,16 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { DoctorsFilters } from "@/components/features/admin/doctors/DoctorsFilters";
-import { DoctorsTable } from "@/components/features/admin/doctors/DoctorsTable";
-import { DoctorDetailsDialog } from "@/components/features/admin/doctors/DoctorDetailsDialog";
-import { ConfirmationDialog } from "@/components/ui/confirmation-dialog";
+import { DoctorsFilters } from "@/Components/features/admin/doctors/DoctorsFilters";
+import { DoctorsTable } from "@/Components/features/admin/doctors/DoctorsTable";
+import { DoctorDetailsDialog } from "@/Components/features/admin/doctors/DoctorDetailsDialog";
+import { ConfirmationDialog } from "@/Components/ui/confirmation-dialog";
 import { adminService } from "@/Services/admin/adminService";
 import { AdminDoctor, DoctorProfileData, ClinicInfoData } from "@/types/admin";
 import { toast } from "react-hot-toast";
 
 interface DoctorsManagementClientProps {
-  initialDoctors: AdminDoctor[];
+    initialDoctors: AdminDoctor[];
 }
 
 export default function DoctorsManagementClient({ initialDoctors }: DoctorsManagementClientProps) {
@@ -121,7 +121,7 @@ export default function DoctorsManagementClient({ initialDoctors }: DoctorsManag
             if (updated && selectedDoctor?.id === id) {
                 setSelectedDoctor(updated);
             }
-            
+
             toast.success("Doctor details updated successfully");
             router.refresh();
         } catch (error) {

@@ -1,92 +1,66 @@
 "use client";
 
-import { use, useState, Suspense } from "react";
-import DoctorReviews from "@/components/features/doctor/DoctorReviews";
-import LoadingSpinner from "@/components/common/LoadingSpinner";
-import PrvButton from "@/components/common/prvButton";
-import PatientInfoDialog from "@/components/features/appointment/PatientInfoDialog";
-import DoctorInfoCard from "@/components/features/appointment/DoctorInfoCard";
-import BookingSection from "@/components/features/appointment/BookingSection";
+import { use, Suspense } from "react";
+import { useRouter } from "next/navigation";
+import DoctorReviews from "@/Components/features/doctor/DoctorReviews";
+import LoadingSpinner from "@/Components/common/LoadingSpinner";
+import PrvButton from "@/Components/common/prvButton";
+// import PatientInfoDialog from "@/Components/features/appointment/PatientInfoDialog";
+import DoctorInfoCard from "@/Components/features/appointment/DoctorInfoCard";
+import BookingSection from "@/Components/features/appointment/BookingSection";
 import { useAppointment } from "@/hooks/useAppointment";
 
-function AppointmentContent({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = use(params);
+export default function AppointmentPage({ params }: { params: Promise<{ id: string[] }> }) {
+  const resolvedParams = use(params);
+  const id = resolvedParams.id[0];
+
   const {
     doctor,
+    isLoading,
     reviews,
     setReviews,
-    isLoading,
-    bookLoading,
-    chatLoading,
-    slotsLoading,
     selectedDate,
-    setSelectedDate,
     selectedSlot,
+    setSelectedDate,
     setSelectedSlot,
     availableSlots,
-    bookAppointment,
+    slotsLoading,
+    chatLoading,
     startDoctorChat
   } = useAppointment(id);
 
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const router = useRouter();
 
   const handleBookNowClick = () => {
-    setDialogOpen(true);
+    if (!doctor || !selectedSlot) return;
+
+    const params = new URLSearchParams({
+      doctorId: doctor.id.toString(),
+      date: selectedDate,
+      startTime: selectedSlot.startAt,
+      endTime: selectedSlot.endAt
+    });
+
+    router.push(`/user/appointment/summary?${params.toString()}`);
   };
 
-  const handlePatientInfoSubmit = async (patientInfo: {
-    PatientName: string;
-    PatientPhone: string;
-    patientAge: number;
-    patientGender: string;
-  }) => {
-    try {
-      await bookAppointment(patientInfo);
-      setDialogOpen(false);
-    } catch {
-      // Error is handled in the hook (toast)
-    }
-  };
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen">
-        <LoadingSpinner />
-      </div>
-    );
-  }
-
-  if (!doctor) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <p className="text-xl text-gray-600">Doctor not found</p>
-          <p className="text-sm text-gray-500">Invalid doctor ID: {id}</p>
-        </div>
-      </div>
-    );
-  }
+  if (isLoading) return <LoadingSpinner />;
+  if (!doctor) return <div className="text-center py-10">Doctor not found</div>;
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-10">
-      {/* Header */}
-      <div className="mb-8 flex">
-        <div className="flex gap-3 items-center w-full">
-          <PrvButton />
-          <h3 className="text-4xl font-semibold text-gray-900">Doctor</h3>
+    <div className="container mx-auto px-4 py-8 space-y-8 max-w-7xl">
+      <PrvButton />
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Left Column: Doctor Info */}
+        <div className="lg:col-span-1 h-fit">
+          <DoctorInfoCard
+            doctor={doctor}
+          />
         </div>
-      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-        {/* Left column: Doctor info */}
-        <DoctorInfoCard doctor={doctor} />
-
-        {/* Right column: Booking & Reviews */}
-        <div className="lg:col-span-2 space-y-10">
+        {/* Right Column: Booking & Reviews */}
+        <div className="lg:col-span-2 space-y-8">
           <BookingSection
             selectedDate={selectedDate}
             setSelectedDate={setSelectedDate}
@@ -99,38 +73,15 @@ function AppointmentContent({
             chatLoading={chatLoading}
           />
 
-          <div className="bg-white rounded-2xl shadow p-6 md:p-8">
+          <Suspense fallback={<LoadingSpinner />}>
             <DoctorReviews
               doctorId={doctor.id}
               reviews={reviews}
               setReviews={setReviews}
             />
-          </div>
+          </Suspense>
         </div>
       </div>
-
-      <PatientInfoDialog
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
-        onSubmit={handlePatientInfoSubmit}
-        isLoading={bookLoading}
-      />
     </div>
-  );
-}
-
-export default function AppointmentPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  return (
-    <Suspense fallback={
-      <div className="min-h-screen">
-        <LoadingSpinner />
-      </div>
-    }>
-      <AppointmentContent params={params} />
-    </Suspense>
   );
 }
