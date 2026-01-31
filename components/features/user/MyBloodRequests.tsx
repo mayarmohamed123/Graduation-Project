@@ -140,8 +140,8 @@ export default function MyBloodRequests() {
     }
 
     return (
-        <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-gray-900">My Blood Requests</h2>
+        <div className="h-full flex flex-col space-y-6">
+            <h2 className="text-2xl font-bold text-gray-900 shrink-0">My Blood Requests</h2>
 
             {requests.length === 0 ? (
                 <div className="bg-white rounded-2xl shadow-sm p-12 text-center border border-gray-100">
@@ -149,64 +149,66 @@ export default function MyBloodRequests() {
                     <p className="text-gray-500 text-lg">You haven&apos;t made any blood requests yet.</p>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 gap-6">
-                    {requests.map((request) => (
-                        <div key={request.id} className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-                            <div className="space-y-3 flex-1">
-                                <h3 className="text-xl font-bold text-primary">{request.hospitalName}</h3>
+                <div className="flex-1 overflow-y-auto pr-2 scrollbar-hide">
+                    <div className="grid grid-cols-1 gap-6 pb-4">
+                        {requests.map((request) => (
+                            <div key={request.id} className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                                <div className="space-y-3 flex-1">
+                                    <h3 className="text-xl font-bold text-primary">{request.hospitalName}</h3>
 
-                                <div className="flex flex-col gap-1">
-                                    <p className="text-lg font-semibold text-gray-800">
-                                        Type: <span className="text-primary">{formatBloodType(request.requiredType)}</span>
-                                        <span className="mx-2 text-gray-300">|</span>
-                                        Units: <span className="text-primary">{request.units}</span>
-                                    </p>
-                                    <p className="text-sm font-medium text-amber-600">
-                                        Need Within: {request.needWithin}
-                                    </p>
+                                    <div className="flex flex-col gap-1">
+                                        <p className="text-lg font-semibold text-gray-800">
+                                            Type: <span className="text-primary">{formatBloodType(request.requiredType)}</span>
+                                            <span className="mx-2 text-gray-300">|</span>
+                                            Units: <span className="text-primary">{request.units}</span>
+                                        </p>
+                                        <p className="text-sm font-medium text-amber-600">
+                                            Need Within: {request.needWithin}
+                                        </p>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <div className="flex items-center gap-2 text-gray-500 text-sm">
+                                            <MapPin size={16} className="text-primary" />
+                                            <span>{request.city}, {request.country}</span>
+                                        </div>
+                                        <div className="flex items-center gap-2 text-gray-500 text-sm">
+                                            <Clock size={16} className="text-primary" />
+                                            <span>Posted: {new Date(request.createdAt).toLocaleDateString()}</span>
+                                        </div>
+                                    </div>
                                 </div>
 
-                                <div className="space-y-2">
-                                    <div className="flex items-center gap-2 text-gray-500 text-sm">
-                                        <MapPin size={16} className="text-primary" />
-                                        <span>{request.city}, {request.country}</span>
-                                    </div>
-                                    <div className="flex items-center gap-2 text-gray-500 text-sm">
-                                        <Clock size={16} className="text-primary" />
-                                        <span>Posted: {new Date(request.createdAt).toLocaleDateString()}</span>
-                                    </div>
+                                <div className="flex gap-2 w-full md:w-auto">
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => openUpdateModal(request)}
+                                        className="flex-1 md:flex-none gap-2 rounded-xl"
+                                    >
+                                        <Edit2 size={16} /> Edit
+                                    </Button>
+                                    <Button
+                                        variant="destructive"
+                                        size="sm"
+                                        onClick={() => openDeleteModal(request)}
+                                        disabled={isDeleting}
+                                        className="flex-1 md:flex-none gap-2 rounded-xl"
+                                    >
+                                        <Trash2 size={16} /> Delete
+                                    </Button>
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => setViewingDonorsFor({ id: request.id, name: request.hospitalName })}
+                                        className="flex-1 md:flex-none gap-2 rounded-xl text-primary border-primary hover:bg-primary/5"
+                                    >
+                                        <Users size={16} /> Donors
+                                    </Button>
                                 </div>
                             </div>
-
-                            <div className="flex gap-2 w-full md:w-auto">
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => openUpdateModal(request)}
-                                    className="flex-1 md:flex-none gap-2 rounded-xl"
-                                >
-                                    <Edit2 size={16} /> Edit
-                                </Button>
-                                <Button
-                                    variant="destructive"
-                                    size="sm"
-                                    onClick={() => openDeleteModal(request)}
-                                    disabled={isDeleting}
-                                    className="flex-1 md:flex-none gap-2 rounded-xl"
-                                >
-                                    <Trash2 size={16} /> Delete
-                                </Button>
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => setViewingDonorsFor({ id: request.id, name: request.hospitalName })}
-                                    className="flex-1 md:flex-none gap-2 rounded-xl text-primary border-primary hover:bg-primary/5"
-                                >
-                                    <Users size={16} /> Donors
-                                </Button>
-                            </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
             )}
 

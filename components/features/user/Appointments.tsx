@@ -188,9 +188,9 @@ export default function Appointments() {
 
   if (isLoading) {
     return (
-      <div>
-        <h2 className="text-xl font-semibold text-gray-900 mb-8">Appointments</h2>
-        <div className="flex items-center justify-center py-12">
+      <div className="h-full flex flex-col">
+        <h2 className="text-xl font-semibold text-gray-900 mb-8 shrink-0">Appointments</h2>
+        <div className="flex-1 flex items-center justify-center">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
         </div>
       </div>
@@ -198,20 +198,22 @@ export default function Appointments() {
   }
 
   return (
-    <div>
-      <h2 className="text-xl font-semibold text-gray-900 mb-8">Appointments</h2>
+    <div className="h-full flex flex-col">
+      <div className="shrink-0">
+        <h2 className="text-xl font-semibold text-gray-900 mb-8">Appointments</h2>
 
-      {/* Tab Filters */}
-      <div className="mb-8 flex justify-center">
-        <Switch
-          tabs={[
-            { id: "pending", label: "Pending" },
-            { id: "completed", label: "Completed" },
-            { id: "cancelled", label: "Canceled" },
-          ]}
-          activeTab={activeTab}
-          onTabChange={(id: string) => setActiveTab(id as TabType)}
-        />
+        {/* Tab Filters */}
+        <div className="mb-8 flex justify-center">
+          <Switch
+            tabs={[
+              { id: "pending", label: "Pending" },
+              { id: "completed", label: "Completed" },
+              { id: "cancelled", label: "Canceled" },
+            ]}
+            activeTab={activeTab}
+            onTabChange={(id: string) => setActiveTab(id as TabType)}
+          />
+        </div>
       </div>
 
       {/* Content */}
@@ -222,14 +224,16 @@ export default function Appointments() {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {filteredAppointments.map((appointment) => (
-            <AppointmentCard
-              key={appointment.id}
-              appointment={appointment}
-              showButtons={activeTab === "pending"}
-            />
-          ))}
+        <div className="flex-1 overflow-y-auto pr-2 scrollbar-hide">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {filteredAppointments.map((appointment) => (
+              <AppointmentCard
+                key={appointment.id}
+                appointment={appointment}
+                showButtons={activeTab === "pending"}
+              />
+            ))}
+          </div>
         </div>
       )}
     </div>

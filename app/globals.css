@@ -192,3 +192,11 @@ html {
 .chat-scroll::-webkit-scrollbar-thumb:hover {
   background: #9CA3AF;
 }
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+.scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
