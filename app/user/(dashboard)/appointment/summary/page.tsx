@@ -4,9 +4,9 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState, Suspense } from "react";
 import Image from "next/image";
 import { ArrowLeft, Calendar, Clock, MapPin, BadgeCheck, Loader2 } from "lucide-react";
-import { Button } from "@/Components/ui/button";
-import { Input } from "@/Components/ui/input";
-import { Label } from "@/Components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { toast } from "react-hot-toast";
 import { doctorService } from "@/Services/doctorService";
 import { Doctor } from "@/types/doctors";
@@ -165,7 +165,7 @@ function AppointmentSummaryContent() {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Left Column: Patient Form */}
                     <div className="lg:col-span-2 space-y-6">
-                        <div className="bg-white rounded-[2rem] border border-gray-100 p-8 shadow-sm">
+                        <div className="bg-white rounded-4xl border border-gray-100 p-8 shadow-sm">
                             <h2 className="text-xl font-bold text-gray-900 mb-6">Patient Details</h2>
 
                             <div className="space-y-6">
@@ -245,7 +245,7 @@ function AppointmentSummaryContent() {
                     {/* Right Column: Doctor & Payment Summary */}
                     <div className="lg:col-span-1 space-y-6">
                         {/* Doctor Info Card */}
-                        <div className="bg-white rounded-[2rem] border border-gray-100 p-6 shadow-sm">
+                        <div className="bg-white rounded-4xl border border-gray-100 p-6 shadow-sm">
                             <div className="flex gap-4 items-start mb-6">
                                 <div className="relative w-16 h-16 rounded-2xl overflow-hidden shrink-0 bg-gray-100">
                                     <Image
@@ -296,7 +296,7 @@ function AppointmentSummaryContent() {
                         </div>
 
                         {/* Payment Summary */}
-                        <div className="bg-white rounded-[2rem] border border-gray-100 p-6 shadow-sm">
+                        <div className="bg-white rounded-4xl border border-gray-100 p-6 shadow-sm">
                             <h3 className="font-bold text-gray-900 mb-4">Payment Summary</h3>
                             <div className="space-y-3 mb-6">
                                 <div className="flex justify-between text-sm">

@@ -78,6 +78,17 @@ class AuthService {
     );
   }
 
+  async resetPassword(email: string, token: string, newpassword: string): Promise<{ message: string }> {
+    return apiRequest<{ message: string }>(
+      `${API_BASE_URL}/User/reset-password`,
+      {
+        method: "POST",
+        data: { email, token, newpassword },
+        requiresAuth: false,
+      }
+    );
+  }
+
   async googleLogin(): Promise<void> {
     // Redirect to backend OAuth endpoint
     window.location.href = `${API_BASE_URL}/User/google-login`;

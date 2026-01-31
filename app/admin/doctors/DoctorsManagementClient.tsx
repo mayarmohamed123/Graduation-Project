@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { DoctorsFilters } from "@/Components/features/admin/doctors/DoctorsFilters";
-import { DoctorsTable } from "@/Components/features/admin/doctors/DoctorsTable";
-import { DoctorDetailsDialog } from "@/Components/features/admin/doctors/DoctorDetailsDialog";
-import { ConfirmationDialog } from "@/Components/ui/confirmation-dialog";
+import { DoctorsFilters } from "@/components/features/admin/doctors/DoctorsFilters";
+import { DoctorsTable } from "@/components/features/admin/doctors/DoctorsTable";
+import { DoctorDetailsDialog } from "@/components/features/admin/doctors/DoctorDetailsDialog";
+import { ConfirmationDialog } from "@/components/ui/confirmation-dialog";
 import { adminService } from "@/Services/admin/adminService";
 import { AdminDoctor, DoctorProfileData, ClinicInfoData } from "@/types/admin";
 import { toast } from "react-hot-toast";

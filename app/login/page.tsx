@@ -2,6 +2,7 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 import Image from "next/image";
 import { Lock, Mail } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -147,11 +148,11 @@ function SignInForm() {
 
             {/* Forgot Password */}
             <div className="text-right mb-4 mt-2">
-              <a
+              <Link
                 href="/forgot-password"
                 className="text-sm text-[#2BBBC5] hover:underline">
                 Forgot Password?
-              </a>
+              </Link>
             </div>
 
             {/* Button */}
