@@ -12,12 +12,12 @@ function PaymentSuccessContent() {
   const router = useRouter();
   // Check for both session_id (Stripe default) and sessionId (custom)
   const sessionId = searchParams.get("session_id") || searchParams.get("sessionId");
-  
+
   // Initialize status based on sessionId presence to avoid useEffect setState warning
-  const [status, setStatus] = useState<"loading" | "success" | "error">(() => 
+  const [status, setStatus] = useState<"loading" | "success" | "error">(() =>
     !sessionId ? "error" : "loading"
   );
-  
+
   const hasVerified = useRef(false);
 
   useEffect(() => {
@@ -70,14 +70,14 @@ function PaymentSuccessContent() {
             </p>
           </div>
           <div className="pt-4 flex flex-col gap-3">
-            <Button 
+            <Button
               className="w-full h-12 rounded-xl bg-[#2BBBC5] hover:bg-[#25A0A9] text-white font-bold"
               onClick={() => router.push("/")}
             >
               Return Home
             </Button>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               className="w-full h-12 rounded-xl border-gray-200"
               onClick={() => router.push("/login")}
             >
@@ -93,7 +93,7 @@ function PaymentSuccessContent() {
     <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gray-50">
       <div className="bg-white p-10 rounded-3xl shadow-xl border border-gray-100 max-w-lg w-full text-center space-y-8 animate-in zoom-in-95 duration-300">
         <div className="relative w-64 h-64 mx-auto mb-6">
-           <Image
+          <Image
             src="/images/payment-success.png"
             alt="Payment Successful"
             fill
@@ -101,7 +101,7 @@ function PaymentSuccessContent() {
             priority
           />
         </div>
-        
+
         <div className="space-y-3">
           <h1 className="text-3xl font-black font-outfit text-gray-900">Payment Done Successfully!</h1>
           <p className="text-gray-500 text-lg">
@@ -127,7 +127,14 @@ function PaymentSuccessContent() {
           </ul>
         </div>
 
-      
+        <div className="pt-2">
+          <Button
+            className="w-full h-14 rounded-2xl bg-[#2BBBC5] hover:bg-[#25A0A9] text-white font-bold text-lg shadow-lg shadow-[#2BBBC5]/20 transition-all hover:scale-[1.02] active:scale-95"
+            onClick={() => router.push("/user")}
+          >
+            Return to Home Page
+          </Button>
+        </div>
       </div>
     </div>
   );
