@@ -9,6 +9,7 @@ import { userService } from "@/Services/userService";
 import { toast } from "react-hot-toast";
 import { formatDate, formatTime } from "@/lib/dateUtils";
 import { startConversationWithDoctor } from "@/Services/chatServices";
+import Switch from "@/components/common/Switch";
 
 type TabType = "pending" | "completed" | "cancelled";
 
@@ -201,31 +202,16 @@ export default function Appointments() {
       <h2 className="text-xl font-semibold text-gray-900 mb-8">Appointments</h2>
 
       {/* Tab Filters */}
-      <div className="flex gap-3 mb-8 bg-gray-100 p-2 rounded-full justify-evenly transition-all ">
-        <button
-          onClick={() => setActiveTab("pending")}
-          className={`px-16 py-3 rounded-full font-medium transition ${activeTab === "pending"
-              ? "bg-primary text-white"
-              : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-            }`}>
-          Pending
-        </button>
-        <button
-          onClick={() => setActiveTab("completed")}
-          className={`px-16 py-3 rounded-full font-medium transition ${activeTab === "completed"
-              ? "bg-primary text-white"
-              : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-            }`}>
-          Completed
-        </button>
-        <button
-          onClick={() => setActiveTab("cancelled")}
-          className={`px-16 py-3 rounded-full font-medium transition ${activeTab === "cancelled"
-              ? "bg-primary text-white"
-              : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-            }`}>
-          Canceled
-        </button>
+      <div className="mb-8 flex justify-center">
+        <Switch
+          tabs={[
+            { id: "pending", label: "Pending" },
+            { id: "completed", label: "Completed" },
+            { id: "cancelled", label: "Canceled" },
+          ]}
+          activeTab={activeTab}
+          onTabChange={(id: string) => setActiveTab(id as TabType)}
+        />
       </div>
 
       {/* Content */}

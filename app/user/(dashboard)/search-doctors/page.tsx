@@ -7,8 +7,6 @@ import { FilterState, Doctor } from "@/types/doctors";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import SearchInput from "@/components/common/SearchInput";
 import DoctorCard from "@/components/features/doctor/DoctorCard";
-import { Button } from "@/components/ui/button";
-import SpecialtyIcon from "@/components/common/SpecialtyIcon";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";

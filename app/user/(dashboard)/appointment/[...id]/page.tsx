@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import DoctorReviews from "@/components/features/doctor/DoctorReviews";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import PrvButton from "@/components/common/prvButton";
-// import PatientInfoDialog from "@/Components/features/appointment/PatientInfoDialog";
+// import PatientInfoDialog from "@/components/features/appointment/PatientInfoDialog";
 import DoctorInfoCard from "@/components/features/appointment/DoctorInfoCard";
 import BookingSection from "@/components/features/appointment/BookingSection";
 import { useAppointment } from "@/hooks/useAppointment";
