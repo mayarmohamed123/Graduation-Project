@@ -69,14 +69,14 @@ export default function UserHomeSlider() {
 
             <div className="max-w-md">
               <h2 className="text-2xl font-medium text-[#259FA7] mb-2">
-                Order Medicines Easily & Securely
+                Find & Order Medicines Easily
               </h2>
               <p className="font-normal text-[#259FA7] mb-4">
-                Fast delivery from verified pharmacies — your health, your
-                convenience.
+                Locate specific medicines nearby and get fast delivery from
+                verified pharmacies.
               </p>
               <Button shape="pill" className="bg-[#2BBBC5] text-white hover:bg-[#25A0A9] font-semibold shadow-md" onClick={() => router.push("/user/search-medicine")}>
-                Order Now
+                Find & Order Now
               </Button>
             </div>
           </div>

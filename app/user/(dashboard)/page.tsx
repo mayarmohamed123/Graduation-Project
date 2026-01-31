@@ -63,7 +63,7 @@ export default async function Page() {
     },
     {
       id: 3,
-      title: "Donate Blood",
+      title: "Donate or Request Blood",
       description: "Save lives and support your community.",
       image: donateCardImage,
       alt: "Donate Blood",
