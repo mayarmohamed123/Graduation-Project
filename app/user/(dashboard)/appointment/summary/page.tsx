@@ -4,9 +4,9 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState, Suspense } from "react";
 import Image from "next/image";
 import { ArrowLeft, Calendar, Clock, MapPin, BadgeCheck, Loader2 } from "lucide-react";
-import { Button } from "@/Components/ui/button";
-import { Input } from "@/Components/ui/input";
-import { Label } from "@/Components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { toast } from "react-hot-toast";
 import { doctorService } from "@/Services/doctorService";
 import { Doctor } from "@/types/doctors";
@@ -59,8 +59,6 @@ function AppointmentSummaryContent() {
 
     // Derived values
     const consultationFee = doctor?.consultationPrice || 0;
-    const serviceCharge = 5; // Example fixed service charge
-    const totalAmount = consultationFee + serviceCharge;
 
     // Form Handling
     const handleInputChange = (field: string, value: string) => {
@@ -124,7 +122,7 @@ function AppointmentSummaryContent() {
     };
 
     // Helper: Format Date/Time
-    const formattedDate = date ? new Date(date).toLocaleDateString("en-US", {
+    const formattedDate = date ? new Date(date + 'T00:00:00').toLocaleDateString("en-US", {
         weekday: 'long',
         year: 'numeric',
         month: 'long',
@@ -303,13 +301,9 @@ function AppointmentSummaryContent() {
                                     <span className="text-gray-600">Consultation Fee</span>
                                     <span className="font-semibold text-gray-900">${consultationFee}</span>
                                 </div>
-                                <div className="flex justify-between text-sm">
-                                    <span className="text-gray-600">Service Charge</span>
-                                    <span className="font-semibold text-gray-900">${serviceCharge}</span>
-                                </div>
                                 <div className="pt-3 border-t border-gray-100 flex justify-between items-center">
                                     <span className="font-bold text-gray-900">Total</span>
-                                    <span className="text-xl font-black text-[#2BBBC5]">${totalAmount}</span>
+                                    <span className="text-xl font-black text-[#2BBBC5]">${consultationFee}</span>
                                 </div>
                             </div>
 

@@ -2,12 +2,12 @@
 
 import { use, Suspense } from "react";
 import { useRouter } from "next/navigation";
-import DoctorReviews from "@/Components/features/doctor/DoctorReviews";
-import LoadingSpinner from "@/Components/common/LoadingSpinner";
-import PrvButton from "@/Components/common/prvButton";
+import DoctorReviews from "@/components/features/doctor/DoctorReviews";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
+import PrvButton from "@/components/common/prvButton";
 // import PatientInfoDialog from "@/Components/features/appointment/PatientInfoDialog";
-import DoctorInfoCard from "@/Components/features/appointment/DoctorInfoCard";
-import BookingSection from "@/Components/features/appointment/BookingSection";
+import DoctorInfoCard from "@/components/features/appointment/DoctorInfoCard";
+import BookingSection from "@/components/features/appointment/BookingSection";
 import { useAppointment } from "@/hooks/useAppointment";
 
 export default function AppointmentPage({ params }: { params: Promise<{ id: string[] }> }) {
@@ -34,11 +34,20 @@ export default function AppointmentPage({ params }: { params: Promise<{ id: stri
   const handleBookNowClick = () => {
     if (!doctor || !selectedSlot) return;
 
+    // Merge selectedDate (YYYY-MM-DD) with the time portion of startAt/endAt (e.g. T11:30:00)
+    const mergeDateTime = (dateStr: string, isoStr: string) => {
+      const timePart = isoStr.split("T")[1];
+      return `${dateStr}T${timePart}`;
+    };
+
+    const startTime = mergeDateTime(selectedDate, selectedSlot.startAt);
+    const endTime = mergeDateTime(selectedDate, selectedSlot.endAt);
+
     const params = new URLSearchParams({
       doctorId: doctor.id.toString(),
       date: selectedDate,
-      startTime: selectedSlot.startAt,
-      endTime: selectedSlot.endAt
+      startTime: startTime,
+      endTime: endTime,
     });
 
     router.push(`/user/appointment/summary?${params.toString()}`);

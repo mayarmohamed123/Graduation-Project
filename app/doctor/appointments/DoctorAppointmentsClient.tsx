@@ -1,7 +1,7 @@
 "use client";
 
-import StatisticsCard from "@/Components/features/doctor/StatisticsCard";
-import AppointmentCard from "@/Components/features/doctor/AppointmentCard";
+import StatisticsCard from "@/components/features/doctor/StatisticsCard";
+import AppointmentCard from "@/components/features/doctor/AppointmentCard";
 import React, { useState } from "react";
 import {
     Search,
@@ -14,18 +14,18 @@ import {
     Plus,
     Loader2,
 } from "lucide-react";
-import { Button } from "@/Components/ui/button";
+import { Button } from "@/components/ui/button";
 import { AppointmentInfo, AppointmentStats } from "@/types/appointments";
 import { useAppointmentActions } from "@/hooks/useAppointmentActions";
 import { useRouter } from "next/navigation";
 import { useEffect, useCallback } from "react";
 import { doctorService } from "@/Services/doctorService";
 import { DoctorAvailability, CreateAvailabilityData, UpdateAvailabilityData } from "@/types/doctors";
-import { AvailabilityList } from "@/Components/features/doctor/appointments/AvailabilityList";
-import { AvailabilityForm } from "@/Components/features/doctor/appointments/AvailabilityForm";
+import { AvailabilityList } from "@/components/features/doctor/appointments/AvailabilityList";
+import { AvailabilityForm } from "@/components/features/doctor/appointments/AvailabilityForm";
 import { toast } from "react-hot-toast";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/Components/ui";
-import { ConfirmDialog } from "@/Components/common/ConfirmDialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui";
+import { ConfirmDialog } from "@/components/common/ConfirmDialog";
 
 interface DoctorAppointmentsClientProps {
     initialData: {

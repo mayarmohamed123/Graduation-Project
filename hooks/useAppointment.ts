@@ -5,15 +5,7 @@ import { Doctor, Review, AppointmentSlot } from "@/types/doctors";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
-// Helper to format date for API (YYYY-MM-DD)
-const formatDateForApi = (dateString: string): string => {
-  const date = new Date(dateString);
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-};
-
+// Initialized with YYYY-MM-DD format directly now
 export const useAppointment = (id: string) => {
   const router = useRouter();
   const [doctor, setDoctor] = useState<Doctor | null>(null);
@@ -22,15 +14,17 @@ export const useAppointment = (id: string) => {
   const [bookLoading, setBookLoading] = useState(false);
   const [chatLoading, setChatLoading] = useState(false);
   const [slotsLoading, setSlotsLoading] = useState(false);
-  
-  // Initialize with today's date
-  const today = new Date().toLocaleDateString("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
+
+  // Initialize with today's date in YYYY-MM-DD
+  const todayDate = new Date();
+  const offset = todayDate.getTimezoneOffset();
+  const localToday = new Date(todayDate.getTime() - offset * 60 * 1000);
+  const today = localToday.toISOString().split("T")[0];
+
   const [selectedDate, setSelectedDate] = useState<string>(today);
-  const [selectedSlot, setSelectedSlot] = useState<AppointmentSlot | null>(null);
+  const [selectedSlot, setSelectedSlot] = useState<AppointmentSlot | null>(
+    null,
+  );
   const [availableSlots, setAvailableSlots] = useState<AppointmentSlot[]>([]);
 
   const fetchDoctorData = useCallback(async () => {
@@ -50,7 +44,9 @@ export const useAppointment = (id: string) => {
       setReviews(Array.isArray(reviewData) ? reviewData : []);
     } catch (error) {
       console.error("Failed to load doctor data:", error);
-      toast.error(error instanceof Error ? error.message : "Failed to load doctor data");
+      toast.error(
+        error instanceof Error ? error.message : "Failed to load doctor data",
+      );
     } finally {
       setIsLoading(false);
     }
@@ -65,10 +61,12 @@ export const useAppointment = (id: string) => {
       const doctorId = parseInt(id, 10);
       if (isNaN(doctorId)) return;
 
-      const formattedDate = formatDateForApi(selectedDate);
-      const slots = await doctorService.getDoctorAvailableSlots(doctorId, formattedDate);
+      const slots = await doctorService.getDoctorAvailableSlots(
+        doctorId,
+        selectedDate,
+      );
       setAvailableSlots(slots);
-      
+
       // Clear selected slot when date changes
       setSelectedSlot(null);
     } catch (error) {
@@ -103,11 +101,16 @@ export const useAppointment = (id: string) => {
     try {
       setBookLoading(true);
 
+      const mergeDateTime = (dateStr: string, isoStr: string) => {
+        const timePart = isoStr.split("T")[1];
+        return `${dateStr}T${timePart}`;
+      };
+
       const payload = {
         doctorId: doctor.id,
         clinicId: doctor.clinicId,
-        startAt: selectedSlot.startAt,
-        endAt: selectedSlot.endAt,
+        startAt: mergeDateTime(selectedDate, selectedSlot.startAt),
+        endAt: mergeDateTime(selectedDate, selectedSlot.endAt),
         PatientName: patientInfo.PatientName,
         PatientPhone: patientInfo.PatientPhone,
         patientAge: patientInfo.patientAge,
@@ -115,19 +118,21 @@ export const useAppointment = (id: string) => {
       };
 
       // 1. Book the appointment
-      const bookingResponse = await doctorService.bookAppointmentInClinic(payload);
+      const bookingResponse =
+        await doctorService.bookAppointmentInClinic(payload);
 
       // 2. Create the payment session
       const sessionResponse = await doctorService.createPaymentSession(
-        bookingResponse.appointment.id
+        bookingResponse.appointment.id,
       );
 
       // 3. Redirect to Stripe checkout
       window.location.href = sessionResponse.sessionUrl;
-
     } catch (err) {
       console.error("Failed to book appointment:", err);
-      toast.error(err instanceof Error ? err.message : "Failed to book appointment");
+      toast.error(
+        err instanceof Error ? err.message : "Failed to book appointment",
+      );
       throw err; // Re-throw to handle in component if needed
     } finally {
       setBookLoading(false);
@@ -144,7 +149,9 @@ export const useAppointment = (id: string) => {
       toast.success("Opening chat with doctor...");
     } catch (error) {
       console.error("Failed to start chat:", error);
-      toast.error(error instanceof Error ? error.message : "Failed to start chat");
+      toast.error(
+        error instanceof Error ? error.message : "Failed to start chat",
+      );
     } finally {
       setChatLoading(false);
     }

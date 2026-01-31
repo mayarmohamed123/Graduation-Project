@@ -50,14 +50,14 @@ export default function BookingSection({
         <div className="flex-1 w-full max-w-[370px]">
           <Calendar
             mode="single"
+            required
             selected={new Date(selectedDate)}
             onSelect={(date) => {
               if (date) {
-                const formatted = date.toLocaleDateString("en-US", {
-                  month: "long",
-                  day: "numeric",
-                  year: "numeric",
-                });
+                // Format as YYYY-MM-DD using local time
+                const offset = date.getTimezoneOffset();
+                const localDate = new Date(date.getTime() - (offset * 60 * 1000));
+                const formatted = localDate.toISOString().split('T')[0];
                 setSelectedDate(formatted);
               }
             }}
@@ -81,7 +81,7 @@ export default function BookingSection({
               {activeSlots.map((slot) => {
                 const timeLabel = formatTime(slot.startAt);
                 const isSelected = selectedSlot?.startAt === slot.startAt;
-                
+
                 return (
                   <button
                     key={slot.startAt}
