@@ -107,7 +107,7 @@ function LandingNavbar() {
               className="rounded-full"
               priority
             />
-            <span className="text-2xl font-semibold text-primary">Sehha</span>
+            <span className="text-2xl font-semibold text-primary">Healing</span>
           </Link>
 
           {/* Desktop Menu */}
