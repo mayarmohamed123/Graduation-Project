@@ -6,7 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 
 import Image from "next/image";
 import Link from "next/link";
-import { sehhaLogo } from "@/assets";
+import { healingLogo } from "@/assets";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchUserCart } from "@/store/slices/cartSlice";
 import { usePathname } from "next/navigation";
@@ -47,14 +47,14 @@ function Navbar() {
           {/* Logo */}
           <Link href="/user" className="flex items-center gap-4">
             <Image
-              src={sehhaLogo}
-              alt="Sehha Logo"
+              src={healingLogo}
+              alt="Healing Logo"
               width={48}
               height={48}
               className="rounded-full"
               priority
             />
-            <span className="text-2xl font-semibold text-primary">Sehha</span>
+            <span className="text-2xl font-semibold text-primary">Healing</span>
           </Link>
 
           {/* Desktop Menu */}

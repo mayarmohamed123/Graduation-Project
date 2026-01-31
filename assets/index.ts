@@ -3,8 +3,8 @@ export { default as googleIcon } from "./Social Icons.svg";
 export { default as facebookIcon } from "./Social Icons (1).svg";
 
 // Logos
-export { default as sehhaLogo } from "./Sehaa 1.png";
 export { default as footerLogo } from "./Footer Logo.png";
+export { default as healingLogo } from "./healingLogo.png";
 
 // Vectors & Decorative
 export { default as vector37 } from "./Vector 37.png";

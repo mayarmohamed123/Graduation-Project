@@ -9,14 +9,14 @@ export default function JoinSection() {
       image: joinDoctorImage,
       title: "Join as a Doctor",
       description:
-        "Reach more patients and grow your practice with Sehha. Manage appointments, consultations, and communication in one secure platform.",
+        "Reach more patients and grow your practice with Healing. Manage appointments, consultations, and communication in one secure platform.",
       href: "/register/doctor",
     },
     {
       image: joinPharmacyImage,
       title: "Join as a Pharmacy",
       description:
-        "Serve patients faster and expand your reach. Receive and fulfill medicine orders through Sehha’s verified network.",
+        "Serve patients faster and expand your reach. Receive and fulfill medicine orders through Healing’s verified network.",
       href: "/register/pharmacy",
     },
   ];
@@ -27,7 +27,7 @@ export default function JoinSection() {
       <div className="text-center mb-16">
         <h2 className="heading mb-4">Join Us</h2>
         <p className="paragraph max-w-6xl mx-auto">
-          Be part of the Sehha network and help us make healthcare more
+          Be part of the Healing network and help us make healthcare more
           accessible. Whether you’re a doctor or a pharmacy, we provide the
           tools you need to connect with patients effectively.
         </p>
@@ -44,9 +44,8 @@ export default function JoinSection() {
               {/* Image container */}
               <div className="relative w-[220px] h-[220px] shrink-0">
                 <div
-                  className={`absolute ${
-                    index === 1 ? "-top-24" : "-top-[54px]"
-                  } -left-[42px]`}>
+                  className={`absolute ${index === 1 ? "-top-24" : "-top-[54px]"
+                    } -left-[42px]`}>
                   <Image
                     src={item.image}
                     alt={item.title}

@@ -44,7 +44,7 @@ export default function DoctorDashboardClient({ initialData }: DoctorDashboardCl
     <div className="max-w-7xl mx-auto space-y-8 pb-8">
       {/* Search Header - Optional based on image */}
       <div className="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm md:hidden">
-        <h1 className="text-xl font-bold text-gray-800">Sehha</h1>
+        <h1 className="text-xl font-bold text-gray-800">Healing</h1>
       </div>
 
       <div className="mt-4 mb-4">

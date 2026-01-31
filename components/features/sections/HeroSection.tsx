@@ -11,7 +11,7 @@ export default function HeroSection() {
       {/* Left Text Side */}
       <div className="flex-1 max-w-2xl space-y-6 text-center md:text-left">
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold text-primary leading-tight">
-          Your Health, Connected with Sehha
+          Your Health, Connected with Healing
         </h1>
         <p className="text-[#4D4D4D] font-semibold text-lg sm:text-xl md:text-2xl">
           Find trusted doctors near you, order medicines with ease, and donate

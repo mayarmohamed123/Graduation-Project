@@ -21,7 +21,7 @@ import {
   Star,
   Droplet,
 } from "lucide-react";
-import { sehhaLogo } from "@/assets";
+import { healingLogo } from "@/assets";
 import { useAuth } from "@/hooks/useAuth";
 
 type Role = "doctor" | "pharmacy" | "admin";
@@ -86,8 +86,8 @@ export default function DashboardSidebar({ role }: DashboardSidebarProps) {
       {/* Logo Section */}
       <div className="p-2 flex items-center gap-3">
         <Image
-          src={sehhaLogo}
-          alt="Sehha Logo"
+          src={healingLogo}
+          alt="Healing Logo"
           width={40}
           height={40}
           className="rounded-full"

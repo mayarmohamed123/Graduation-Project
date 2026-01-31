@@ -90,7 +90,7 @@ export default function UserHomeSlider() {
                 Save Lives. Donate Blood Today.
               </h2>
               <p className="font-normal text-white mb-4">
-                Join the Sehha community and make a real difference.
+                Join the Healing community and make a real difference.
               </p>
               <Button shape="pill" className="bg-white text-[#2BBBC5] hover:bg-gray-100 font-semibold shadow-md" onClick={() => router.push("/user/donation")}>
                 Donate Now

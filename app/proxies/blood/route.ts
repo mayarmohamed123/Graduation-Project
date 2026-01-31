@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  const API_URL = "https://sehha-api.ngrok.app/api/BloodRequest/unfulfilled";
+  const API_URL = "https://healing-api.ngrok.app/api/BloodRequest/unfulfilled";
 
   try {
     const response = await fetch(API_URL, {

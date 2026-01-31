@@ -9,7 +9,7 @@ export default function WorkSection() {
       number: 1,
       title: "Sign Up & Create Your Profile",
       description:
-        "Sign up on the Sehha website in minutes. Add your basic details to personalize your healthcare experience.",
+        "Sign up on the Healing website in minutes. Add your basic details to personalize your healthcare experience.",
     },
     {
       number: 2,
@@ -37,7 +37,7 @@ export default function WorkSection() {
       <div className="text-center mb-16">
         <h2 className="heading mb-4">How It Works</h2>
         <p className="paragraph max-w-7xl mx-auto">
-          Navigating your healthcare journey with Sehha is seamless. Just follow
+          Navigating your healthcare journey with Healing is seamless. Just follow
           these steps mentioned below to proceed with your selected services.
           You can also see our FAQ section for more guidance:
         </p>

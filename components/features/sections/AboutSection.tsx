@@ -6,7 +6,7 @@ export default function AboutSection() {
   return (
     <section id="about" className="max-w-7xl mx-auto px-8 md:px-20 py-20">
       {/* Section Title */}
-      <h2 className="heading text-center mb-16">About Sehha</h2>
+      <h2 className="heading text-center mb-16">About Healing</h2>
 
       {/* Content Wrapper */}
       <div className="flex flex-col md:flex-row items-center justify-between gap-6">
@@ -14,7 +14,7 @@ export default function AboutSection() {
         <div className="relative w-full md:w-1/2 h-[250px] sm:h-[300px] md:h-[400px]">
           <Image
             src={aboutImage}
-            alt="About Sehaa"
+            alt="About Healing"
             fill
             sizes="(max-width: 768px) 100vw, 50vw"
             className="object-contain rounded-2xl shadow-md"
@@ -25,7 +25,7 @@ export default function AboutSection() {
         {/* Right - Text */}
         <div className="max-w-xl space-y-6 text-center md:text-left">
           <p className="text-gray-600 leading-relaxed">
-            Sehha is a modern healthcare platform that connects patients,
+            Healing is a modern healthcare platform that connects patients,
             doctors, and pharmacies in one trusted digital space.
           </p>
           <p className="text-gray-600 leading-relaxed">

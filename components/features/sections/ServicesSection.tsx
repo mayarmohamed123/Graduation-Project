@@ -18,9 +18,9 @@ export default function ServicesSection() {
     },
     {
       icon: pharmacyServiceIcon,
-      title: "Order Medicines Online",
-      firstText: "Order prescriptions and health supplies easily.",
-      secondText: "Fast delivery from verified pharmacies.",
+      title: "Find & Order Medicines",
+      firstText: "Locate specific medicines in pharmacies near you.",
+      secondText: "Place orders online for fast and secure delivery.",
     },
     {
       icon: bloodServiceIcon,
@@ -47,7 +47,7 @@ export default function ServicesSection() {
         <h2 className="heading">Top Services We Offer</h2>
         <p className="paragraph">
           In today&apos;s fast-moving world, your health deserves care that&apos;s both
-          accessible and convenient. That&apos;s why Sehha brings together a suite of
+          accessible and convenient. That&apos;s why Healing brings together a suite of
           digital healthcare services designed to connect you with doctors,
           pharmacies, and donors — all in one trusted platform.
         </p>

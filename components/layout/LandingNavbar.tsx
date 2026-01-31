@@ -6,17 +6,17 @@ import React, { useState, useEffect, useCallback, useMemo, memo } from "react";
 import { Button } from "../ui";
 import Image from "next/image";
 import Link from "next/link";
-import { sehhaLogo } from "@/assets";
+import { healingLogo } from "@/assets";
 
 // Memoized nav link component to prevent unnecessary re-renders
-const NavLink = memo(function NavLink({ 
-  href, 
-  name, 
+const NavLink = memo(function NavLink({
+  href,
+  name,
   onClick,
   isActive
-}: { 
-  href: string; 
-  name: string; 
+}: {
+  href: string;
+  name: string;
   onClick: () => void;
   isActive: boolean;
 }) {
@@ -24,18 +24,16 @@ const NavLink = memo(function NavLink({
     <Link
       href={href}
       onClick={onClick}
-      className={`relative py-2 text-sm font-medium transition-colors duration-300 ${
-        isActive ? "text-primary" : "text-gray-600 hover:text-primary"
-      }`}
+      className={`relative py-2 text-sm font-medium transition-colors duration-300 ${isActive ? "text-primary" : "text-gray-600 hover:text-primary"
+        }`}
     >
       {name}
       {/* Animated Underline */}
-      <span 
-        className={`absolute bottom-0 left-0 h-[3px] w-full transform transition-all duration-300 origin-left ${
-          isActive 
-            ? "scale-x-100 opacity-100" 
-            : "scale-x-0 opacity-0"
-        }`}
+      <span
+        className={`absolute bottom-0 left-0 h-[3px] w-full transform transition-all duration-300 origin-left ${isActive
+          ? "scale-x-100 opacity-100"
+          : "scale-x-0 opacity-0"
+          }`}
         style={{
           background: "linear-gradient(90deg, #2BBBC5 0%, #1a9ba3 100%)",
           borderRadius: "2px"
@@ -102,8 +100,8 @@ function LandingNavbar() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-4">
             <Image
-              src={sehhaLogo}
-              alt="Sehha Logo"
+              src={healingLogo}
+              alt="Healing Logo"
               width={48}
               height={48}
               className="rounded-full"
@@ -158,11 +156,10 @@ function LandingNavbar() {
               <Link
                 key={link.name}
                 href={link.href}
-                className={`block py-2 transition-colors duration-200 ${
-                  activeSection === link.id 
-                    ? "text-primary font-bold border-l-4 pl-2" 
-                    : "text-gray-600 pl-3"
-                }`}
+                className={`block py-2 transition-colors duration-200 ${activeSection === link.id
+                  ? "text-primary font-bold border-l-4 pl-2"
+                  : "text-gray-600 pl-3"
+                  }`}
                 style={activeSection === link.id ? { borderColor: "#2BBBC5" } : {}}
                 onClick={handleCloseMenu}>
                 {link.name}
