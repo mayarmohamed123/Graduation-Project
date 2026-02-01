@@ -23,8 +23,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Medical App",
-    template: "%s | Medical App",
+    default: "Healing",
+    template: "%s | Healing",
   },
   description: "Healthcare application",
 };

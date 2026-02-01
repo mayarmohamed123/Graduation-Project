@@ -13,12 +13,12 @@ export default function Footer() {
           <div className="flex items-center gap-2 mb-4">
             <Image
               src={footerLogo}
-              alt="Sehaa Logo"
+              alt="Healing Logo"
               width={40}
               height={40}
               priority
             />
-            <h2 className="text-xl font-semibold">Sehaa</h2>
+            <h2 className="text-xl font-semibold">Healing</h2>
           </div>
           <p className="text-sm text-gray-100 mb-6">
             Your trusted digital healthcare platform. <br />
@@ -87,7 +87,7 @@ export default function Footer() {
               <MapPin size={16} /> Cairo, Egypt
             </li>
             <li className="flex items-center gap-2">
-              <Mail size={16} /> Support@Sehaa.com
+              <Mail size={16} /> Support@Healing.com
             </li>
             <li className="flex items-center gap-2">
               <Phone size={16} /> +20 101 234 5678

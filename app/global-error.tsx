@@ -58,7 +58,7 @@ export default function GlobalError({
           </div>
 
           <div className="pt-8 text-gray-400 text-sm">
-            <p>&copy; {new Date().getFullYear()} Sehaa Healthcare. High-priority maintenance mode active.</p>
+            <p>&copy; {new Date().getFullYear()} Healing Healthcare. High-priority maintenance mode active.</p>
           </div>
         </div>
       </body>

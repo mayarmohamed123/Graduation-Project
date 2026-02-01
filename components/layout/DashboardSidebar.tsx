@@ -92,7 +92,7 @@ export default function DashboardSidebar({ role }: DashboardSidebarProps) {
           height={40}
           className="rounded-full"
         />
-        <span className="text-2xl font-semibold">Sehha</span>
+        <span className="text-2xl font-semibold">Healing</span>
       </div>
 
       {/* Navigation Menu */}
