@@ -64,10 +64,13 @@ export default function DoctorCard({
   };
 
 
-
   const cleanName = (name: string) => {
     if (!name) return "";
-    return name.split("_")[0];
+    // First remove the random suffix after underscore
+    const baseName = name.split("_")[0];
+    // Then split CamelCase into words (e.g., "YasminShawkiMohamed" -> "Yasmin Shawki Mohamed")
+    const formattedName = baseName.replace(/([a-z])([A-Z])/g, "$1 $2");
+    return formattedName;
   };
 
   const displayName = cleanName(doctor.username);

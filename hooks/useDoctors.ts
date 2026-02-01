@@ -1,30 +1,27 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { Doctor } from "@/types/doctors";
 import { doctorService } from "@/Services/doctorService";
-import { useAuth } from "@/hooks/useAuth";
+
+export interface DoctorFilters {
+  specialty?: string | null;
+  name?: string;
+  gender?: "male" | "female" | null;
+  consultationType?: "inClinic" | "homeVisit" | null;
+  sort?: string;
+}
 
 export const useDoctors = () => {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { isAuthenticated, isLoading: authLoading } = useAuth();
+  
+  // Track if initial fetch has happened to prevent duplicate calls
+  const hasFetched = useRef(false);
 
   const fetchDoctors = useCallback(
-    async (filters?: {
-      specialty?: string | null;
-      name?: string;
-      gender?: "male" | "female" | null;
-      consultationType?: "inClinic" | "homeVisit" | null;
-      sort?: string;
-    }) => {
-      if (!isAuthenticated) {
-        setError("Please log in to view doctors");
-        setLoading(false);
-        return;
-      }
-
+    async (filters?: DoctorFilters) => {
       try {
         setLoading(true);
         setError(null);
@@ -62,6 +59,7 @@ export const useDoctors = () => {
         }
 
         setDoctors(data);
+        hasFetched.current = true;
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : "Failed to fetch doctors";
@@ -71,20 +69,22 @@ export const useDoctors = () => {
         setLoading(false);
       }
     },
-    [isAuthenticated]
+    []
   );
 
+  // Fetch doctors on mount - let API handle authentication via cookies
   useEffect(() => {
-    if (!authLoading && isAuthenticated) {
+    if (!hasFetched.current) {
       fetchDoctors();
     }
-  }, [fetchDoctors, isAuthenticated, authLoading]);
+  }, [fetchDoctors]);
 
   return {
     doctors,
-    loading: loading || authLoading,
+    loading,
     error,
     refetch: fetchDoctors,
-    isAuthenticated,
   };
 };
+
+

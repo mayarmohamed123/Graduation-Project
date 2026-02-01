@@ -9,7 +9,7 @@ interface SearchInputProps {
   className?: string;
 }
 
-export default function SearchInput({ onSearch, placeholder = "Search for doctors, pharmacies, or blood donors", className = "" }: SearchInputProps) {
+export default function SearchInput({ onSearch, placeholder = "Search about what u want..", className = "" }: SearchInputProps) {
   const [query, setQuery] = useState<string>("");
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,11 +29,12 @@ export default function SearchInput({ onSearch, placeholder = "Search for doctor
         />
         <div className="absolute top-1/2 right-4 -translate-y-1/2">
           <Image
-            className="cursor-pointer"
+            className="cursor-pointer hover:opacity-70 transition-opacity"
             src={vector}
             alt="search icon"
             width={20}
             height={20}
+            onClick={() => onSearch(query)}
           />
         </div>
       </div>

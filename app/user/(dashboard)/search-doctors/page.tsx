@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useAuth } from "@/hooks/useAuth";
-import { useDoctors } from "@/hooks/useDoctors";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { useDoctors, DoctorFilters } from "@/hooks/useDoctors";
 import { FilterState, Doctor } from "@/types/doctors";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import SearchInput from "@/components/common/SearchInput";
@@ -36,7 +35,6 @@ export default function SearchDoctorsPage() {
     "Dentistry",
   ];
 
-  const { isAuthenticated, isLoading: authLoading } = useAuth();
   const { doctors, loading, error, refetch } = useDoctors();
 
   const [filters, setFilters] = useState<FilterState>({
@@ -49,14 +47,17 @@ export default function SearchDoctorsPage() {
 
   const [searchInput, setSearchInput] = useState("");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  
+  // Track if this is the first filter change (to skip initial effect run)
+  const isFirstFilterChange = useRef(true);
 
   // Handle search input change
-  const handleSearchChange = async (query: string) => {
+  const handleSearchChange = useCallback((query: string) => {
     setSearchInput(query);
-  };
+  }, []);
 
   // Handle filter changes
-  const handleFilterChange = (key: keyof FilterState, value: string | null) => {
+  const handleFilterChange = useCallback((key: keyof FilterState, value: string | null) => {
     setFilters((prev: FilterState) => {
       // Handle sort field which is always a string
       if (key === "sort") {
@@ -70,10 +71,10 @@ export default function SearchDoctorsPage() {
         [key]: value,
       };
     });
-  };
+  }, []);
 
   // Clear all filters
-  const clearFilters = () => {
+  const clearFilters = useCallback(() => {
     setFilters({
       specialty: null,
       name: "",
@@ -82,9 +83,9 @@ export default function SearchDoctorsPage() {
       sort: "all",
     });
     setSearchInput("");
-  };
+  }, []);
 
-  // Debounce search input
+  // Debounce search input and update name filter
   useEffect(() => {
     const timer = setTimeout(() => {
       setFilters((prev: FilterState) => ({
@@ -96,19 +97,22 @@ export default function SearchDoctorsPage() {
     return () => clearTimeout(timer);
   }, [searchInput]);
 
-  // Refetch when filters change
+  // Refetch when filters change (but skip the initial render)
   useEffect(() => {
-    if (isAuthenticated) {
-      refetch(filters);
+    if (isFirstFilterChange.current) {
+      isFirstFilterChange.current = false;
+      return;
     }
-  }, [filters, refetch, isAuthenticated]);
 
-  // Show loading while checking authentication
-  if (authLoading) {
-    return <LoadingSpinner />;
-  }
-
- 
+    const apiFilters: DoctorFilters = {
+      specialty: filters.specialty,
+      name: filters.name || undefined,
+      gender: filters.gender,
+      consultationType: filters.consultationType,
+      sort: filters.sort === "all" ? undefined : filters.sort,
+    };
+    refetch(apiFilters);
+  }, [filters, refetch]);
 
   return (
     <div className="min-h-screen bg-gray-50 pb-8">
