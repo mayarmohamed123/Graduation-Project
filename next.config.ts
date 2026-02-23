@@ -10,23 +10,35 @@ const nextConfig = {
         protocol: "https",
         hostname: "flagcdn.com",
       },
+      {
+        protocol: "https",
+        hostname: "unendingly-unfoul-emmy.ngrok-free.dev",
+      },
     ],
   },
   experimental: {
     // other flags here
   },
   async rewrites() {
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "https://webadd-avgnfdemdqcffecu.canadacentral-01.azurewebsites.net";
-    return [
-      {
-        source: "/api/:path*",
-        destination: `${backendUrl}/api/:path*`,
-      },
-      {
-        source: "/hubs/:path*",
-        destination: `${backendUrl}/hubs/:path*`,
-      },
-    ];
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "https://unendingly-unfoul-emmy.ngrok-free.dev";
+    return {
+      afterFiles: [
+        {
+          source: "/api/:path*",
+          destination: `${backendUrl}/api/:path*`,
+        },
+        {
+          source: "/hubs/:path*",
+          destination: `${backendUrl}/hubs/:path*`,
+        },
+      ],
+      fallback: [
+        {
+          source: "/:path*",
+          destination: `${backendUrl}/:path*`,
+        },
+      ],
+    };
   },
 };
 

@@ -14,10 +14,10 @@ export function UserRow({ user }: UserRowProps) {
         <tr className="hover:bg-gray-50 transition-colors">
             <td className="px-6 py-4">
                 <div className="flex items-center gap-3">
-                    <div className="relative h-10 w-10 rounded-full overflow-hidden bg-gray-100 flex-shrink-0">
+                    <div className="relative h-10 w-10 rounded-full overflow-hidden bg-gray-100 shrink-0">
                         {user.profileImage ? (
                             <Image
-                                src={user.profileImage}
+                                src={user.profileImage.startsWith("http") ? user.profileImage : (user.profileImage.startsWith("/") ? user.profileImage : `/${user.profileImage}`)}
                                 alt={user.userName}
                                 fill
                                 sizes="40px"

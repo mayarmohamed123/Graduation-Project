@@ -13,7 +13,7 @@ interface PharmacySidebarProps {
 export default function PharmacySidebar({ pharmacy, onMessage }: PharmacySidebarProps) {
   const imageUrl = pharmacy.imagePath?.startsWith("http")
     ? pharmacy.imagePath
-    : `${process.env.NEXT_PUBLIC_API_BASE_URL}${pharmacy.imagePath}`;
+    : pharmacy.imagePath?.startsWith("/") ? pharmacy.imagePath : `/${pharmacy.imagePath}`;
 
   const handleDirections = () => {
     const url = `https://www.google.com/maps/dir/?api=1&destination=${pharmacy.latitude},${pharmacy.longitude}`;

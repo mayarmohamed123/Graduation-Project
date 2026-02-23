@@ -108,12 +108,12 @@ export default function DoctorCard({
         )}
 
         {/* Image */}
-        <div className="h-full w-full flex items-center justify-center p-4">
+        <div className="h-full w-full flex items-center justify-center p-0">
             <Image
               src={image}
               alt={`Dr. ${displayName}`}
               fill
-              className="object-cover rounded-xl"
+              className="object-contain"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
         </div>

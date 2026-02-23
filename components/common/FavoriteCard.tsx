@@ -46,7 +46,8 @@ export default function FavoriteCard({
     // Get image URL
     const getImageUrl = () => {
         if (isDoctor(item)) {
-            return item.doctorImage || "";
+            const doctorImage = item.doctorImage || "";
+            return doctorImage.startsWith("http") ? doctorImage : (doctorImage.startsWith("/") ? doctorImage : `/${doctorImage}`);
         } else if (isMedicine(item)) {
             return item.imagePath?.startsWith("http")
                 ? item.imagePath
@@ -54,7 +55,7 @@ export default function FavoriteCard({
         } else if (isClinic(item)) {
             return item.imagePath?.startsWith("http")
                 ? item.imagePath
-                : `${process.env.NEXT_PUBLIC_API_BASE_URL}${item.imagePath}`;
+                : item.imagePath?.startsWith("/") ? item.imagePath : `/${item.imagePath}`;
         }
         return "";
     };
@@ -154,7 +155,7 @@ export default function FavoriteCard({
                             src={imageUrl}
                             alt={getTitle()}
                             fill
-                            className="object-cover rounded-xl"
+                            className={isDoctor(item) || isClinic(item) ? "object-contain" : "object-cover rounded-xl"}
                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         />
                     ) : (

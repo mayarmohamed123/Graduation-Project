@@ -60,7 +60,7 @@ export default function MedicineCard({
 
   const imageUrl = medicine.imagePath?.startsWith("http")
     ? medicine.imagePath
-    : `${process.env.NEXT_PUBLIC_API_BASE_URL}${medicine.imagePath}`;
+    : medicine.imagePath?.startsWith("/") ? medicine.imagePath : `/${medicine.imagePath}`;
 
   const toggleFavorite = async (e: React.MouseEvent) => {
     e.preventDefault();

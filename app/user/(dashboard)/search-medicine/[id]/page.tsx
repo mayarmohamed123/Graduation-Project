@@ -105,7 +105,7 @@ export default function MedicineDetailsPage() {
 
   const imageUrl = medicine.imagePath?.startsWith("http")
     ? medicine.imagePath
-    : `${process.env.NEXT_PUBLIC_API_BASE_URL}${medicine.imagePath}`;
+    : medicine.imagePath?.startsWith("/") ? medicine.imagePath : `/${medicine.imagePath}`;
 
   const tabs: TabType[] = ["Description", "How to Use", "Side Effects", "Reviews"];
 

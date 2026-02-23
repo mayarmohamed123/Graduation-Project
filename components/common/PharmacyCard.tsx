@@ -13,7 +13,7 @@ interface PharmacyCardProps {
 export default function PharmacyCard({ pharmacy }: PharmacyCardProps) {
   const imageUrl = pharmacy.imagePath?.startsWith("http")
     ? pharmacy.imagePath
-    : `${process.env.NEXT_PUBLIC_API_BASE_URL}${pharmacy.imagePath}`;
+    : pharmacy.imagePath?.startsWith("/") ? pharmacy.imagePath : `/${pharmacy.imagePath}`;
 
   return (
     <div className="rounded-2xl border-2 border-[#D0F1F3] bg-white overflow-hidden hover:shadow-lg transition-shadow duration-300">
